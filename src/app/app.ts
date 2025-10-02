@@ -9,7 +9,7 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('learning-center');
+  protected readonly title = signal('geops-frontend');
   private translate: TranslateService;
 
   constructor() {
