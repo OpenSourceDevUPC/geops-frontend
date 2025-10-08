@@ -1,5 +1,9 @@
 {
   "option": {
-    "home": "Inicio"
+    "home": "Inicio",
+    "offers": "Ofertas",
+    "categories": "Categorías",
+    "favorites": "Favoritos",
+    "coupons": "Mis Cupones"
   }
 }
