@@ -1,0 +1,52 @@
+<div class="layout">
+
+  <div class="content">
+    <h2 class="h2">Favoritos</h2>
+
+    <div *ngIf="loading" class="loading">Cargando…</div>
+
+    <div *ngIf="!loading && offers.length === 0" class="empty">
+      No tienes favoritos aún.
+    </div>
+
+    <section class="offers-grid" *ngIf="!loading && offers.length">
+      <article class="offer-card" *ngFor="let o of offers">
+        <button class="fav active" type="button" (click)="remove(o)">
+          <span class="heart">❤️</span>
+        </button>
+
+        <div class="img-box">
+          <img [src]="imgFor(o)" [alt]="o.title" />
+        </div>
+
+        <div class="card-body">
+          <h3 class="ttl">{{ o.title }}</h3>
+          <div class="pname">{{ o.partner }}</div>
+
+          <div class="stars-row">
+            <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+            <span class="score">5.0</span>
+          </div>
+
+          <hr class="sep" />
+
+          <div class="price-row">
+            <div class="prc">
+              <span class="curr">s/</span>
+              <span class="amt">{{ o.price | number:'1.2-2' }}</span>
+            </div>
+            <div class="loc">
+              <span class="pin" aria-hidden="true">📍</span>
+              {{ o.location }}
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <a class="buy" routerLink="/ofertas">Ver</a>
+            <button class="add" (click)="remove(o)">Quitar</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>
