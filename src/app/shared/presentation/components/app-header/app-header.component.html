@@ -1,0 +1,44 @@
+<header class="topbar" role="banner">
+  <div class="wrap">
+    <a routerLink="/ofertas" class="logo" aria-label="GeoPs Home">GeoPs</a>
+
+    <form class="search" (ngSubmit)="doSearch()">
+      <span class="icon" aria-hidden="true">
+    <svg width="29" height="29" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" stroke="white" stroke-width="2"/>
+      <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </span>
+
+      <input
+        [(ngModel)]="q"
+        name="q"
+        type="search"
+        placeholder="Busca y encuentra las mejores ofertas"
+        (keyup.enter)="doSearch()" />
+
+      <button type="submit" class="sr-only">Buscar</button>
+    </form>
+
+    <nav class="actions" aria-label="acciones">
+      <a class="pill help" href="#" role="button">Ayuda</a>
+      <button class="pill bell" aria-label="Notificaciones">
+        <svg width="22" height="22" viewBox="0 0 24 24">
+          <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22ZM20 17H4l2-3v-3a6 6 0 0 1 12 0v3l2 3Z" fill="white"/>
+        </svg>
+      </button>
+      <a class="pill profile" href="#" role="button" aria-label="Perfil Ariana">
+        <span class="avatar" aria-hidden="true">{{ userInitial }}</span>
+        <span class="name">{{ userName }}</span>
+      </a>
+      <a class="pill cart" href="#" role="button" aria-label="Carrito">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 6h13l-2 9H8L6 3H3" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9" cy="20" r="1.8" fill="#000"/>
+          <circle cx="17" cy="20" r="1.8" fill="#000"/>
+        </svg>
+        <span>Carrito</span>
+      </a>
+    </nav>
+  </div>
+</header>
