@@ -1,9 +1,98 @@
 {
+  "header": {
+    "logo": "GeoPs",
+    "search": {
+      "placeholder": "Search and find the best offers"
+    },
+    "help": "Help",
+    "notifications": "Notifications",
+    "cart": "Cart",
+    "profile": {
+      "menu": {
+        "myProfile": "My Profile",
+        "settings": "Settings",
+        "logout": "Logout"
+      }
+    }
+  },
   "option": {
     "home": "Home",
     "offers": "Offers",
     "categories": "Categories",
     "favorites": "Favorites",
     "coupons": "My Coupons"
+  },
+  "offersPage": {
+    "title": "Offers",
+    "hero": {
+      "rating": "{{value}}",
+      "buy": "Buy"
+    },
+    "filters": {
+      "search": "Search",
+      "allCategories": "All categories",
+      "sort": {
+        "relevance": "Relevance",
+        "priceAsc": "Lower price",
+        "priceDesc": "Higher price",
+        "ratingDesc": "Best rating"
+      },
+      "allLocations": "All",
+      "clear": "Clear"
+    },
+    "card": {
+      "view": "View offer",
+      "rating": "{{value}}",
+      "currency": "S/",
+      "buy": "Buy",
+      "add": "Add",
+      "locationPin": "Location"
+    }
+  },
+  "offersData": {
+    "titles": {
+      "1": "Coney KIDS 2x1: Kids entry for 2 hours",
+      "2": "DBS: Facial care kit with 30% off",
+      "3": "MINNA Beauty: Lemon Sugar Scrub + Dallism Lip Gloss combo",
+      "4": "Kabuki – Deal: 2x1 Mixsoon Centella Cleansing Foam 150ml",
+      "5": "BUFFET LUNCH: ONLY Chorrillos location, Mon–Sun",
+      "6": "FUN JUNGLE: 60 or 90 minutes on inflatables",
+      "7": "BUFFET LUNCH: Creole, Chinese, pasta, soups, salads, desserts & more",
+      "8": "CINEMARK: 2× 2D tickets + 2 large drinks + giant popcorn",
+      "9": "LUNCH BUFFET OR DINNER WITH DANCING at Mandarin International Restaurant",
+      "10": "Pack: 5 games + 1 free",
+      "11": "FUN JUNGLE TRUJILLO: 60 minutes unlimited games",
+      "12": "Shimaya Ramen – 3 maki boards or 30 maki pieces",
+      "13": "Infinity Park Peru – AREQUIPA unlimited entries",
+      "14": "Arequipeño Creole BUFFET with live Ceviche station – CASA ANDINA PREMIUM",
+      "15": "ARUMA: Gift Card S/ 40 for S/ 29.90",
+      "16": "CINEPLANET: 2× 2D tickets + 2 large drinks + giant popcorn",
+      "17": "AQUATICA POOL PARK ICA: Full-day fun",
+      "18": "CINEMARK: 2 tickets + 2 sodas + medium or large popcorn",
+      "19": "CINEPLANET PROVINCES: 2× 2D tickets + giant popcorn + 2 large drinks",
+      "20": "Full-day wristband – Rides",
+      "21": "All you can eat Nikkei",
+      "22": "All-you-can-eat makis + drink",
+      "23": "Playland Kids – 2h unlimited",
+      "24": "Mundo Kids – All-day unlimited pass"
+    },
+    "categories": {
+      "Entretenimiento": "Entertainment",
+      "Belleza": "Beauty",
+      "Gastronomía": "Dining",
+      "Gift Card": "Gift Card"
+    },
+    "locations": {
+      "Varias Sedes": "Multiple locations",
+      "Tiendas seleccionadas": "Selected stores",
+      "Online y tiendas": "Online & stores"
+    }
+  },
+  "favoritesPage": {
+    "title": "Favorites",
+    "loading": "Loading…",
+    "empty": "You don't have favorites yet.",
+    "view": "View",
+    "remove": "Remove"
   }
 }
