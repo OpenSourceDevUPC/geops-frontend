@@ -1,9 +1,98 @@
 {
+  "header": {
+    "logo": "GeoPs",
+    "search": {
+      "placeholder": "Busca y encuentra las mejores ofertas"
+    },
+    "help": "Ayuda",
+    "notifications": "Notificaciones",
+    "cart": "Carrito",
+    "profile": {
+      "menu": {
+        "myProfile": "Mi Perfil",
+        "settings": "Configuración",
+        "logout": "Cerrar Sesión"
+      }
+    }
+  },
   "option": {
     "home": "Inicio",
     "offers": "Ofertas",
     "categories": "Categorías",
     "favorites": "Favoritos",
     "coupons": "Mis Cupones"
+  },
+  "offersPage": {
+    "title": "Ofertas",
+    "hero": {
+      "rating": "{{value}}",
+      "buy": "Comprar"
+    },
+    "filters": {
+      "search": "Buscar",
+      "allCategories": "Todas las categorías",
+      "sort": {
+        "relevance": "Relevancia",
+        "priceAsc": "Menor precio",
+        "priceDesc": "Mayor precio",
+        "ratingDesc": "Mejor calificación"
+      },
+      "allLocations": "Todas",
+      "clear": "Limpiar"
+    },
+    "card": {
+      "view": "Ver oferta",
+      "rating": "{{value}}",
+      "currency": "S/",
+      "buy": "Comprar",
+      "add": "Añadir",
+      "locationPin": "Ubicación"
+    }
+  },
+  "offersData": {
+    "titles": {
+      "1": "Coney KIDS 2x1 En entrada para niños x 2 horas",
+      "2": "DBS: Kit de cuidado facial con 30% off",
+      "3": "Belleza MINNA: Combo Lemon Sugar Scrub Lip Mask + Dallism Lip Gloss",
+      "4": "Kabuki - Oferta: 2x1 Mixsoon Limpiador Centella Cleansing Foam 150ml",
+      "5": "ALMUERZO BUFFET: SOLO en sede de CHORRILLOS de Lunes a Domingo",
+      "6": "FUN JUNGLE: 60 o 90 minutos de inflables",
+      "7": "ALMUERZO BUFFET: Criollo, chifas, pastas, cremas, ensaladas, postres y más",
+      "8": "CINEMARK: 2 entradas 2D + 2 bebidas grandes + Pop gigante",
+      "9": "BUFFET ALMUERZO O CENA BAILABLE en Restaurante Internacional Mandarín",
+      "10": "Paquete 5 juegos + 1 gratis",
+      "11": "FUN JUNGLE TRUJILLO: 60 minutos juegos ilimitados",
+      "12": "Shimaya Ramen - 3 tabla de makis o 30 piezas de makis",
+      "13": "Infinity Park Peru – AREQUIPA ingresos ilimitados",
+      "14": "BUFFET Criollo Arequipeño con estación de Ceviche en vivo – CASA ANDINA PREMIUM",
+      "15": "ARUMA: Gift Card S/ 40 por S/ 29.90",
+      "16": "CINEPLANET: 2 entradas 2D + 2 bebidas grandes + Pop gigante",
+      "17": "AQUATICA POOL PARK ICA: Full Day diversión",
+      "18": "CINEMARK: 2 Entradas + 2 gaseosas + cancha mediana o grande",
+      "19": "CINEPLANET PROVINCIAS: 2 entradas 2D + Popcorn gigante + 2 bebidas grandes",
+      "20": "Pulsera Full Day – Juegos Mecánicos",
+      "21": "All you can eat Nikkei",
+      "22": "Barra libre de makis + bebida",
+      "23": "Playland Kids – 2h ilimitados",
+      "24": "Mundo Kids – Pase ilimitado día"
+    },
+    "categories": {
+      "Entretenimiento": "Entretenimiento",
+      "Belleza": "Belleza",
+      "Gastronomía": "Gastronomía",
+      "Gift Card": "Gift Card"
+    },
+    "locations": {
+      "Varias Sedes": "Varias Sedes",
+      "Tiendas seleccionadas": "Tiendas seleccionadas",
+      "Online y tiendas": "Online y tiendas"
+    }
+  },
+  "favoritesPage": {
+    "title": "Favoritos",
+    "loading": "Cargando…",
+    "empty": "No tienes favoritos aún.",
+    "view": "Ver",
+    "remove": "Quitar"
   }
 }
