@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router} from '@angular/router';
-import { environment } from '../../../../../environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
+import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
+import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
+import { TranslateModule } from '@ngx-translate/core';
 
 type Offer = {
   id: number;
@@ -28,14 +29,12 @@ type FavoriteRow = {
 @Component({
   selector: 'app-ofertas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './ofertas.component.html',
   styleUrls: ['./ofertas.component.css'],
 })
 
-
 export class OfertasComponent implements OnInit, OnDestroy {
-  private API = environment.platformProviderApiBaseUrl;
 
   loading = false;
   all: Offer[] = [];
@@ -51,7 +50,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
   /**
    * filttros de búsqueda
    */
-
   filters = {
     q: '',
     category: 'all',
@@ -60,20 +58,16 @@ export class OfertasComponent implements OnInit, OnDestroy {
   };
 
   private favSet = new Set<number>();
-
   private dataLoaded = false;
 
   /**
    * crea una instancia del componente ofertascomponent
-   * @param http
-   * @param route
-   * @param router
    */
-
   constructor(
-    private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private offersApi: OffersApiEndpoint,
+    private favoritesApi: FavoritesApiEndpoint
   ) {}
 
   /**
@@ -82,20 +76,19 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * inicia el carrusel de las ofertas destacadas
    * recupera los favoritos del usuario
    */
-
   ngOnInit(): void {
     this.loading = true;
 
-    this.http.get<Offer[]>(`${this.API}/offers`).subscribe({
+    this.offersApi.getAll().subscribe({
       next: (offers) => {
         const order = [14, 8, 18, 21];
-        this.all = offers;
+        this.all = offers as Offer[];
         this.featured = order
-          .map((id) => offers.find((o) => o.id === id))
+          .map((id) => this.all.find((o) => o.id === id))
           .filter((o): o is Offer => !!o);
 
-        this.categories = Array.from(new Set(offers.map((o) => o.category))).sort();
-        this.locations = Array.from(new Set(offers.map((o) => o.location))).sort();
+        this.categories = Array.from(new Set(this.all.map((o) => o.category))).sort();
+        this.locations = Array.from(new Set(this.all.map((o) => o.location))).sort();
 
         this.dataLoaded = true;
         this.applyFilters();
@@ -113,7 +106,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * y tambien detiene el temporizador del carrusel
    * @return { void}
    */
-
   ngOnDestroy(): void {
     clearInterval(this.timer);
   }
@@ -121,7 +113,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
   /**
    * inicia el desplazamiento automático del carrusel
    */
-
   startAuto() {
     clearInterval(this.timer);
     this.timer = setInterval(() => this.next(), 2000);
@@ -130,7 +121,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
   /**
    * cambia la oferta destacada en el carrusel
    */
-
   next() {
     this.idx = (this.idx + 1) % this.featured.length;
   }
@@ -139,7 +129,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * cambia el carrusel a una oferta especifica
    * @param index
    */
-
   goTo(index: number) {
     this.idx = index;
     this.startAuto();
@@ -148,7 +137,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
   /**
    * obtiene la oferta destacada actualmente activa
    */
-
   active(): Offer | null {
     return this.featured[this.idx] ?? null;
   }
@@ -158,7 +146,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * devuelve una ruta
    * @param o
    */
-
   imgFor(o: Offer | null): string {
     return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
   }
@@ -166,7 +153,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
   /**
    * se aplican filtros
    */
-
   applyFilters() {
     const q = this.filters.q.trim().toLowerCase();
 
@@ -202,7 +188,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
   /**
    * limpia los filtros aplicados
    */
-
   clearFilters() {
     this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
     this.applyFilters();
@@ -212,9 +197,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * obtiene los favoritos del usuario actual desde la API
    * @private
    */
-
   private fetchFavs() {
-    this.http.get<FavoriteRow[]>(`${this.API}/favorites?userId=1`).subscribe({
+    this.favoritesApi.getByUser(1).subscribe({
       next: (rows) => (this.favSet = new Set(rows.map((r) => r.offerId))),
       error: () => this.favSet.clear(),
     });
@@ -224,7 +208,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * verifica si una oferta esta marcada como favorita
    * @param id
    */
-
   isFav(id: number) { return this.favSet.has(id); }
 
   /**
@@ -234,18 +217,12 @@ export class OfertasComponent implements OnInit, OnDestroy {
    */
   toggleFav(o: Offer) {
     if (this.favSet.has(o.id)) {
-      this.http
-        .get<FavoriteRow[]>(`${this.API}/favorites?userId=1&offerId=${o.id}`)
-        .subscribe((rows) => {
-          if (!rows.length) return;
-          this.http
-            .delete(`${this.API}/favorites/${rows[0].id}`)
-            .subscribe(() => this.favSet.delete(o.id));
-        });
+      this.favoritesApi.findRow(1, o.id).subscribe((rows) => {
+        if (!rows.length) return;
+        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => this.favSet.delete(o.id));
+      });
     } else {
-      const row: FavoriteRow = { userId: 1, offerId: o.id, createdAt: new Date().toISOString() };
-      this.http.post(`${this.API}/favorites`, row)
-        .subscribe(() => this.favSet.add(o.id));
+      this.favoritesApi.add(1, o.id).subscribe(() => this.favSet.add(o.id));
     }
   }
 }

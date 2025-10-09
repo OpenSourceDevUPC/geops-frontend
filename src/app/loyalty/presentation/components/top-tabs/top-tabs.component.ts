@@ -1,37 +1,48 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-top-tabs',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslateModule],
   template: `
-  <nav class="tabs-wrap" aria-label="Navegación principal">
-    <a class="tab"
-       routerLink="/home"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact:true}">Home</a>
+    <nav class="tabs-wrap" aria-label="Navegación principal">
+      <a class="tab"
+         routerLink="/home"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact:true}">
+        {{ 'option.home' | translate }}
+      </a>
 
-    <a class="tab"
-       routerLink="/ofertas"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact:true}">Ofertas</a>
+      <a class="tab"
+         routerLink="/ofertas"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact:true}">
+        {{ 'option.offers' | translate }}
+      </a>
 
-    <a class="tab"
-       routerLink="/categorias"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact:true}">Categorías</a>
+      <a class="tab"
+         routerLink="/categorias"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact:true}">
+        {{ 'option.categories' | translate }}
+      </a>
 
-    <a class="tab"
-       routerLink="/favoritos"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact:true}">Favoritos</a>
+      <a class="tab"
+         routerLink="/favoritos"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact:true}">
+        {{ 'option.favorites' | translate }}
+      </a>
 
-    <a class="tab"
-       routerLink="/mis-cupones"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact:true}">Mis Cupones</a>
-  </nav>
+      <a class="tab"
+         routerLink="/mis-cupones"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact:true}">
+        {{ 'option.coupons' | translate }}
+      </a>
+    </nav>
   `,
   styles: [`
     .tabs-wrap{
@@ -55,9 +66,15 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       padding: 8px 16px;
       border-radius: 12px;
       transition: background .15s, color .15s;
+      white-space: nowrap;
     }
 
     .tab:hover{
+      background: #000;
+      color: #fff;
+    }
+
+    .tab.active{
       background: #000;
       color: #fff;
     }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
-import { environment } from '../../../../../environments/environment';
+import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
+import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
+import { TranslateModule } from '@ngx-translate/core';
 
 type Offer = {
   id: number;
@@ -20,23 +21,21 @@ type Offer = {
 @Component({
   selector: 'app-favoritos',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './favoritos.component.html',
   styleUrls: ['./favoritos.component.css'],
 })
-
-
 export class FavoritosComponent implements OnInit {
-  private API = environment.platformProviderApiBaseUrl;
-
   loading = false;
   offers: Offer[] = [];
 
   /**
-   * crea una instancia del componente 'favoritoscomponent''
-   * @param http
+   * crea una instancia del componente 'favoritoscomponent'
    */
-  constructor(private http: HttpClient) {}
+  constructor(
+    private favsApi: FavoritesApiEndpoint,
+    private offersApi: OffersApiEndpoint
+  ) {}
 
   /**
    * Carga las ofertas favoritas del usuario
@@ -47,26 +46,26 @@ export class FavoritosComponent implements OnInit {
   }
 
   /**
-   * Obtiene los favoritos del usuario y recupera las ofertas segun el id sel usuario
+   * Obtiene los favoritos del usuario y recupera las ofertas según el id del usuario
    */
   fetch() {
     this.loading = true;
-    this.http.get<any[]>(`${this.API}/favorites?userId=1`).subscribe({
+
+    this.favsApi.getByUser(1).subscribe({
       next: (rows) => {
-        const ids = rows.map(r => r.offerId);
+        const ids = rows.map((r) => r.offerId);
         if (!ids.length) { this.offers = []; this.loading = false; return; }
 
-        const qs = ids.map(id => `id=${id}`).join('&');
-        this.http.get<Offer[]>(`${this.API}/offers?${qs}`).subscribe({
+        this.offersApi.getByIds(ids).subscribe({
           next: (list) => {
-            const map = new Map(list.map(o => [o.id, o]));
-            this.offers = ids.map(id => map.get(id)!).filter(Boolean);
+            const map = new Map(list.map((o) => [o.id, o]));
+            this.offers = ids.map((id) => map.get(id)!).filter(Boolean) as Offer[];
             this.loading = false;
           },
-          error: () => this.loading = false
+          error: () => (this.loading = false),
         });
       },
-      error: () => this.loading = false
+      error: () => (this.loading = false),
     });
   }
 
@@ -74,7 +73,6 @@ export class FavoritosComponent implements OnInit {
    * devuelve la url de la imagen asociada a una oferta
    * @param o
    */
-
   imgFor(o: Offer) { return o.imageUrl ?? `assets/offers/${o.id}.jpg`; }
 
   /**
@@ -82,10 +80,10 @@ export class FavoritosComponent implements OnInit {
    * @param o
    */
   remove(o: Offer) {
-    this.http.get<any[]>(`${this.API}/favorites?userId=1&offerId=${o.id}`).subscribe(rows => {
+    this.favsApi.findRow(1, o.id).subscribe((rows) => {
       if (!rows.length) return;
-      this.http.delete(`${this.API}/favorites/${rows[0].id}`).subscribe(() => {
-        this.offers = this.offers.filter(x => x.id !== o.id);
+      this.favsApi.removeRow(rows[0].id).subscribe(() => {
+        this.offers = this.offers.filter((x) => x.id !== o.id);
       });
     });
   }
