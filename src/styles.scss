@@ -1,12 +1,18 @@
-:root { --purple: #A751D4; --cta:#AB58E3; --text:#000; }
-* { box-sizing: border-box; }
+:root { --purple:
+  #A751D4;
+  --cta:#AB58E3;
+  --text:#000;
+}
+* {
+  box-sizing: border-box;
+}
+
 html, body { margin: 0; padding: 0; }
 
-html, body { font-family: 'Poppins', system-ui, -apple-system, sans-serif; }
-:root{
-  --header-bg: #A751D4;
-  --search-bg: #4A0072;
-  --pill-text: #ffffff;
-  --pill-radius: 20px;
-  --font: 'Poppins', system-ui, sans-serif;
+html, body { font-family:
+  'Poppins',
+  system-ui,
+  -apple-system,
+  sans-serif;
 }
+
