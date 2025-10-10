@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #fff;
+  font-family: 'Inter', Arial, sans-serif;
+  color: #1a1a1a;
+}
+
+/* Layout */
+.container {
+  max-width: 700px;
+  margin: 80px auto 0 auto; /* centrado horizontal */
+  padding: 0 16px;
+  text-align: left;
+}
+
+
+/* Título */
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+/* Lista */
+.faq-list { display: flex; flex-direction: column; }
+
+/* Item */
+details {
+  border-bottom: 1px solid #e6e6e6; /* línea fina como el diseño */
+  padding: 0.25rem 0;
+}
+
+/* Cabecera */
+summary {
+  list-style: none;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;              /* altura amplia */
+  cursor: pointer;
+}
+
+/* Oculta el marcador nativo */
+summary::-webkit-details-marker { display: none; }
+
+/* Chevron */
+summary::after {
+  content: '';
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #1f2937;
+  border-bottom: 2px solid #1f2937;
+  transform: rotate(45deg);
+  transition: transform .2s ease;
+  margin-left: 12px;
+}
+
+/* Chevron rotado al abrir */
+details[open] summary::after { transform: rotate(-135deg); }
+
+/* Contenido */
+.answer {
+  padding: 0 0 1rem 0;
+  color: #444;
+  line-height: 1.6;
+  animation: fade .18s ease-out;
+}
+.answer .note { font-size: .92rem; color: #6b7280; }
+
+/* Animación sutil */
+@keyframes fade { from {opacity:.6; transform: translateY(-2px);} to {opacity:1; transform:none;} }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container { max-width: 100%; margin: 40px 0 0 0; padding: 0 16px; }
+  h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  summary { font-size: 1rem; }
+}
