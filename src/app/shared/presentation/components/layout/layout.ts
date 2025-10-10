@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,8 @@ import { FooterContent } from '../footer-content/footer-content';
 import { TopTabsComponent } from '../../../../loyalty/presentation/components/top-tabs/top-tabs.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
+import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-layout',
@@ -31,14 +33,30 @@ import {LanguageSwitcher} from '../language-switcher/language-switcher';
     FooterContent,
     TopTabsComponent,
     TranslateModule,
-    LanguageSwitcher
+    LanguageSwitcher,
+    CommonModule,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
 })
 export class Layout {
   q = '';
-  userName = 'Ariana';
+  userName = 'Usuario';
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user.name;
+      console.log('[Layout] Usuario actual:', this.userName, 'ID:', user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
+  }
 
   get userInitial() {
     const n = this.userName?.trim();
@@ -47,11 +65,16 @@ export class Layout {
 
   doSearch() {
     const term = this.q.trim();
-    console.log('[Layout] Buscar:', term);
+    if (term) {
+      console.log('[Layout] Buscar:', term);
+      this.router.navigate(['/ofertas'], { queryParams: { q: term } });
+    }
   }
 
-  onGlobalSearch(term: string) {
-    console.log('Buscar:', term);
+  onLogout() {
+    console.log('[Layout] Cerrando sesión');
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   options = [

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
+import {AuthService} from '../../../infrastructure/auth/auth.service';
 
 type Offer = {
   id: number;
@@ -17,13 +18,6 @@ type Offer = {
   location: string;
   category: string;
   imageUrl?: string;
-};
-
-type FavoriteRow = {
-  id?: number;
-  userId: number;
-  offerId: number;
-  createdAt: string;
 };
 
 @Component({
@@ -59,6 +53,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
   private favSet = new Set<number>();
   private dataLoaded = false;
+  private currentUserId: number | null = null;
 
   /**
    * crea una instancia del componente ofertascomponent
@@ -67,7 +62,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private offersApi: OffersApiEndpoint,
-    private favoritesApi: FavoritesApiEndpoint
+    private favoritesApi: FavoritesApiEndpoint,
+    private authService: AuthService
   ) {}
 
   /**
@@ -77,6 +73,16 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * recupera los favoritos del usuario
    */
   ngOnInit(): void {
+
+    this.currentUserId = this.authService.getCurrentUserId();
+    console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
+
+    if (!this.currentUserId) {
+      console.warn('[Ofertas] No hay usuario autenticado');
+      // Opcional: redirigir al login
+      // this.router.navigate(['/login']);
+    }
+
     this.loading = true;
 
     this.offersApi.getAll().subscribe({
@@ -198,8 +204,15 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * @private
    */
   private fetchFavs() {
-    this.favoritesApi.getByUser(1).subscribe({
-      next: (rows) => (this.favSet = new Set(rows.map((r) => r.offerId))),
+    if (!this.currentUserId) {
+      this.favSet.clear();
+      return;
+    }
+    this.favoritesApi.getByUser(this.currentUserId).subscribe({
+      next: (rows) => {
+        this.favSet = new Set(rows.map((r) => r.offerId));
+        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
+      },
       error: () => this.favSet.clear(),
     });
   }
@@ -216,13 +229,27 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * @param o
    */
   toggleFav(o: Offer) {
+    if (!this.currentUserId) {
+      console.warn('[Ofertas] Debes iniciar sesión para agregar favoritos');
+      alert('Debes iniciar sesión para agregar favoritos');
+      return;
+    }
+
     if (this.favSet.has(o.id)) {
-      this.favoritesApi.findRow(1, o.id).subscribe((rows) => {
+      // REMOVER favorito
+      this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
         if (!rows.length) return;
-        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => this.favSet.delete(o.id));
+        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
+          this.favSet.delete(o.id);
+          console.log('[Ofertas] Favorito eliminado:', o.id);
+        });
       });
     } else {
-      this.favoritesApi.add(1, o.id).subscribe(() => this.favSet.add(o.id));
+      // AGREGAR favorito
+      this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
+        this.favSet.add(o.id);
+        console.log('[Ofertas] Favorito agregado:', o.id);
+      });
     }
   }
 }
