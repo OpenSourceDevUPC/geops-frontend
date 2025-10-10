@@ -1,7 +1,7 @@
 import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 
 /**
- * entidad de dominio para una oferta
+ * domain entity for an offer
  */
 export interface Offer extends BaseEntity {
   title: string;

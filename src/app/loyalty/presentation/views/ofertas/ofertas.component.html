@@ -79,15 +79,16 @@
           <span class="scrim" aria-hidden="true"></span>
 
           <button
-            type="button"
             class="view-offer"
-            [attr.aria-label]="('offersPage.card.view' | translate) + ' ' + (('offersData.titles.' + o.id) | translate)">
+            [routerLink]="['/ofertas', o.id]"
+            [queryParams]="{ from: 'offers' }"
+            [queryParamsHandling]="'preserve'">
             {{ 'offersPage.card.view' | translate }}
           </button>
+
         </div>
 
         <div class="card-body">
-          <!-- título traducido -->
           <h3 class="ttl">{{ ('offersData.titles.' + o.id) | translate }}</h3>
           <div class="pname">{{ o.partner }}</div>
 

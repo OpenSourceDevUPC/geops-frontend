@@ -2,7 +2,7 @@
 
 export interface FavoriteRowResource {
   /**
-   * tipos de datos para la api de favoritos
+   * data types for the favorites api
    */
   id: number;
   userId: number;

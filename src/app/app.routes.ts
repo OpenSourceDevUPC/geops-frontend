@@ -28,6 +28,11 @@ export const routes: Routes = [
             .then(m => m.OfertasComponent),
         title: 'GeoPs - Ofertas'
       },
+      { path: 'ofertas/:id',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/ver-oferta/ver-oferta.component')
+            .then(m => m.VerOfertaComponent)
+      },
       {
         path: 'categorias',
         loadComponent: () =>
