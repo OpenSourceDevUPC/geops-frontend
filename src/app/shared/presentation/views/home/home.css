@@ -3,55 +3,6 @@
   flex-direction: column;
   align-items: center;
 }
-.account-card {
-  display: flex;
-  flex-direction: row;
-  background-color: #A751D43D;
-  width: 80%;
-  max-width: 80%;
-  min-height: 48px;
-  border-radius: 15px;
-  padding: 2rem 4rem;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-.account-card-text {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: start;
-}
-.account-card-text span {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-}
-.account-card-text p {
-  font-size: 0.85rem;
-  margin: 0;
-}
-.account-card-buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-.account-card-buttons button {
-  border: none;
-  border-radius: 10px;
-  max-height: 2rem;
-  padding: 0.5rem;
-  font-weight: bold;
-}
-.btn-premium {
-  background-color: #E2D226
-}
-.btn-more {
-  background-color: #FFFFFF;
-  opacity: 50%;
-  color: #AB58E3;
-}
 /*Map*/
 .map-container {
   background-color: white;
