@@ -125,11 +125,13 @@
     "beauty": "Belleza"
   },
   "welcomeBanner": {
-    "welcome": "Bienvenido",
+    "welcome": "Bienvenido(a)",
     "hello": "Hola,",
     "user": "Ariana",
-    "viewMore": "Ver Más",
-    "premium": "Premium"
+    "viewMore": "Ver más",
+    "premium": "Premium",
+    "currentBasic": "Plan Básico",
+    "currentPremium": "Plan Premium"
   },
   "subscriptions": {
     "title": "Planes",

@@ -1,20 +1,33 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
+import {Offer} from '../../../../loyalty/domain/model/offer.entity';
+import {OffersApiEndpoint} from '../../../../loyalty/infrastructure/offers-api-endpoint';
+import {DecimalPipe, NgForOf} from '@angular/common';
+import {FavoritesApiEndpoint} from '../../../../loyalty/infrastructure/favorites-api-endpoint';
+import {CartApi} from '../../../../cart/infrastructure/cart-api';
+import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
+import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'app-home',
   imports: [
     TranslatePipe,
-    WelcomeBannerComponent
+    WelcomeBannerComponent,
+    DecimalPipe,
+    NgForOf,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home {
+export class Home implements OnInit {
 
-  username = 'Ariana';
-  plan = 1;//1 stands for Free Plan, 2 stands for Premium Plan
+  private favSet = new Set<number>();
+  private currentUserId: number | null = null;
+  private userId:string = 'a512';
+  private readonly cartApi = inject(CartApi);
+  private readonly cartUiService = inject(CartUiService);
+
   categories = [
     { key: 'all', label: 'home.map.all' },
     { key: 'cinemas', label: 'home.map.cinemas' },
@@ -25,14 +38,94 @@ export class Home {
     { key: 'beauty', label: 'home.map.beauty' }
   ];
   selectedCategories:string[] = ['all'];
+  cinemaOffers:Offer[] = [];
+  buffetOffers:Offer[] = [];
+  parkOffers:Offer[] = [];
+  mechGamesOffers:Offer[] = [];
+  makisOffers:Offer[] = [];
+  beautyOffers:Offer[] = [];
 
-  /**
-   * Verifies if the plan is a Premium Plan or not
-   * @param plan - Detects if the plan is premium. 1 means Premium Plan, 2 or any number means Free plan
-   * @returns If the user is premium or not.
-   */
-  isPremium(plan: number): boolean {
-    return plan === 1;
+  constructor(
+    private offersApi: OffersApiEndpoint,
+    private favoritesApi: FavoritesApiEndpoint,
+    private authService: AuthService
+  )
+  {}
+
+  ngOnInit(): void {
+    const cinemaNumbers = [18, 8, 16];
+    const buffetNumbers = [7, 5, 9];
+    const parkNumbers = [13, 11, 17];
+    const mechGamesNumbers = [20, 10, 1];
+    const makisNumbers = [22, 21, 12];
+    const beautyNumbers = [15, 2, 3];
+
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userId = String(user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
+
+    this.currentUserId = this.authService.getCurrentUserId();
+    console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
+
+    if (!this.currentUserId) {
+      console.warn('[Ofertas] No hay usuario autenticado');
+      // Opcional: redirigir al login
+      // this.router.navigate(['/login']);
+    }
+
+    this.offersApi.getByIds(cinemaNumbers).subscribe({
+      next: (offers) => {
+          this.cinemaOffers = offers;
+          console.log('Cinema offers: ', this.cinemaOffers);
+        },
+      error: (err) => {console.error('Error to fetching offers', err)}
+    });
+
+    this.offersApi.getByIds(buffetNumbers).subscribe({
+      next: (offers) => {
+        this.buffetOffers = offers;
+        console.log('Buffet offers: ', this.buffetOffers);
+      },
+      error: (err) => {console.error('Error to fetching offers', err)}
+    });
+
+    this.offersApi.getByIds(parkNumbers).subscribe({
+      next: (offers) => {
+        this.parkOffers = offers;
+        console.log('Park offers: ', this.parkOffers);
+      },
+      error: (err) => {console.error('Error to fetching offers', err)}
+    });
+
+
+    this.offersApi.getByIds(mechGamesNumbers).subscribe({
+      next: (offers) => {
+        this.mechGamesOffers = offers;
+        console.log('Mechanical Games offers: ', this.mechGamesOffers);
+      },
+      error: (err) => {console.error('Error to fetching offers', err)}
+    });
+
+    this.offersApi.getByIds(makisNumbers).subscribe({
+      next: (offers) => {
+        this.makisOffers = offers;
+        console.log('Makis Open Bar offers: ', this.makisOffers);
+      },
+      error: (err) => {console.error('Error to fetching offers', err)}
+    });
+
+    this.offersApi.getByIds(beautyNumbers).subscribe({
+      next: (offers) => {
+        this.beautyOffers = offers;
+        console.log('Beauty offers: ', this.beautyOffers);
+      },
+      error: (err) => {console.error('Error to fetching offers', err)}
+    });
+
+    this.fetchFavs();
   }
 
   /**
@@ -63,4 +156,102 @@ export class Home {
   isCategoryActive(catKey: string): boolean {
     return this.selectedCategories.includes(catKey);
   }
+
+  /**
+   * Function to get the url of the offer image
+   * @param o - The offer that might have an image
+   * @returns the url of the image, if there is not one, returns an empty string
+   */
+  imgFor(o: Offer | null): string {
+    return !o ? '' : (o.imageUrl ?? `../../assets/offers/${o.id}.jpg`);
+  }
+
+  isFav(id: number) { return this.favSet.has(id); }
+
+  toggleFav(o: Offer) {
+    if (!this.currentUserId) {
+      console.warn('[Ofertas] Debes iniciar sesión para agregar favoritos');
+      alert('Debes iniciar sesión para agregar favoritos');
+      return;
+    }
+
+    if (this.favSet.has(o.id)) {
+      this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
+        if (!rows.length) return;
+        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
+          this.favSet.delete(o.id);
+          console.log('[Ofertas] Favorito eliminado:', o.id);
+        });
+      });
+    } else {
+      this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
+        this.favSet.add(o.id);
+        console.log('[Ofertas] Favorito agregado:', o.id);
+      });
+    }
+  }
+
+  private fetchFavs() {
+    if (!this.currentUserId) {
+      this.favSet.clear();
+      return;
+    }
+    this.favoritesApi.getByUser(this.currentUserId).subscribe({
+      next: (rows) => {
+        this.favSet = new Set(rows.map((r) => r.offerId));
+        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
+      },
+      error: () => this.favSet.clear(),
+    });
+  }
+
+  buyNow(o: Offer) {
+    // Using hardcoded user ID for now - in real app would come from auth service
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    // Add to cart first, then open cart sidebar
+    this.cartApi
+      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .subscribe({
+        next: () => {
+          console.log('Item added to cart successfully');
+          // Reset payment flow when items are added
+          this.cartUiService.resetPaymentFlow();
+          // Open the cart sidebar after adding the item
+          this.cartUiService.openCart();
+        },
+        error: (error) => {
+          console.error('Error adding item to cart:', error);
+          // Could show an error message here
+        },
+      });
+  }
+
+  addToCart(o: Offer) {
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    this.cartApi.addItemToCart(
+      this.userId,
+      o.id.toString(),
+      offerTitle,
+      o.price,
+      offerImageUrl,
+      1
+    ).subscribe({
+      next: () => {
+        // Reset payment flow when items are added
+        this.cartUiService.resetPaymentFlow();
+        // Could show a success message here
+        console.log('Item added to cart successfully');
+      },
+      error: (error) => {
+        console.error('Error adding item to cart:', error);
+        // Could show an error message here
+      }
+    });
+  }
+
+
 }
