@@ -5,15 +5,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
 .modal-overlay.visible {
@@ -24,14 +24,14 @@
 /* Modal Container */
 .modal-container {
   background: white;
-  border-radius: 24px;
-  max-width: 640px;
+  border-radius: 20px;
+  max-width: 580px;
   width: 90%;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  transform: scale(0.95) translateY(20px);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  transform: scale(0.9) translateY(30px);
+  transition: transform 0.3s ease;
 }
 
 .modal-overlay.visible .modal-container {
@@ -43,138 +43,129 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 32px 32px 0;
-  margin-bottom: 16px;
+  padding: 24px 28px 0;
+  margin-bottom: 8px;
 }
 
 .modal-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1F2937;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .close-button {
-  background: none;
+  background: #F5F5F5;
   border: none;
   cursor: pointer;
   padding: 8px;
-  border-radius: 12px;
+  border-radius: 50%;
   transition: all 0.2s ease;
-  color: #6B7280;
+  color: #666666;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
 .close-button:hover {
-  background: #F3F4F6;
-  color: #374151;
+  background: #E5E5E5;
+  color: #333333;
 }
 
 /* Modal Subtitle */
 .modal-subtitle {
-  padding: 0 32px;
-  margin-bottom: 32px;
+  padding: 0 28px;
+  margin-bottom: 24px;
 }
 
 .modal-subtitle p {
-  font-size: 16px;
-  color: #6B7280;
+  font-size: 14px;
+  color: #888888;
   margin: 0;
-  text-align: center;
-  line-height: 1.5;
+  text-align: left;
+  line-height: 1.4;
 }
 
 /* Plans Content */
 .plans-content {
-  padding: 0 32px 32px;
+  padding: 0 28px 28px;
 }
 
 .plans-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* Plan Cards */
 .plan-card {
-  border: 2px solid #E5E7EB;
-  border-radius: 20px;
-  padding: 32px 24px;
+  border: 2px solid #E0E0E0;
+  border-radius: 16px;
+  padding: 24px 20px;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   cursor: pointer;
   background: white;
 }
 
 .plan-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Basic Plan Styling */
 .plan-card.basic-plan {
-  border-color: #E5E7EB;
+  border-color: #E0E0E0;
 }
 
 .plan-card.basic-plan:hover {
-  border-color: #D1D5DB;
+  border-color: #CCCCCC;
 }
 
 /* Premium Plan Styling */
 .plan-card.premium-plan {
-  border-color: #8B5CF6;
+  border-color: #B347D9;
   position: relative;
-  overflow: hidden;
-}
-
-.plan-card.premium-plan::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
-  border-radius: 22px;
-  z-index: -1;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .plan-card.premium-plan:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(179, 71, 217, 0.15);
 }
 
 /* Recommended Badge */
 .recommended-badge {
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+  background: #B347D9;
   color: white;
-  padding: 8px 20px;
-  border-radius: 0 0 16px 16px;
-  font-size: 12px;
-  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(179, 71, 217, 0.25);
+  z-index: 10;
+  width: fit-content;
 }
 
 /* Plan Content */
 .plan-content {
-  text-align: center;
+  text-align: left;
   position: relative;
   z-index: 1;
 }
 
 .plan-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1F2937;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
   margin: 0 0 16px 0;
   line-height: 1.2;
 }
@@ -183,48 +174,48 @@
 .plan-price {
   display: flex;
   align-items: baseline;
-  justify-content: center;
-  margin-bottom: 32px;
-  min-height: 60px;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+  min-height: 50px;
   align-items: center;
 }
 
 .currency {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
-  color: #6B7280;
-  margin-right: 4px;
+  color: #333333;
+  margin-right: 2px;
 }
 
 .price-amount {
-  font-size: 48px;
-  font-weight: 800;
-  color: #1F2937;
+  font-size: 36px;
+  font-weight: 700;
+  color: #333333;
   line-height: 1;
 }
 
 .price-interval {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  color: #6B7280;
-  margin-left: 4px;
+  color: #666666;
+  margin-left: 2px;
 }
 
 /* Features List */
 .features-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 32px 0;
+  margin: 0 0 24px 0;
   text-align: left;
 }
 
 .feature-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
-  font-size: 15px;
-  line-height: 1.5;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .feature-item:last-child {
@@ -232,52 +223,87 @@
 }
 
 .feature-check {
-  color: #10B981;
+  color: #4CAF50;
   flex-shrink: 0;
-  margin-top: 1px;
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
 }
 
 .feature-text {
-  color: #374151;
-  font-weight: 500;
+  color: #555555;
+  font-weight: 400;
 }
 
 /* Plan Buttons */
 .plan-button {
   width: 100%;
-  padding: 16px 24px;
-  border-radius: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
   border: none;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   text-transform: none;
-  letter-spacing: 0.025em;
+  letter-spacing: 0;
 }
 
 .basic-button {
-  background: #F3F4F6;
-  color: #374151;
-  border: 2px solid transparent;
+  background: #F5F5F5;
+  color: #333333;
+  border: 1px solid #E0E0E0;
 }
 
 .basic-button:hover {
-  background: #E5E7EB;
-  color: #1F2937;
+  background: #EEEEEE;
+  color: #222222;
   transform: translateY(-1px);
 }
 
 .premium-button {
-  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+  background: #B347D9;
   color: white;
-  box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(179, 71, 217, 0.2);
 }
 
 .premium-button:hover {
-  background: linear-gradient(135deg, #7C3AED 0%, #0891B2 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px 0 rgba(139, 92, 246, 0.4);
+  background: #9A3BC1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(179, 71, 217, 0.3);
+}
+
+/* Button disabled and loading states */
+.plan-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.plan-button:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+.basic-button:disabled {
+  background: #F0F0F0;
+  color: #999999;
+}
+
+.premium-button:disabled {
+  background: #D4A5E8;
+  color: #FFFFFF;
 }
 
 /* Loading Styles */
@@ -287,13 +313,13 @@
 }
 
 .loading-spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid #E5E7EB;
-  border-top-color: #8B5CF6;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #E5E5E5;
+  border-top-color: #B347D9;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin: 0 auto 24px;
+  margin: 0 auto 16px;
 }
 
 @keyframes spin {

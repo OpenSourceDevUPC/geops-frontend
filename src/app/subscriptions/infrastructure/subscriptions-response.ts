@@ -6,7 +6,7 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
 export interface SubscriptionResource extends BaseResource {
   price: number;
   recommended: boolean;
-  type: 'basic' | 'premium';
+  type: 'BASIC' | 'PREMIUM';
 }
 
 /**

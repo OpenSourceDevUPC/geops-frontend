@@ -38,4 +38,12 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
         map(users => users.length ? users[0] : undefined)
       );
   }
+
+  // Actualiza un usuario existente
+  updateUser(user: User): Observable<UserResource> {
+    return this.http.put<UserResource>(
+      `${this.endpointUrl}/${encodeURIComponent(user.id)}`,
+      user
+    );
+  }
 }

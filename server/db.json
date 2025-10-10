@@ -317,7 +317,21 @@
       "password": "password",
       "phone": "999999999",
       "role": "CONSUMER",
-      "plan": "BASIC"
+      "plan": "PREMIUM"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "price": 0,
+      "recommended": false,
+      "type": "BASIC"
+    },
+    {
+      "id": 2,
+      "price": 19,
+      "recommended": true,
+      "type": "PREMIUM"
     }
   ]
 }
