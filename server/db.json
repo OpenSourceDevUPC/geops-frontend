@@ -303,12 +303,33 @@
   "favorites": [
     {
       "userId": 1,
-      "offerId": 6,
-      "createdAt": "2025-10-10T21:54:43.923Z",
+      "offerId": 7,
+      "createdAt": "2025-10-10T23:02:39.588Z",
       "id": 1
     }
   ],
-  "reviews": [],
+  "reviews": [
+    {
+      "offerId": 7,
+      "userId": 1,
+      "userName": "ABIGAIL",
+      "rating": 3,
+      "text": "YO",
+      "likes": 0,
+      "createdAt": "2025-10-10T22:46:06.048Z",
+      "id": 1
+    },
+    {
+      "offerId": 13,
+      "userId": 1,
+      "userName": "ABIGAIL",
+      "rating": 2,
+      "text": "NO ME GUSTO NADA",
+      "likes": 0,
+      "createdAt": "2025-10-10T22:57:06.136Z",
+      "id": 2
+    }
+  ],
   "subscriptions": [
     {
       "id": 1,
@@ -327,11 +348,42 @@
     {
       "id": 1,
       "userId": "1",
-      "items": [],
-      "totalItems": 0,
-      "totalAmount": 0,
+      "items": [
+        {
+          "id": 1760137344774,
+          "userId": "1",
+          "offerId": "9",
+          "offerTitle": "BUFFET ALMUERZO O CENA BAILABLE en Restaurante Internacional Mandarín",
+          "offerPrice": 54.9,
+          "offerImageUrl": "assets/offers/9.jpg",
+          "quantity": 1,
+          "total": 54.9
+        }
+      ],
+      "totalItems": 1,
+      "totalAmount": 54.9,
       "createdAt": "2025-10-10T21:55:00.820Z",
-      "updatedAt": "2025-10-10T21:55:18.098Z"
+      "updatedAt": "2025-10-10T23:02:24.774Z"
+    },
+    {
+      "id": 2,
+      "userId": "a512",
+      "items": [
+        {
+          "id": 1760137362380,
+          "userId": "a512",
+          "offerId": "7",
+          "offerTitle": "ALMUERZO BUFFET: Criollo, chifas, pastas, cremas, ensaladas, postres y más",
+          "offerPrice": 44.9,
+          "offerImageUrl": "assets/offers/7.jpg",
+          "quantity": 1,
+          "total": 44.9
+        }
+      ],
+      "totalItems": 1,
+      "totalAmount": 44.9,
+      "createdAt": "2025-10-10T23:02:42.380Z",
+      "updatedAt": "2025-10-10T23:02:42.380Z"
     }
   ],
   "payments": [
@@ -348,6 +400,20 @@
       "createdAt": "2025-10-10T21:55:18.039Z",
       "completedAt": "2025-10-10T21:55:18.039Z",
       "id": 1
+    },
+    {
+      "userId": "1",
+      "cartId": "1",
+      "amount": 213.6,
+      "paymentMethod": "CARD",
+      "status": "COMPLETED",
+      "customerEmail": "ABIGOE83@GMAIL.COM",
+      "customerFirstName": "ABIGAIL",
+      "customerLastName": "GOÑE",
+      "paymentCode": "CARD-7141",
+      "createdAt": "2025-10-10T23:02:06.346Z",
+      "completedAt": "2025-10-10T23:02:06.346Z",
+      "id": 2
     }
   ]
 }

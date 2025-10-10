@@ -150,7 +150,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * inicia el desplazamiento automático del carrusel
+   * starts the automatic scrolling of the carousel
    */
   startAuto() {
     clearInterval(this.timer);
@@ -158,14 +158,14 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * cambia la oferta destacada en el carrusel
+   * change the featured offer in the carousel
    */
   next() {
     this.idx = (this.idx + 1) % this.featured.length;
   }
 
   /**
-   * cambia el carrusel a una oferta especifica
+   * change the carousel to a specific offer
    * @param index
    */
   goTo(index: number) {
@@ -174,15 +174,14 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * obtiene la oferta destacada actualmente activa
+   * get the currently active featured offer
    */
   active(): Offer | null {
     return this.featured[this.idx] ?? null;
   }
 
   /**
-   * devuelve la url de la imagen correspondiente de una oferta, en caso no haya imagen
-   * devuelve una ruta
+   * returns the URL of the corresponding image of an offer, if there is no image
    * @param o
    */
   imgFor(o: Offer | null): string {
@@ -190,7 +189,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * se aplican filtros
+   * filters are applied
    */
   applyFilters() {
     const q = this.filters.q.trim().toLowerCase();
@@ -228,7 +227,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * limpia los filtros aplicados
+   * clears the applied filters
    */
   clearFilters() {
     this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
@@ -236,7 +235,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * obtiene los favoritos del usuario actual desde la API
+   * get the current users favorites from the API
    * @private
    */
   private fetchFavs() {
@@ -253,14 +252,14 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * verifica si una oferta esta marcada como favorita
+   * check if an offer is marked as a favorite
    * @param id
    */
   isFav(id: number) { return this.favSet.has(id); }
 
   /**
-   * aqui basicamente se actualiza el estado de favorito de una oferta
-   * si ya esta marcada, la elimina de favoritos, sino la agrega
+   * this basically updates the favorite status of an offer.
+   * If its already marked, it removes it from your favorites; if not, it adds it.
    * @param o
    */
   toggleFav(o: Offer) {
