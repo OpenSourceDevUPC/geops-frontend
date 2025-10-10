@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   /**
-   * Carga el usuario guardado en localStorage
+   * Loads the user saved in localStorage
    */
   private loadUserFromStorage(): void {
     const stored = localStorage.getItem('currentUser');
@@ -25,23 +25,23 @@ export class AuthService {
       try {
         const user = JSON.parse(stored);
         this.currentUserSubject.next(user);
-        console.log('[AuthService] Usuario cargado desde localStorage:', user.id);
+        console.log('[AuthService] User loaded from localStorage:', user.id);
       } catch (e) {
-        console.error('[AuthService] Error al parsear usuario:', e);
+        console.error('[AuthService] Error parsing user:', e);
         localStorage.removeItem('currentUser');
       }
     }
   }
 
   /**
-   * Obtiene el usuario actual
+   * Gets the current user
    */
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
   /**
-   * Obtiene el ID del usuario actual
+   * Gets the current user's ID
    */
   getCurrentUserId(): number | null {
     const user = this.currentUserSubject.value;
@@ -49,14 +49,14 @@ export class AuthService {
   }
 
   /**
-   * Verifica si hay un usuario autenticado
+   * Checks if there is an authenticated user
    */
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
 
   /**
-   * Inicia sesión con email y password
+   * Logs in with email and password
    */
   login(email: string, password: string): Observable<User | null> {
     return this.usersApi.login(email, password).pipe(
@@ -65,37 +65,37 @@ export class AuthService {
 
         const user: User = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
-        console.log('[AuthService] Login exitoso. Usuario ID:', user.id);
+        console.log('[AuthService] Successful login. User ID:', user.id);
         return user;
       })
     );
   }
 
   /**
-   * Registra un nuevo usuario
+   * Registers a new user
    */
   register(userData: Omit<User, 'id'>): Observable<User> {
     return this.usersApi.register(userData as User).pipe(
       map(userResource => {
         const user: User = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
-        console.log('[AuthService] Registro exitoso. Usuario ID:', user.id);
+        console.log('[AuthService] Successful registration. User ID:', user.id);
         return user;
       })
     );
   }
 
   /**
-   * Cierra sesión
+   * Logs out
    */
   logout(): void {
-    console.log('[AuthService] Cerrando sesión');
+    console.log('[AuthService] Logging out');
     this.currentUserSubject.next(null);
     localStorage.removeItem('currentUser');
   }
 
   /**
-   * Establece el usuario actual y lo guarda en localStorage
+   * Sets the current user and saves it in localStorage
    */
   private setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
@@ -103,7 +103,7 @@ export class AuthService {
   }
 
   /**
-   * Convierte UserResource a User
+   * Converts UserResource to User
    */
   private mapResourceToUser(resource: UserResource): User {
     return {
@@ -123,8 +123,7 @@ export class AuthService {
     };
   }
 
-
-  // --- CÓDIGO CORREGIDO ABAJO ---
+  // --- CORRECTED CODE BELOW ---
   updateUser(user: User): Observable<User> {
     return this.usersApi.update(user, user.id).pipe(
       map((userResource: any) => {
@@ -142,7 +141,7 @@ export class AuthService {
   refreshCurrentUser(): Observable<User | null> {
     const userId = this.getCurrentUserId();
     if (!userId) {
-      console.warn('[AuthService] No hay usuario autenticado para refrescar');
+      console.warn('[AuthService] No authenticated user to refresh');
       return new Observable(subscriber => {
         subscriber.next(null);
         subscriber.complete();
@@ -153,7 +152,7 @@ export class AuthService {
         if (!userResource) return null;
         const user = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
-        console.log('[AuthService] Usuario refrescado. ID:', user.id);
+        console.log('[AuthService] User refreshed. ID:', user.id);
         return user;
       })
     );

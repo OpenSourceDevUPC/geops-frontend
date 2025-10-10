@@ -1,3 +1,9 @@
+/*
+  RegisterComponent Styles
+  Styles for the user registration form, including layout, form fields, buttons, error messages, login link, and language switcher.
+*/
+
+/* Main container for the registration form */
 .register-container {
   min-width: 340px;
   max-width: 380px;
@@ -10,6 +16,8 @@
   flex-direction: column;
   align-items: stretch;
 }
+
+/* Title styling for the registration form */
 .register-title {
   font-size: 1.6em;
   font-weight: bold;
@@ -17,17 +25,23 @@
   text-align: center;
   margin-bottom: 18px;
 }
+
+/* Form layout and spacing */
 .register-form {
   display: flex;
   flex-direction: column;
   gap: 17px;
 }
+
+/* Label styling for form fields */
 .register-label {
   font-weight: 600;
   font-size: 1em;
   color: #6b21a8;
   margin-bottom: .2em;
 }
+
+/* Input field styling */
 .register-input {
   width: 100%;
   border: 1.5px solid #e3d0fb;
@@ -43,6 +57,8 @@
   border-color: #a259ff;
   background: #fff;
 }
+
+/* Submit button styling */
 .register-btn {
   margin-top: 6px;
   background: #a259ff;
@@ -61,6 +77,8 @@
   color: #bdbdbd;
   cursor: not-allowed;
 }
+
+/* Error message styling */
 .register-error {
   margin-top: 10px;
   color: #e53e3e;
@@ -69,6 +87,8 @@
   padding: 8px 12px;
   text-align: center;
 }
+
+/* Login message and link styling */
 .register-login-msg {
   text-align: center;
   margin-top: 17px;
@@ -83,6 +103,8 @@
 .register-login-link:hover {
   text-decoration: underline;
 }
+
+/* Language switcher styling */
 .register-language-switch {
   position: absolute;
   top: 2rem;

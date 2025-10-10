@@ -1,3 +1,9 @@
+/*
+  SettingsComponent Styles
+  Styles for the user settings page, including layout, profile, form, and interactive elements.
+*/
+
+/* Layout wrapper for the settings page */
 .settings-wrapper {
   margin: 0 auto;
   padding-top: 56px;
@@ -8,6 +14,7 @@
   align-items: center;
 }
 
+/* Card container for settings content */
 .settings-card {
   max-width: 600px;
   width: 100%;
@@ -18,6 +25,7 @@
   margin-bottom: 24px;
 }
 
+/* Profile section: avatar, name, plan, actions */
 .settings-profile {
   display: flex;
   align-items: center;
@@ -27,6 +35,7 @@
   margin-bottom: 28px;
 }
 
+/* User avatar styling */
 .settings-avatar {
   width: 52px;
   height: 52px;
@@ -40,6 +49,7 @@
   justify-content: center;
 }
 
+/* User name styling */
 .settings-name {
   font-size: 22px;
   font-weight: 600;
@@ -47,18 +57,21 @@
   margin-bottom: 2px;
 }
 
+/* User plan label styling */
 .settings-plan {
   color: #A751D4;
   font-size: 15px;
   font-weight: 500;
 }
 
+/* Profile action buttons */
 .settings-profile-actions {
   margin-left: auto;
   display: flex;
   gap: 10px;
 }
 
+/* General button styles */
 .settings-btn {
   font-size: 15px;
   font-weight: 500;
@@ -83,6 +96,7 @@
   background: #8636be;
 }
 
+/* Input and select styles for form fields */
 .settings-input,
 .settings-row input,
 .settings-row select {
@@ -113,6 +127,7 @@ input[disabled], select[disabled] {
   border-style: dashed;
 }
 
+/* Form layout */
 .settings-form {
   display: flex;
   flex-direction: column;
@@ -120,17 +135,20 @@ input[disabled], select[disabled] {
   margin-top: 10px;
 }
 
+/* Row layout for each form field */
 .settings-row {
   display: flex;
   flex-direction: column;
   gap: 7px;
 }
 
+/* Checkbox styling for favorite categories */
 .settings-row input[type="checkbox"] {
   margin: 0 3px 0 0;
   transform: scale(1.2);
 }
 
+/* Tag styles for selected categories */
 .settings-tags {
   margin: 6px 0;
   gap: 8px;
@@ -155,6 +173,7 @@ input[disabled], select[disabled] {
   font-weight: 500;
 }
 
+/* Checkbox label styling */
 .checkbox-label {
   margin-left: 16px;
   display: inline-flex;
@@ -162,6 +181,7 @@ input[disabled], select[disabled] {
   font-size: 14px;
 }
 
+/* Action buttons at the bottom of the form */
 .settings-actions {
   display: flex;
   gap: 12px;
@@ -169,6 +189,7 @@ input[disabled], select[disabled] {
   justify-content: flex-end;
 }
 
+/* Footer text styling */
 .settings-footer {
   text-align: center;
   color: #777;
@@ -177,7 +198,7 @@ input[disabled], select[disabled] {
   margin-top: 20px;
 }
 
-/* CHIPS FAVORITOS */
+/* Favorite categories chip group */
 .settings-checkbox-group {
   display: flex;
   flex-wrap: wrap;
@@ -225,7 +246,7 @@ input[disabled], select[disabled] {
   color: #7f19cf;
 }
 
-/* GRUPO INPUT + ICONO LÁPIZ */
+/* Input group with edit icon */
 .input-edit-group {
   display: flex;
   align-items: center;
@@ -233,6 +254,7 @@ input[disabled], select[disabled] {
   position: relative;
 }
 
+/* Edit icon button styling */
 .edit-icon-btn {
   background: none;
   border: none;
