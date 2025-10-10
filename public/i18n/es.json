@@ -135,6 +135,57 @@
       }
     }
   },
+  "payment": {
+    "form": {
+      "title": "Checkout",
+      "back": "Volver al carrito",
+      "customerInfo": "Información del Cliente",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "firstName": "Nombres",
+      "firstNamePlaceholder": "Ingresa tus nombres",
+      "lastName": "Apellidos",
+      "lastNamePlaceholder": "Ingresa tus apellidos",
+      "paymentMethod": "Método de Pago",
+      "creditCard": "Tarjeta de Crédito",
+      "yape": "Yape",
+      "cardDetails": "Detalles de la Tarjeta",
+      "cardNumber": "Número de Tarjeta",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "orderSummary": "Resumen del Pedido",
+      "total": "Total",
+      "processPayment": "Procesar Pago",
+      "processing": "Procesando...",
+      "errors": {
+        "emailRequired": "El correo electrónico es requerido",
+        "emailInvalid": "Por favor ingresa un correo válido",
+        "firstNameRequired": "Los nombres son requeridos",
+        "firstNameMinLength": "Los nombres deben tener al menos 2 caracteres",
+        "lastNameRequired": "Los apellidos son requeridos",
+        "lastNameMinLength": "Los apellidos deben tener al menos 2 caracteres",
+        "cardNumberRequired": "El número de tarjeta es requerido",
+        "cardNumberPattern": "Por favor ingresa un número de tarjeta válido de 16 dígitos",
+        "cvvRequired": "El CVV es requerido",
+        "cvvPattern": "Por favor ingresa un CVV válido de 3 dígitos"
+      }
+    },
+    "confirmation": {
+      "title": "Pago Confirmado",
+      "subtitle": "Tu código de compra",
+      "codeLabel": "Código de Compra",
+      "amount": "Monto",
+      "paymentMethod": "Método de Pago",
+      "cardPayment": "Tarjeta de Crédito",
+      "yapePayment": "Yape",
+      "plinPayment": "Plin",
+      "customer": "Cliente",
+      "email": "Correo",
+      "date": "Fecha",
+      "continue": "Seguir Comprando"
+    }
+  },
   "cart": {
     "title": "Tu Carrito",
     "loading": "Cargando carrito...",
@@ -149,7 +200,8 @@
     },
     "actions": {
       "clear": "Vaciar Carrito",
-      "checkout": "Pagar Ahora"
+      "checkout": "Pagar Ahora",
+      "payNow": "Pagar Ahora"
     }
   }
 }
