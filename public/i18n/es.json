@@ -94,5 +94,114 @@
     "empty": "No tienes favoritos aún.",
     "view": "Ver",
     "remove": "Quitar"
+  },
+  "welcomeBanner": {
+    "welcome": "Bienvenido",
+    "hello": "Hola,",
+    "user": "Ariana",
+    "viewMore": "Ver Más",
+    "premium": "Premium"
+  },
+  "subscriptions": {
+    "title": "Planes",
+    "subtitle": "Elige el plan que se ajuste a ti. Puedes cambiar cuando quieras.",
+    "currency": "S/",
+    "interval": "mes",
+    "recommended": "Recomendado",
+    "close": "Cerrar",
+    "plans": {
+      "basic": {
+        "name": "Básico",
+        "description": "Plan gratuito con funcionalidades básicas",
+        "features": [
+          "Acceso a cupones públicos",
+          "Filtro por categoría y radio",
+          "3 cupones activos al mismo tiempo",
+          "Soporte por email"
+        ],
+        "buttonText": "Empezar"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "Plan premium con acceso a funcionalidades exclusivas",
+        "features": [
+          "Todo lo del Básico",
+          "Cupones exclusivos según ubicación",
+          "Mapa en vivo con ofertas/horarios",
+          "Historial y alertas inteligentes",
+          "Soporte prioritario"
+        ],
+        "buttonText": "Probar Premium"
+      }
+    }
+  },
+  "payment": {
+    "form": {
+      "title": "Checkout",
+      "back": "Volver al carrito",
+      "customerInfo": "Información del Cliente",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "firstName": "Nombres",
+      "firstNamePlaceholder": "Ingresa tus nombres",
+      "lastName": "Apellidos",
+      "lastNamePlaceholder": "Ingresa tus apellidos",
+      "paymentMethod": "Método de Pago",
+      "creditCard": "Tarjeta de Crédito",
+      "yape": "Yape",
+      "cardDetails": "Detalles de la Tarjeta",
+      "cardNumber": "Número de Tarjeta",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "orderSummary": "Resumen del Pedido",
+      "total": "Total",
+      "processPayment": "Procesar Pago",
+      "processing": "Procesando...",
+      "errors": {
+        "emailRequired": "El correo electrónico es requerido",
+        "emailInvalid": "Por favor ingresa un correo válido",
+        "firstNameRequired": "Los nombres son requeridos",
+        "firstNameMinLength": "Los nombres deben tener al menos 2 caracteres",
+        "lastNameRequired": "Los apellidos son requeridos",
+        "lastNameMinLength": "Los apellidos deben tener al menos 2 caracteres",
+        "cardNumberRequired": "El número de tarjeta es requerido",
+        "cardNumberPattern": "Por favor ingresa un número de tarjeta válido de 16 dígitos",
+        "cvvRequired": "El CVV es requerido",
+        "cvvPattern": "Por favor ingresa un CVV válido de 3 dígitos"
+      }
+    },
+    "confirmation": {
+      "title": "Pago Confirmado",
+      "subtitle": "Tu código de compra",
+      "codeLabel": "Código de Compra",
+      "amount": "Monto",
+      "paymentMethod": "Método de Pago",
+      "cardPayment": "Tarjeta de Crédito",
+      "yapePayment": "Yape",
+      "plinPayment": "Plin",
+      "customer": "Cliente",
+      "email": "Correo",
+      "date": "Fecha",
+      "continue": "Seguir Comprando"
+    }
+  },
+  "cart": {
+    "title": "Tu Carrito",
+    "loading": "Cargando carrito...",
+    "empty": {
+      "title": "¡Tu carrito está vacío!",
+      "message": "Añade algunos productos para empezar"
+    },
+    "removeItem": "Eliminar producto",
+    "summary": {
+      "items": "Productos",
+      "total": "Total"
+    },
+    "actions": {
+      "clear": "Vaciar Carrito",
+      "checkout": "Pagar Ahora",
+      "payNow": "Pagar Ahora"
+    }
   }
 }
