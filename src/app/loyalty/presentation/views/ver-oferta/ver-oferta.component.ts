@@ -5,10 +5,10 @@ import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
-import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
+import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
+import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { ReviewsApiEndpoint } from '../../../infrastructure/reviews-api-endpoint';
-import { AuthService } from '../../../infrastructure/auth/auth.service';
+import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import { Review } from '../../../domain/model/review.entity';
 import { CartApi } from '../../../../cart/infrastructure/cart-api';
 import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';

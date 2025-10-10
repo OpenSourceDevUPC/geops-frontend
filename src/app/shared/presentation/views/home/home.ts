@@ -2,12 +2,12 @@ import {Component, inject, OnInit} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 import {Offer} from '../../../../loyalty/domain/model/offer.entity';
-import {OffersApiEndpoint} from '../../../../loyalty/infrastructure/offers-api-endpoint';
+import {OffersApiEndpoint} from '../../../../loyalty/infrastructure/offers/offers-api-endpoint';
 import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
-import {FavoritesApiEndpoint} from '../../../../loyalty/infrastructure/favorites-api-endpoint';
+import {FavoritesApiEndpoint} from '../../../../loyalty/infrastructure/favorites/favorites-api-endpoint';
 import {CartApi} from '../../../../cart/infrastructure/cart-api';
 import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
-import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
+import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {RouterLink} from '@angular/router';
 
 @Component({

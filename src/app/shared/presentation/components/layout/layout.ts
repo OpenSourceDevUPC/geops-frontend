@@ -16,7 +16,7 @@ import {LanguageSwitcher} from '../language-switcher/language-switcher';
 import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
 import { CartApi } from '../../../../cart/infrastructure/cart-api';
 import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
-import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
+import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {CommonModule} from '@angular/common';
 
 @Component({

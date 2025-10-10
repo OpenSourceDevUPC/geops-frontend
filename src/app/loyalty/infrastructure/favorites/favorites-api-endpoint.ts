@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
+import { BaseApiEndpoint } from '../../../shared/infrastructure/base-api-endpoint';
 import { FavoriteRow } from './favorites-assembler';
 import { FavoriteRowResource, FavoriteRowsResponse } from './favorites-response';
 import { FavoritesAssembler } from './favorites-assembler';

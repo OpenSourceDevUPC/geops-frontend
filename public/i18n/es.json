@@ -2,16 +2,16 @@
   "header": {
     "logo": "GeoPs",
     "search": {
-      "placeholder": "Busca y encuentra las mejores ofertas"
+      "placeholder": "Buscar y encuentra las mejores ofertas"
     },
     "help": "Ayuda",
     "notifications": "Notificaciones",
     "cart": "Carrito",
     "profile": {
       "menu": {
-        "myProfile": "Mi Perfil",
+        "myProfile": "Mi perfil",
         "settings": "Configuración",
-        "logout": "Cerrar Sesión"
+        "logout": "Cerrar sesión"
       }
     }
   },
@@ -20,7 +20,7 @@
     "offers": "Ofertas",
     "categories": "Categorías",
     "favorites": "Favoritos",
-    "coupons": "Mis Cupones"
+    "coupons": "Mis cupones"
   },
   "offersPage": {
     "title": "Ofertas",
@@ -45,36 +45,36 @@
       "rating": "{{value}}",
       "currency": "S/",
       "buy": "Comprar",
-      "add": "Añadir",
+      "add": "Agregar",
       "locationPin": "Ubicación"
     }
   },
   "offersData": {
     "titles": {
-      "1": "Coney KIDS 2x1 En entrada para niños x 2 horas",
-      "2": "DBS: Kit de cuidado facial con 30% off",
-      "3": "Belleza MINNA: Combo Lemon Sugar Scrub Lip Mask + Dallism Lip Gloss",
-      "4": "Kabuki - Oferta: 2x1 Mixsoon Limpiador Centella Cleansing Foam 150ml",
-      "5": "ALMUERZO BUFFET: SOLO en sede de CHORRILLOS de Lunes a Domingo",
-      "6": "FUN JUNGLE: 60 o 90 minutos de inflables",
-      "7": "ALMUERZO BUFFET: Criollo, chifas, pastas, cremas, ensaladas, postres y más",
-      "8": "CINEMARK: 2 entradas 2D + 2 bebidas grandes + Pop gigante",
-      "9": "BUFFET ALMUERZO O CENA BAILABLE en Restaurante Internacional Mandarín",
-      "10": "Paquete 5 juegos + 1 gratis",
+      "1": "Coney KIDS 2x1: Entrada para niños por 2 horas",
+      "2": "DBS: Kit de cuidado facial con 30% de descuento",
+      "3": "MINNA Beauty: Combo Lemon Sugar Scrub + Dallism Lip Gloss",
+      "4": "Kabuki – Promo: 2x1 Mixsoon Centella Cleansing Foam 150ml",
+      "5": "BUFFET ALMUERZO: SOLO sede Chorrillos, Lun–Dom",
+      "6": "FUN JUNGLE: 60 o 90 minutos en inflables",
+      "7": "BUFFET ALMUERZO: Criollo, chino, pastas, sopas, ensaladas, postres y más",
+      "8": "CINEMARK: 2× entradas 2D + 2 gaseosas grandes + canchita gigante",
+      "9": "BUFFET O CENA CON SHOW en Restaurante Internacional Mandarin",
+      "10": "Pack: 5 juegos + 1 gratis",
       "11": "FUN JUNGLE TRUJILLO: 60 minutos juegos ilimitados",
-      "12": "Shimaya Ramen - 3 tabla de makis o 30 piezas de makis",
-      "13": "Infinity Park Peru – AREQUIPA ingresos ilimitados",
-      "14": "BUFFET Criollo Arequipeño con estación de Ceviche en vivo – CASA ANDINA PREMIUM",
+      "12": "Shimaya Ramen – 3 tablas de makis o 30 piezas de makis",
+      "13": "Infinity Park Perú – AREQUIPA ingresos ilimitados",
+      "14": "BUFFET CRIOLLO AREQUIPEÑO con estación de ceviche en vivo – CASA ANDINA PREMIUM",
       "15": "ARUMA: Gift Card S/ 40 por S/ 29.90",
-      "16": "CINEPLANET: 2 entradas 2D + 2 bebidas grandes + Pop gigante",
-      "17": "AQUATICA POOL PARK ICA: Full Day diversión",
-      "18": "CINEMARK: 2 Entradas + 2 gaseosas + cancha mediana o grande",
-      "19": "CINEPLANET PROVINCIAS: 2 entradas 2D + Popcorn gigante + 2 bebidas grandes",
-      "20": "Pulsera Full Day – Juegos Mecánicos",
-      "21": "All you can eat Nikkei",
-      "22": "Barra libre de makis + bebida",
-      "23": "Playland Kids – 2h ilimitados",
-      "24": "Mundo Kids – Pase ilimitado día"
+      "16": "CINEPLANET: 2× entradas 2D + 2 gaseosas grandes + canchita gigante",
+      "17": "AQUATICA POOL PARK ICA: Diversión todo el día",
+      "18": "CINEMARK: 2 entradas + 2 gaseosas + canchita mediana o grande",
+      "19": "CINEPLANET PROVINCIAS: 2× entradas 2D + canchita gigante + 2 gaseosas grandes",
+      "20": "Pulsera full day – Juegos",
+      "21": "Nikkei todo lo que puedas comer",
+      "22": "Makis ilimitados + bebida",
+      "23": "Playland Kids – 2h ilimitado",
+      "24": "Mundo Kids – Pase ilimitado todo el día"
     },
     "categories": {
       "Entretenimiento": "Entretenimiento",
@@ -83,7 +83,7 @@
       "Gift Card": "Gift Card"
     },
     "locations": {
-      "Varias Sedes": "Varias Sedes",
+      "Varias Sedes": "Varias sedes",
       "Tiendas seleccionadas": "Tiendas seleccionadas",
       "Online y tiendas": "Online y tiendas"
     }
@@ -91,51 +91,51 @@
   "favoritesPage": {
     "title": "Favoritos",
     "loading": "Cargando…",
-    "empty": "No tienes favoritos aún.",
+    "empty": "Aún no tienes favoritos.",
     "view": "Ver",
-    "remove": "Quitar"
+    "remove": "Eliminar"
   },
   "home": {
     "welcome": "Bienvenido",
     "hi": "Hola",
-    "free-plan": "Plan Gratis",
-    "premium-plan": "Plan Premium",
+    "free-plan": "Plan gratuito",
+    "premium-plan": "Plan premium",
     "see-more": "Ver más",
     "map": {
       "places": "Lugares",
       "use-my-location": "Usar mi ubicación",
+      "example": "ej.: cine, buffet",
       "search": "Buscar",
-      "example": "ej: cine, buffet",
       "radius": "Radio",
-      "settings": "Configurar",
+      "settings": "Configuración",
       "all": "Todos",
       "cinemas": "Cines",
       "buffets": "Buffets",
       "parks": "Parques",
-      "for-children": "Infanitles",
+      "for-children": "Para niños",
       "makis": "Makis",
       "beauty": "Belleza",
       "near-you": "Cerca de ti"
     },
     "cinemas": "Cines",
-    "lunch-buffets": "Almuerzos Buffets",
-    "inflatable-parks": "Parques inflables",
+    "lunch-buffets": "Buffets de almuerzo",
+    "inflatable-parks": "Parques de inflables",
     "mechanical-games": "Juegos mecánicos",
     "maki-open-bar": "Barra libre de makis",
     "beauty": "Belleza"
   },
   "welcomeBanner": {
-    "welcome": "Bienvenido(a)",
+    "welcome": "Bienvenido",
     "hello": "Hola,",
     "user": "Ariana",
     "viewMore": "Ver más",
     "premium": "Premium",
-    "currentBasic": "Plan Básico",
-    "currentPremium": "Plan Premium"
+    "currentBasic": "Plan básico",
+    "currentPremium": "Plan premium"
   },
   "subscriptions": {
     "title": "Planes",
-    "subtitle": "Elige el plan que se ajuste a ti. Puedes cambiar cuando quieras.",
+    "subtitle": "Elige el plan que más te convenga. Puedes cambiar cuando quieras.",
     "currency": "S/",
     "interval": "mes",
     "recommended": "Recomendado",
@@ -146,113 +146,184 @@
         "description": "Plan gratuito con funcionalidades básicas",
         "features": [
           "Acceso a cupones públicos",
-          "Filtro por categoría y radio",
+          "Filtrar por categoría y radio",
           "3 cupones activos al mismo tiempo",
-          "Soporte por email"
+          "Soporte por correo"
         ],
-        "buttonText": "Empezar"
+        "buttonText": "Comenzar"
       },
       "premium": {
         "name": "Premium",
         "description": "Plan premium con acceso a funcionalidades exclusivas",
         "features": [
           "Todo lo del Básico",
-          "Cupones exclusivos según ubicación",
+          "Cupones exclusivos por ubicación",
           "Mapa en vivo con ofertas/horarios",
-          "Historial y alertas inteligentes",
+          "Historial inteligente y alertas",
           "Soporte prioritario"
         ],
         "buttonText": "Probar Premium"
       }
     }
   },
+  "cart": {
+    "title": "Carrito de compras",
+    "loading": "Cargando...",
+    "empty": {
+      "title": "Tu carrito está vacío",
+      "message": "¡Agrega algunas ofertas para comenzar!"
+    },
+    "removeItem": "Eliminar artículo",
+    "summary": {
+      "items": "Artículos",
+      "total": "Total"
+    },
+    "actions": {
+      "clear": "Vaciar carrito",
+      "checkout": "Finalizar compra",
+      "payNow": "Pagar ahora"
+    }
+  },
   "payment": {
     "form": {
-      "title": "Checkout",
+      "title": "Finalizar compra",
       "back": "Volver al carrito",
-      "customerInfo": "Información del Cliente",
-      "email": "Correo Electrónico",
+      "customerInfo": "Información del cliente",
+      "email": "Correo electrónico",
       "emailPlaceholder": "Ingresa tu correo electrónico",
-      "firstName": "Nombres",
-      "firstNamePlaceholder": "Ingresa tus nombres",
-      "lastName": "Apellidos",
-      "lastNamePlaceholder": "Ingresa tus apellidos",
-      "paymentMethod": "Método de Pago",
-      "creditCard": "Tarjeta de Crédito",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Ingresa tu nombre",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Ingresa tu apellido",
+      "paymentMethod": "Método de pago",
+      "selectPaymentMethod": "Selecciona método de pago",
+      "chooseMethod": "Elige cómo deseas pagar",
+      "creditCard": "Tarjeta de crédito/débito",
       "yape": "Yape",
-      "cardDetails": "Detalles de la Tarjeta",
-      "cardNumber": "Número de Tarjeta",
+      "plin": "Plin",
+      "cardDetails": "Detalles de la tarjeta",
+      "cardNumber": "Número de tarjeta",
       "cardNumberPlaceholder": "1234 5678 9012 3456",
       "cvv": "CVV",
       "cvvPlaceholder": "123",
-      "orderSummary": "Resumen del Pedido",
+      "orderSummary": "Resumen del pedido",
       "total": "Total",
-      "processPayment": "Procesar Pago",
+      "processPayment": "Procesar pago",
       "processing": "Procesando...",
       "errors": {
-        "emailRequired": "El correo electrónico es requerido",
+        "emailRequired": "El correo electrónico es obligatorio",
         "emailInvalid": "Por favor ingresa un correo válido",
-        "firstNameRequired": "Los nombres son requeridos",
-        "firstNameMinLength": "Los nombres deben tener al menos 2 caracteres",
-        "lastNameRequired": "Los apellidos son requeridos",
-        "lastNameMinLength": "Los apellidos deben tener al menos 2 caracteres",
-        "cardNumberRequired": "El número de tarjeta es requerido",
+        "firstNameRequired": "El nombre es obligatorio",
+        "firstNameMinLength": "El nombre debe tener al menos 2 caracteres",
+        "lastNameRequired": "El apellido es obligatorio",
+        "lastNameMinLength": "El apellido debe tener al menos 2 caracteres",
+        "cardNumberRequired": "El número de tarjeta es obligatorio",
         "cardNumberPattern": "Por favor ingresa un número de tarjeta válido de 16 dígitos",
-        "cvvRequired": "El CVV es requerido",
+        "cvvRequired": "El CVV es obligatorio",
         "cvvPattern": "Por favor ingresa un CVV válido de 3 dígitos"
       }
     },
     "confirmation": {
-      "title": "Pago Confirmado",
-      "subtitle": "Tu código de compra",
-      "codeLabel": "Código de Compra",
+      "title": "Pago confirmado",
+      "subtitle": "Tu código de pago",
+      "codeLabel": "Código de pago",
       "amount": "Monto",
-      "paymentMethod": "Método de Pago",
-      "cardPayment": "Tarjeta de Crédito",
+      "paymentMethod": "Método de pago",
+      "cardPayment": "Tarjeta de crédito/débito",
       "yapePayment": "Yape",
       "plinPayment": "Plin",
       "customer": "Cliente",
-      "email": "Correo",
+      "email": "Correo electrónico",
       "date": "Fecha",
-      "continue": "Seguir Comprando"
+      "continue": "Seguir comprando"
     }
   },
-  "cart": {
-    "title": "Tu Carrito",
-    "loading": "Cargando carrito...",
-    "empty": {
-      "title": "¡Tu carrito está vacío!",
-      "message": "Añade algunos productos para empezar"
-    },
-    "removeItem": "Eliminar producto",
-    "summary": {
-      "items": "Productos",
-      "total": "Total"
-    },
-    "actions": {
-      "clear": "Vaciar Carrito",
-      "checkout": "Pagar Ahora",
-      "payNow": "Pagar Ahora"
-    }
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico:",
+    "password": "Contraseña:",
+    "button": "Entrar",
+    "noAccount": "¿No tienes una cuenta?",
+    "register": "Regístrate aquí"
+  },
+  "profile": {
+    "planPremium": "Plan premium",
+    "planBasic": "Plan básico",
+    "edit": "Editar",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "favorites": "Ofertas guardadas",
+    "location": "Ubicación",
+    "locationAlways": "Siempre",
+    "locationAsk": "Preguntar",
+    "places": "Lugares habituales",
+    "rights": "© 2025 Todos los derechos reservados"
+  },
+  "register": {
+    "title": "Registro de usuario",
+    "name": "Nombre:",
+    "email": "Correo electrónico:",
+    "password": "Contraseña:",
+    "phone": "Teléfono:",
+    "role": "Tipo de usuario:",
+    "owner": "Negocio (Propietario)",
+    "consumer": "Consumidor",
+    "plan": "Plan:",
+    "basic": "Básico",
+    "premium": "Premium",
+    "button": "Registrarse",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "loginHere": "Inicia sesión aquí"
+  },
+  "business": {
+    "title": "Datos adicionales del negocio",
+    "businessName": "Nombre del negocio:",
+    "businessType": "Tipo de negocio:",
+    "taxId": "RUC:",
+    "button": "Guardar"
+  },
+  "settings": {
+    "plan.label": "Plan",
+    "plan.BASIC": "Básico",
+    "plan.PREMIUM": "Premium",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "locationPermission.label": "Permiso de ubicación",
+    "locationPermission.ASK": "Preguntar",
+    "locationPermission.ALWAYS": "Siempre",
+    "home": "Casa",
+    "work": "Trabajo",
+    "favorites": "Categoría favorita",
+    "security": "Seguridad",
+    "passwordCurrent": "Contraseña actual",
+    "passwordNew": "Nueva contraseña",
+    "passwordConfirm": "Confirmar nueva contraseña",
+    "clear": "Limpiar",
+    "changePassword": "Cambiar contraseña",
+    "updating": "Actualizando...",
+    "rights": "© 2025 Todos los derechos reservados"
   },
   "helpCenter": {
-    "title": "Centro de Ayuda",
+    "title": "Centro de ayuda",
     "registerQuestion": "¿Cómo me registro como cliente?",
     "registerSteps": "Ve a <b>Registrarse</b>, ingresa tu correo, contraseña, confirma y verifica tu correo.<br>Pasos:",
-    "registerStep1": "Click en <b>Registrarse</b> (header o landing).",
-    "registerStep2": "Completa correo y contraseña segura (8+ caracteres, 1 mayúscula, 1 número, 1 símbolo).",
-    "registerStep3": "Revisa tu email y verifica la cuenta.",
+    "registerStep1": "Haz clic en <b>Registrarse</b> (en el encabezado o landing).",
+    "registerStep2": "Ingresa tu correo y una contraseña segura (8+ caracteres, 1 mayúscula, 1 número, 1 símbolo).",
+    "registerStep3": "Revisa tu correo y verifica tu cuenta.",
     "registerStep4": "Vuelve e inicia sesión.",
-    "couponQuestion": "¿Cómo canjeo un cupón en el local?",
+    "couponQuestion": "¿Cómo canjeo un cupón en la tienda?",
     "couponSteps": "Muestra tu cupón desde <b>Mis cupones</b> y el negocio lo valida con un código/QR.<br>Pasos:",
     "couponStep1": "Compra la oferta y ve a <b>Perfil → Mis cupones</b>.",
-    "couponStep2": "Abre el cupón y pulsa <b>Mostrar para canjear</b>.",
+    "couponStep2": "Abre el cupón y toca <b>Mostrar para canjear</b>.",
     "couponStep3": "El negocio escanea/ingresa el <b>código único</b> y listo.",
-    "couponNote": "Nota: Necesitas conexión para validar. Si tu cupón marca \"canjeado\" por error, contáctanos con el <b>ID del cupón</b>.",
+    "couponNote": "Nota: Necesitas conexión a internet para validar. Si tu cupón aparece como 'canjeado' por error, contáctanos con el <b>ID del cupón</b>.",
     "locationQuestion": "¿Por qué pedimos tu ubicación y cómo activarla?",
     "locationSteps": "Para mostrarte <b>ofertas cercanas</b> y ordenarlas por <b>distancia</b>.<br>Pasos:",
-    "locationStep1": "En la barra \"Cerca de ti\", pulsa <b>Permitir ubicación</b>.",
-    "locationStep2": "Si negaste permisos:",
+    "locationStep1": "En la barra \"Cerca de ti\", toca <b>Permitir ubicación</b>.",
+    "locationStep2": "Si denegaste permisos:",
     "locationStep2a": "<b>Perfil:</b> Permisos de ubicación → <b>Permitir</b> → Recargar",
     "locationStep3": "Ajusta el radio (ej. 1–10 km) con el selector para ver más/menos resultados."
   },
@@ -262,17 +333,17 @@
   "offerDetail": {
     "back": "Volver",
     "buy": "Comprar",
-    "addToCart": "Añadir al carrito",
+    "addToCart": "Agregar al carrito",
     "bullets": {
-      "valid": "Válido online y en tiendas físicas {{partner}}.",
+      "valid": "Válido online y en tiendas físicas de {{partner}}.",
       "business": "Negocio: {{partner}}.",
-      "redeem": "Se canjea como medio de pago hasta por el monto indicado."
+      "redeem": "Se puede canjear como medio de pago hasta el monto indicado."
     },
     "reviews": {
       "title": "Comentarios",
       "count": "{{count}} reseñas",
       "yourRating": "Tu calificación",
-      "ariaRate": "Elegir calificación de 1 a 5",
+      "ariaRate": "Elige una calificación del 1 al 5",
       "placeholder": "Cuéntanos tu experiencia con esta oferta",
       "publish": "Publicar reseña"
     }

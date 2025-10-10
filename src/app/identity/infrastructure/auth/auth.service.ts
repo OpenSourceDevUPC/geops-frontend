@@ -2,17 +2,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../../domain/model/user.entity';
-import { UsersApiEndpoint } from '../users-api-endpoint';
-import { UserResource } from '../users-response';
+import { UsersApiEndpoint } from '../users/users-api-endpoint';
+import { UserResource } from '../users/users-response';
 
 @Injectable({
   providedIn: 'root'
 })
-
-/**
- * authentication service
- */
-
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -22,8 +17,7 @@ export class AuthService {
   }
 
   /**
-   * loads the saved user to keep the session started when reloading the page
-   * @private
+   * Loads the user saved in localStorage
    */
   private loadUserFromStorage(): void {
     const stored = localStorage.getItem('currentUser');
@@ -31,21 +25,23 @@ export class AuthService {
       try {
         const user = JSON.parse(stored);
         this.currentUserSubject.next(user);
+        console.log('[AuthService] User loaded from localStorage:', user.id);
       } catch (e) {
+        console.error('[AuthService] Error parsing user:', e);
         localStorage.removeItem('currentUser');
       }
     }
   }
 
   /**
-   * gets the current user
+   * Gets the current user
    */
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
   /**
-   * gets the id of the current user
+   * Gets the current user's ID
    */
   getCurrentUserId(): number | null {
     const user = this.currentUserSubject.value;
@@ -53,16 +49,14 @@ export class AuthService {
   }
 
   /**
-   * checks if there are already authenticated users
+   * Checks if there is an authenticated user
    */
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
 
   /**
-   * login
-   * @param email
-   * @param password
+   * Logs in with email and password
    */
   login(email: string, password: string): Observable<User | null> {
     return this.usersApi.login(email, password).pipe(
@@ -71,38 +65,37 @@ export class AuthService {
 
         const user: User = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
+        console.log('[AuthService] Successful login. User ID:', user.id);
         return user;
       })
     );
   }
 
   /**
-   * register a new user
-   * @param userData
+   * Registers a new user
    */
   register(userData: Omit<User, 'id'>): Observable<User> {
     return this.usersApi.register(userData as User).pipe(
       map(userResource => {
         const user: User = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
+        console.log('[AuthService] Successful registration. User ID:', user.id);
         return user;
       })
     );
   }
 
   /**
-   * log out
+   * Logs out
    */
   logout(): void {
-    console.log('[AuthService] Cerrando sesión');
+    console.log('[AuthService] Logging out');
     this.currentUserSubject.next(null);
     localStorage.removeItem('currentUser');
   }
 
   /**
-   * save the current user
-   * @param user - authenticated user
-   * @private
+   * Sets the current user and saves it in localStorage
    */
   private setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
@@ -110,9 +103,7 @@ export class AuthService {
   }
 
   /**
-   * converts userResource (API) to resource
-   * @param resource - resource received from the API
-   * @private
+   * Converts UserResource to User
    */
   private mapResourceToUser(resource: UserResource): User {
     return {
@@ -123,8 +114,24 @@ export class AuthService {
       role: resource.role,
       plan: resource.plan,
       phone: resource.phone,
-      business: resource.business
+      business: resource.business,
+      favorites: resource.favorites ?? [],
+      home: resource.home ?? '',
+      work: resource.work ?? '',
+      university: resource.university ?? '',
+      locationPermission: resource.locationPermission ?? 'ASK'
     };
+  }
+
+  // --- CORRECTED CODE BELOW ---
+  updateUser(user: User): Observable<User> {
+    return this.usersApi.update(user, user.id).pipe(
+      map((userResource: any) => {
+        const updated = this.mapResourceToUser(userResource);
+        this.setCurrentUser(updated);
+        return updated;
+      })
+    );
   }
 
   /**
@@ -134,7 +141,7 @@ export class AuthService {
   refreshCurrentUser(): Observable<User | null> {
     const userId = this.getCurrentUserId();
     if (!userId) {
-      console.warn('[AuthService] No hay usuario autenticado para refrescar');
+      console.warn('[AuthService] No authenticated user to refresh');
       return new Observable(subscriber => {
         subscriber.next(null);
         subscriber.complete();
@@ -145,7 +152,7 @@ export class AuthService {
         if (!userResource) return null;
         const user = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
-        console.log('[AuthService] Usuario refrescado. ID:', user.id);
+        console.log('[AuthService] User refreshed. ID:', user.id);
         return user;
       })
     );

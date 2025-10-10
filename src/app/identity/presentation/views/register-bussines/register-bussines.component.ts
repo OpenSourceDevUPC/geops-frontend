@@ -1,39 +1,57 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; // <-- nuevo import
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
+/**
+ * RegisterBussinesComponent handles business profile registration for OWNER users.
+ * Submits business data and updates the user profile.
+ */
 @Component({
   selector: 'app-register-bussines',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule, LanguageSwitcher,
+    MatButtonToggleModule],
   templateUrl: './register-bussines.component.html',
   styleUrls: ['./register-bussines.component.css']
 })
 export class RegisterBussinesComponent {
+  /** Model for business registration form fields */
   business: any = {
     businessName: '',
     businessType: '',
     taxId: ''
   };
+  /** Indicates if submission is in progress */
   submitting = false;
+  /** Stores error messages for display */
   errorMessage = '';
 
+  /**
+   * Initializes RegisterBussinesComponent with Router and HttpClient.
+   * @param router Angular Router for navigation
+   * @param http Angular HttpClient for HTTP requests
+   */
   constructor(private router: Router, private http: HttpClient) {}
 
+  /**
+   * Handles business registration form submission.
+   * Finds the user by email, updates business data, and navigates on success.
+   */
   onSubmit() {
     this.submitting = true;
-    // 1. Obtén el usuario OWNER más reciente (puedes guardar el email en localStorage desde el registro)
     const email = localStorage.getItem('register-owner-email');
     this.http.get<any[]>(`http://localhost:3000/users?email=${email}`).subscribe({
       next: (users) => {
         if (!users.length) {
-          this.errorMessage = 'Usuario no encontrado';
+          this.errorMessage = 'User not found';
           this.submitting = false;
           return;
         }
         const user = users[0];
-        // 2. Actualiza user con PATCH o PUT
         const id = user.id;
         this.http.patch(`http://localhost:3000/users/${id}`, {
           business: this.business
@@ -43,13 +61,13 @@ export class RegisterBussinesComponent {
             this.router.navigate(['/home']);
           },
           error: err => {
-            this.errorMessage = 'Error al guardar negocio';
+            this.errorMessage = 'Error saving business';
             this.submitting = false;
           }
         });
       },
       error: err => {
-        this.errorMessage = 'Error buscando usuario';
+        this.errorMessage = 'Error searching for user';
         this.submitting = false;
       }
     });

@@ -1,4 +1,4 @@
-import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+import { BaseAssembler } from '../../../shared/infrastructure/base-assembler';
 import { FavoriteRowResource, FavoriteRowsResponse } from './favorites-response';
 
 export type FavoriteRow = FavoriteRowResource;
