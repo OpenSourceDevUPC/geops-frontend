@@ -19,7 +19,7 @@
           <span class="amount">{{ o.price | number:'1.2-2' }}</span>
         </div>
 
-        <button class="buy">{{ 'offersPage.hero.buy' | translate }}</button>
+        <button class="buy" (click)="buyNow(o)">{{ 'offersPage.hero.buy' | translate }}</button>
       </div>
 
       <div class="right">
@@ -107,13 +107,16 @@
 
             <div class="loc">
               <span class="pin" aria-hidden="true">📍</span>
-              {{ o.location }}
+              <span *ngIf="isDistrict(o.location); else translatedLocation">{{ o.location }}</span>
+              <ng-template #translatedLocation>
+                <span>{{ 'offersData.locations.' + o.location | translate }}</span>
+              </ng-template>
             </div>
           </div>
 
           <div class="card-actions">
-            <button class="buy">{{ 'offersPage.card.buy' | translate }}</button>
-            <button class="add">{{ 'offersPage.card.add' | translate }}</button>
+            <button class="buy" (click)="buyNow(o)">{{ 'offersPage.card.buy' | translate }}</button>
+            <button class="add" (click)="addToCart(o)">{{ 'offersPage.card.add' | translate }}</button>
           </div>
         </div>
       </article>
