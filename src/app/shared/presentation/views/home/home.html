@@ -1,13 +1,6 @@
 <div class="layout">
-  <div class="account-card">
-    <div class="account-card-text">
-      <p>{{'home.welcome' | translate}}</p>
-      <span>{{'home.hi' | translate}}, {{username}} 👋;</span>
-    </div>
-    <div class="account-card-buttons">
-      <button class="btn-premium">{{isPremium(plan) ? ('home.premium-plan' | translate): ('home.free-plan' | translate)}}</button>
-      <button class="btn-more">{{'home.see-more' | translate}}</button>
-    </div>
+  <div>
+    <app-welcome-banner></app-welcome-banner>
   </div>
   <div class="map-container">
 
