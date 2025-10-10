@@ -14,6 +14,7 @@ import { PaymentApi, CreatePaymentRequest } from '../../../../payment/infrastruc
 import { PaymentMethod } from '../../../../payment/domain/model/payment-method.enum';
 import { Payment } from '../../../../payment/domain/model/payment.entity';
 import { CartUiService } from '../../services/cart-ui.service';
+import { AuthService } from '../../../../loyalty/infrastructure/auth/auth.service';
 
 export type CartView = 'cart' | 'checkout' | 'confirmation';
 export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
@@ -29,10 +30,10 @@ export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
-    TranslateModule
+    TranslateModule,
   ],
   templateUrl: './cart-sidebar.component.html',
-  styleUrl: './cart-sidebar.component.css'
+  styleUrl: './cart-sidebar.component.css',
 })
 export class CartSidebarComponent implements OnInit {
   private readonly cartApi = inject(CartApi);
@@ -59,22 +60,33 @@ export class CartSidebarComponent implements OnInit {
     firstName: ['', [Validators.required, Validators.minLength(2)]],
     lastName: ['', [Validators.required, Validators.minLength(2)]],
     cardNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
-    cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]]
+    cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
   });
 
-  // Constants
-  readonly userId = 'a512'; // In real app would come from auth service
+  userId = 'a512'; // In real app would come from auth service
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userId = String(user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
     // Subscribe to cart changes
-    this.cartApi.cart$.subscribe(cart => {
+    this.cartApi.cart$.subscribe((cart) => {
       const previousCart = this.cart();
       this.cart.set(cart);
 
       // Reset payment flow when cart contents change significantly
       const cartContentsChanged = this.hasCartContentsChanged(previousCart, cart);
 
-      if (cartContentsChanged && this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+      if (
+        cartContentsChanged &&
+        this.paymentStep !== 'methods' &&
+        this.paymentStep !== 'confirmation'
+      ) {
         this.resetPaymentFlow();
       }
     });
@@ -122,7 +134,7 @@ export class CartSidebarComponent implements OnInit {
       error: (error) => {
         console.error('Error loading cart:', error);
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -141,7 +153,7 @@ export class CartSidebarComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error updating quantity:', error);
-      }
+      },
     });
   }
 
@@ -159,7 +171,7 @@ export class CartSidebarComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error removing item:', error);
-      }
+      },
     });
   }
 
@@ -170,11 +182,9 @@ export class CartSidebarComponent implements OnInit {
     this.cartApi.clearCart(this.userId).subscribe({
       error: (error) => {
         console.error('Error clearing cart:', error);
-      }
+      },
     });
   }
-
-
 
   /**
    * Get total items count
@@ -250,7 +260,7 @@ export class CartSidebarComponent implements OnInit {
       customerEmail: formValue.email,
       customerFirstName: formValue.firstName,
       customerLastName: formValue.lastName,
-      cvv: formValue.cvv
+      cvv: formValue.cvv,
     };
 
     this.paymentApi.createPayment(request).subscribe({
@@ -261,7 +271,7 @@ export class CartSidebarComponent implements OnInit {
       error: (error) => {
         this.isProcessingPayment.set(false);
         console.error('Payment failed:', error);
-      }
+      },
     });
   }
 
@@ -278,7 +288,7 @@ export class CartSidebarComponent implements OnInit {
       paymentMethod: method,
       customerEmail: `user-${this.userId}@temp.com`,
       customerFirstName: 'Usuario',
-      customerLastName: 'Temporal'
+      customerLastName: 'Temporal',
     };
 
     this.paymentApi.createPayment(request).subscribe({
@@ -289,7 +299,7 @@ export class CartSidebarComponent implements OnInit {
       error: (error) => {
         this.isProcessingPayment.set(false);
         console.error('Payment failed:', error);
-      }
+      },
     });
   }
 
@@ -363,7 +373,7 @@ export class CartSidebarComponent implements OnInit {
    * Mark all form fields as touched
    */
   private markAllFieldsAsTouched() {
-    Object.keys(this.cardForm.controls).forEach(key => {
+    Object.keys(this.cardForm.controls).forEach((key) => {
       this.cardForm.get(key)?.markAsTouched();
     });
   }
@@ -380,7 +390,7 @@ export class CartSidebarComponent implements OnInit {
    */
   get formErrors(): any {
     const errors: any = {};
-    Object.keys(this.cardForm.controls).forEach(key => {
+    Object.keys(this.cardForm.controls).forEach((key) => {
       const control = this.cardForm.get(key);
       if (control && control.errors) {
         errors[key] = control.errors;

@@ -10,8 +10,12 @@
       </h1>
     </div>
     <div class="action-buttons">
-      <button class="btn btn-premium" (click)="onPremiumClick()">
-        {{ 'welcomeBanner.premium' | translate }}
+      <button
+        class="btn"
+        [class.btn-premium]="isPremiumUser()"
+        [class.btn-basic]="!isPremiumUser()"
+        (click)="onCurrentPlanClick()">
+        {{ isPremiumUser() ? ('welcomeBanner.currentPremium' | translate) : ('welcomeBanner.currentBasic' | translate) }}
       </button>
       <button class="btn btn-view-more" (click)="showPlans()">
         {{ 'welcomeBanner.viewMore' | translate }}

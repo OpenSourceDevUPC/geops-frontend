@@ -4,6 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../domain/model/subscription.entity';
 import { SubscriptionsApi } from '../../../infrastructure/subscriptions-api';
 import { UsersApi } from '../../../../shared/infrastructure/users-api';
+import { AuthService } from '../../../../loyalty/infrastructure/auth/auth.service';
 
 /**
  * Extended subscription interface with translation data
@@ -55,18 +56,24 @@ export class SubscriptionPlansModalComponent implements OnInit {
    */
   updating = signal(false);
 
-  /**
-   * Current user ID (this should be injected from a user service in a real app)
-   */
-  private currentUserId = 'a512'; // Using the ID from db.json for demo
+
+  userId = '';
 
   constructor(
     private SubscriptionsApi: SubscriptionsApi,
     private translateService: TranslateService,
-    private usersApi: UsersApi
+    private usersApi: UsersApi,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userId = String(user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
+
     // Wait for translations to load before loading plans
     this.translateService.onLangChange.subscribe(() => {
       if (this.subscriptionPlans().length > 0) {
@@ -135,22 +142,39 @@ export class SubscriptionPlansModalComponent implements OnInit {
   onPlanSelect(plan: SubscriptionWithTranslations): void {
     this.updating.set(true);
 
-    // TODO:Convert string ID to number for the API call
-    const userId = this.currentUserId || "1";
-
-    this.usersApi.updateUserPlan(userId, plan.type).subscribe({
+    this.usersApi.updateUserPlan(this.userId, plan.type).subscribe({
       next: (updatedUser) => {
         console.log('User plan updated successfully:', updatedUser);
-        this.updating.set(false);
+        
+        // Refresh the current user data to reflect the plan change
+        this.authService.refreshCurrentUser().subscribe({
+          next: (refreshedUser) => {
+            console.log('User data refreshed successfully:', refreshedUser);
+            this.updating.set(false);
 
-        // Show success message or notification here
-        alert(`¡Plan ${plan.name} seleccionado exitosamente!`);
+            // Show success message or notification here
+            alert(`¡Plan ${plan.name} seleccionado exitosamente!`);
 
-        // Emit the plan selection event
-        this.planSelected.emit(plan);
+            // Emit the plan selection event
+            this.planSelected.emit(plan);
 
-        // Close the modal
-        this.onClose();
+            // Close the modal
+            this.onClose();
+          },
+          error: (refreshError) => {
+            console.error('Error refreshing user data:', refreshError);
+            this.updating.set(false);
+            
+            // Still show success for the plan update, but warn about refresh
+            alert(`¡Plan ${plan.name} seleccionado exitosamente! (Actualice la página si no ve los cambios)`);
+            
+            // Emit the plan selection event
+            this.planSelected.emit(plan);
+
+            // Close the modal
+            this.onClose();
+          }
+        });
       },
       error: (error) => {
         console.error('Error updating user plan:', error);
@@ -158,7 +182,7 @@ export class SubscriptionPlansModalComponent implements OnInit {
 
         // Show error message
         alert('Error al actualizar el plan. Por favor, inténtelo de nuevo.');
-      }
+      },
     });
   }
 

@@ -7,6 +7,15 @@
       "password": "789456123",
       "phone": "987654321",
       "role": "CONSUMER",
+      "plan": "PREMIUM"
+    },
+    {
+      "id": "lIkCj-M",
+      "name": "Ale",
+      "email": "ale@gmail.com",
+      "password": "123456",
+      "phone": "999222929",
+      "role": "CONSUMER",
       "plan": "BASIC"
     }
   ],
@@ -330,7 +339,7 @@
       "totalItems": 0,
       "totalAmount": 0,
       "createdAt": "2025-10-10T12:00:00.000Z",
-      "updatedAt": "2025-10-10T09:40:38.866Z"
+      "updatedAt": "2025-10-10T09:50:16.127Z"
     }
   ],
   "payments": [
@@ -361,6 +370,20 @@
       "createdAt": "2025-10-10T09:40:38.801Z",
       "completedAt": "2025-10-10T09:40:38.801Z",
       "id": 2
+    },
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 39.9,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "YAPE-7070",
+      "createdAt": "2025-10-10T09:50:16.068Z",
+      "completedAt": "2025-10-10T09:50:16.068Z",
+      "id": 3
     }
   ]
 }
