@@ -95,12 +95,43 @@
     "view": "Ver",
     "remove": "Quitar"
   },
-  "welcomeBanner": {
+  "home": {
     "welcome": "Bienvenido",
+    "hi": "Hola",
+    "free-plan": "Plan Gratis",
+    "premium-plan": "Plan Premium",
+    "see-more": "Ver más",
+    "map": {
+      "places": "Lugares",
+      "use-my-location": "Usar mi ubicación",
+      "search": "Buscar",
+      "example": "ej: cine, buffet",
+      "radius": "Radio",
+      "settings": "Configurar",
+      "all": "Todos",
+      "cinemas": "Cines",
+      "buffets": "Buffets",
+      "parks": "Parques",
+      "for-children": "Infanitles",
+      "makis": "Makis",
+      "beauty": "Belleza",
+      "near-you": "Cerca de ti"
+    },
+    "cinemas": "Cines",
+    "lunch-buffets": "Almuerzos Buffets",
+    "inflatable-parks": "Parques inflables",
+    "mechanical-games": "Juegos mecánicos",
+    "maki-open-bar": "Barra libre de makis",
+    "beauty": "Belleza"
+  },
+  "welcomeBanner": {
+    "welcome": "Bienvenido(a)",
     "hello": "Hola,",
     "user": "Ariana",
-    "viewMore": "Ver Más",
-    "premium": "Premium"
+    "viewMore": "Ver más",
+    "premium": "Premium",
+    "currentBasic": "Plan Básico",
+    "currentPremium": "Plan Premium"
   },
   "subscriptions": {
     "title": "Planes",
