@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap, BehaviorSubject } from 'rxjs';
+import { Observable, map, tap, BehaviorSubject, of, switchMap, take } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Payment } from '../domain/model/payment.entity';
 import { PaymentApiEndpoint } from './payment-api-endpoint';
 import { PaymentMethod, PaymentStatus } from '../domain/model/payment-method.enum';
+import { CouponsApi } from '../../coupons/infrastructure/coupons-api';
+import { CartApi } from '../../cart/infrastructure/cart-api';
+import { Cart } from '../../cart/domain/model/cart.entity';
+import { CartItem } from '../../cart/domain/model/cart-item.entity';
 
 export interface CreatePaymentRequest {
   userId: string;
   cartId: string;
   amount: number;
+  productType?: string;
+  productId?: string;
+  // items indicates what was purchased; we'll generate a coupon per item.offerId
+  items?: Array<{ offerId: string; price: number; quantity?: number }>;
   paymentMethod: PaymentMethod;
   customerEmail: string;
   customerFirstName: string;
@@ -25,7 +33,7 @@ export class PaymentApi extends BaseApi {
   private paymentsSubject = new BehaviorSubject<Payment[]>([]);
   public payments$ = this.paymentsSubject.asObservable();
 
-  constructor(http: HttpClient) {
+  constructor(http: HttpClient, private couponsApi: CouponsApi, private cartApi: CartApi) {
     super();
     this.paymentEndpoint = new PaymentApiEndpoint(http);
   }
@@ -35,29 +43,78 @@ export class PaymentApi extends BaseApi {
    * @param request - Payment creation request
    */
   createPayment(request: CreatePaymentRequest): Observable<Payment> {
-    // Generate a payment code for tracking
-    const paymentCode = this.generatePaymentCode(request.paymentMethod);
+    // Determine items either from request or from the user's cart
+    const items$ = request.items && request.items.length > 0
+        ? of(request.items)
+        : this.cartApi.getCartByUserId(request.userId).pipe(
+            map((cart: Cart) => cart.items.map((i: CartItem) => ({ offerId: i.offerId, price: i.offerPrice, quantity: i.quantity })))
+          );
 
-    const newPayment: Omit<Payment, 'id'> = {
-      userId: request.userId,
-      cartId: request.cartId,
-      amount: request.amount,
-      paymentMethod: request.paymentMethod,
-      status: PaymentStatus.COMPLETED, // For demo purposes, always successful
-      customerEmail: request.customerEmail,
-      customerFirstName: request.customerFirstName,
-      customerLastName: request.customerLastName,
-      paymentCode: paymentCode,
-      createdAt: new Date().toISOString(),
-      completedAt: new Date().toISOString()
-    };
+    return items$.pipe(
+      take(1),
+      switchMap((items) => {
+        // Generate a payment code for tracking
+        const paymentCode = this.generatePaymentCode(request.paymentMethod);
 
-    return this.paymentEndpoint.create(newPayment as Payment).pipe(
-      tap(payment => {
-        const currentPayments = this.paymentsSubject.value;
-        this.paymentsSubject.next([...currentPayments, payment]);
+        // Generate per-item payment codes (one coupon per purchased unit)
+        const paymentCodes: { offerId: string; code: string }[] = [];
+        if (items && items.length > 0) {
+          for (const it of items) {
+            const qty = (it.quantity && it.quantity > 0) ? it.quantity : 1;
+            for (let i = 0; i < qty; i++) {
+              const code = this.generateRandomCouponCode();
+              paymentCodes.push({ offerId: it.offerId, code });
+            }
+          }
+        }
+
+        const newPayment: Omit<Payment, 'id'> = {
+          userId: request.userId,
+          cartId: request.cartId,
+          productType: request.productType,
+          productId: request.productId,
+          amount: request.amount,
+          paymentCodes: paymentCodes,
+          paymentMethod: request.paymentMethod,
+          status: PaymentStatus.COMPLETED, // For demo purposes, always successful
+          customerEmail: request.customerEmail,
+          customerFirstName: request.customerFirstName,
+          customerLastName: request.customerLastName,
+          paymentCode: paymentCode,
+          createdAt: new Date().toISOString(),
+          completedAt: new Date().toISOString()
+        };
+
+        return this.paymentEndpoint.create(newPayment as Payment).pipe(
+          tap(payment => {
+            const currentPayments = this.paymentsSubject.value;
+            this.paymentsSubject.next([...currentPayments, payment]);
+
+            // After payment persisted, create coupons for each generated payment code
+            if (paymentCodes.length > 0) {
+              for (const pc of paymentCodes) {
+                const couponPayload = {
+                  userId: request.userId,
+                  paymentId: payment.id,
+                  paymentCode: pc.code,
+                  productType: request.productType,
+                  offerId: pc.offerId,
+                  code: pc.code,
+                  createdAt: new Date().toISOString()
+                } as any;
+
+                // fire-and-forget; subscribe to ensure request is executed
+                this.couponsApi.createCoupon(couponPayload).subscribe();
+              }
+            }
+          })
+        );
       })
     );
+  }
+
+  private generateRandomCouponCode(): string {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
   /**

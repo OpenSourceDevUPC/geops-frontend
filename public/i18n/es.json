@@ -100,7 +100,9 @@
     "hello": "Hola,",
     "user": "Ariana",
     "viewMore": "Ver Más",
-    "premium": "Premium"
+    "premium": "Premium",
+    "currentBasic": "Plan Básico",
+    "currentPremium": "Plan Premium"
   },
   "subscriptions": {
     "title": "Planes",
@@ -203,5 +205,29 @@
       "checkout": "Pagar Ahora",
       "payNow": "Pagar Ahora"
     }
+  },
+  "proveedor": {
+    "stats": {
+      "activeCampaigns": "Campañas activas",
+      "impressions": "Impresiones totales",
+      "ctr": "CTR promedio"
+    },
+    "metrics": {
+      "impressions": "Imp",
+      "clicks": "Clicks"
+    },
+    "actions": {
+      "pause": "Pausar",
+      "edit": "Editar",
+      "remove": "Eliminar",
+      "copy": "Copiar"
+    },
+    "latestCampaigns": "Últimas campañas"
+  },
+  "coupons": {
+    "title": "Mis Cupones"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
   }
 }
