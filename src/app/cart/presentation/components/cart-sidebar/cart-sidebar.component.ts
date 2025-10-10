@@ -13,6 +13,7 @@ import { CartItem } from '../../../domain/model/cart-item.entity';
 import { PaymentApi, CreatePaymentRequest } from '../../../../payment/infrastructure/payment-api';
 import { PaymentMethod } from '../../../../payment/domain/model/payment-method.enum';
 import { Payment } from '../../../../payment/domain/model/payment.entity';
+import { CartUiService } from '../../services/cart-ui.service';
 
 export type CartView = 'cart' | 'checkout' | 'confirmation';
 export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
@@ -38,6 +39,7 @@ export class CartSidebarComponent implements OnInit {
   private readonly paymentApi = inject(PaymentApi);
   private readonly fb = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
+  private readonly cartUiService = inject(CartUiService);
 
   // Signals
   isOpen = signal(false);
@@ -66,7 +68,20 @@ export class CartSidebarComponent implements OnInit {
   ngOnInit() {
     // Subscribe to cart changes
     this.cartApi.cart$.subscribe(cart => {
+      const previousCart = this.cart();
       this.cart.set(cart);
+
+      // Reset payment flow when cart contents change significantly
+      const cartContentsChanged = this.hasCartContentsChanged(previousCart, cart);
+
+      if (cartContentsChanged && this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+        this.resetPaymentFlow();
+      }
+    });
+
+    // Subscribe to payment reset signals
+    this.cartUiService.resetPayment$.subscribe(() => {
+      this.resetPaymentState();
     });
 
     // Load cart for user (hardcoded for now)
@@ -118,6 +133,12 @@ export class CartSidebarComponent implements OnInit {
    */
   updateQuantity(item: CartItem, quantity: number) {
     this.cartApi.updateItemQuantity(this.userId, item.offerId, quantity).subscribe({
+      next: () => {
+        // Reset payment flow when quantities are updated
+        if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+          this.resetPaymentFlow();
+        }
+      },
       error: (error) => {
         console.error('Error updating quantity:', error);
       }
@@ -130,6 +151,12 @@ export class CartSidebarComponent implements OnInit {
    */
   removeItem(item: CartItem) {
     this.cartApi.removeItemFromCart(this.userId, item.offerId).subscribe({
+      next: () => {
+        // Reset payment flow when items are removed
+        if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+          this.resetPaymentFlow();
+        }
+      },
       error: (error) => {
         console.error('Error removing item:', error);
       }
@@ -285,6 +312,51 @@ export class CartSidebarComponent implements OnInit {
     this.selectedPaymentMethod.set(null);
     this.cardForm.reset();
     // Don't close the sidebar - let user continue shopping
+  }
+
+  /**
+   * Reset payment flow to initial state
+   */
+  private resetPaymentFlow() {
+    this.paymentStep = 'methods';
+    this.selectedPaymentMethod.set(null);
+    this.isProcessingPayment.set(false);
+    this.completedPayment.set(null);
+    this.cardForm.reset();
+  }
+
+  /**
+   * Public method to reset payment flow (can be called externally)
+   */
+  public resetPaymentState() {
+    if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+      this.resetPaymentFlow();
+    }
+  }
+
+  /**
+   * Check if cart contents have changed significantly
+   */
+  private hasCartContentsChanged(previousCart: Cart | null, currentCart: Cart | null): boolean {
+    // If we're going from no cart to having a cart, or vice versa
+    if (!previousCart && currentCart) return true;
+    if (previousCart && !currentCart) return true;
+    if (!previousCart && !currentCart) return false;
+
+    // If total items count changed
+    if (previousCart!.totalItems !== currentCart!.totalItems) return true;
+
+    // If total amount changed (could indicate price or quantity changes)
+    if (previousCart!.totalAmount !== currentCart!.totalAmount) return true;
+
+    // If the number of unique items changed
+    const prevItemCount = previousCart!.items?.length || 0;
+    const currItemCount = currentCart!.items?.length || 0;
+    if (prevItemCount !== currItemCount) return true;
+
+    // For performance, if we reach here, assume no significant change
+    // (we could do deeper comparison but the above catches most cases)
+    return false;
   }
 
   /**
