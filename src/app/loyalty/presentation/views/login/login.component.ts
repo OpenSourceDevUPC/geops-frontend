@@ -1,14 +1,17 @@
-// src/app/loyalty/presentation/views/login/login.component.ts
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../infrastructure/auth/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterModule, CommonModule],
+  imports: [FormsModule, RouterModule, CommonModule, TranslateModule, LanguageSwitcher,
+    MatButtonToggleModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -35,10 +38,7 @@ export class LoginComponent {
       next: (user) => {
         if (user) {
           console.log('[Login] Usuario autenticado con ID:', user.id);
-          // Redirigir según el rol
-
-            this.router.navigate(['/home']);
-
+          this.router.navigate(['/home']);
         } else {
           this.errorMessage = 'Email o contraseña incorrectos';
         }

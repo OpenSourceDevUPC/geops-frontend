@@ -1,37 +1,40 @@
 <div class="register-container">
-  <h2 class="register-title">Registro de usuario</h2>
+  <div class="register-language-switch">
+    <app-language-switcher />
+  </div>
+  <h2 class="register-title">{{ 'register.title' | translate }}</h2>
   <form class="register-form" (ngSubmit)="onSubmit()" #registerForm="ngForm">
-    <label class="register-label">Nombre:</label>
+    <label class="register-label">{{ 'register.name' | translate }}</label>
     <input class="register-input" type="text" name="name" [(ngModel)]="model.name" required />
 
-    <label class="register-label">Email:</label>
+    <label class="register-label">{{ 'register.email' | translate }}</label>
     <input class="register-input" type="email" name="email" [(ngModel)]="model.email" required />
 
-    <label class="register-label">Contraseña:</label>
+    <label class="register-label">{{ 'register.password' | translate }}</label>
     <input class="register-input" type="password" name="password" [(ngModel)]="model.password" required />
 
-    <label class="register-label">Teléfono:</label>
+    <label class="register-label">{{ 'register.phone' | translate }}</label>
     <input class="register-input" type="text" name="phone" [(ngModel)]="model.phone" required/>
 
-    <label class="register-label">Tipo de usuario:</label>
+    <label class="register-label">{{ 'register.role' | translate }}</label>
     <select class="register-input" name="role" [(ngModel)]="model.role" required>
-      <option value="OWNER">Comercio (Owner)</option>
-      <option value="CONSUMER">Consumidor</option>
+      <option value="OWNER">{{ 'register.owner' | translate }}</option>
+      <option value="CONSUMER">{{ 'register.consumer' | translate }}</option>
     </select>
 
-    <label class="register-label">Plan:</label>
+    <label class="register-label">{{ 'register.plan' | translate }}</label>
     <select class="register-input" name="plan" [(ngModel)]="model.plan" required>
-      <option value="BASIC">Básico</option>
-      <option value="PREMIUM">Premium</option>
+      <option value="BASIC">{{ 'register.basic' | translate }}</option>
+      <option value="PREMIUM">{{ 'register.premium' | translate }}</option>
     </select>
 
     <button class="register-btn" type="submit" [disabled]="registering || !registerForm.form.valid">
-      Registrarse
+      {{ 'register.button' | translate }}
     </button>
   </form>
   <p class="register-login-msg">
-    ¿Ya tienes cuenta?
-    <a class="register-login-link" [routerLink]="['/login']">Inicia sesión aquí</a>
+    {{ 'register.hasAccount' | translate }}
+    <a class="register-login-link" [routerLink]="['/login']">{{ 'register.loginHere' | translate }}</a>
   </p>
   <div *ngIf="errorMessage" class="register-error">{{ errorMessage }}</div>
 </div>

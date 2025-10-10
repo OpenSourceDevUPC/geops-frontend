@@ -5,11 +5,12 @@ import { AuthService } from '../../../infrastructure/auth/auth.service';
 import { User } from '../../../domain/model/user.entity';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import {FormsModule} from '@angular/forms';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profiles',
   standalone: true,
-  imports: [FormsModule, RouterModule, CommonModule],
+  imports: [FormsModule, RouterModule, CommonModule, TranslateModule],
   templateUrl: './profiles.component.html',
   styleUrls: ['./profiles.component.css']
 })

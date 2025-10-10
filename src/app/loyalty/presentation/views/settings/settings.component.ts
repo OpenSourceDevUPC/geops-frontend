@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../infrastructure/auth/auth.service';
 import { User } from '../../../domain/model/user.entity';
 import { MatIconModule } from '@angular/material/icon';
+import {TranslateModule} from '@ngx-translate/core';
 
 type Plan = 'PREMIUM' | 'BASIC';
 type LocationPermission = 'ASK' | 'ALWAYS';
@@ -11,7 +12,7 @@ type LocationPermission = 'ASK' | 'ALWAYS';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })

@@ -5,40 +5,44 @@
       <div class="profile-header-details">
         <div class="profile-name">{{ user.name }}</div>
         <div class="profile-plan">
-          {{ user.plan === 'PREMIUM' ? 'Plan Premium' : 'Plan Básico' }}
+          {{ user.plan === 'PREMIUM' ? ('profile.planPremium' | translate) : ('profile.planBasic' | translate) }}
         </div>
       </div>
       <button class="profile-edit-btn" type="button" routerLink="/settings">
-        <span class="material-icons">edit</span> Editar
+        <span class="material-icons">edit</span> {{ 'profile.edit' | translate }}
       </button>
     </div>
     <div class="profile-list">
       <div class="profile-item">
-        <span class="profile-label">Correo</span>
+        <span class="profile-label">{{ 'profile.email' | translate }}</span>
         <span class="profile-value">{{ user.email }}</span>
       </div>
       <div class="profile-item">
-        <span class="profile-label">Teléfono</span>
+        <span class="profile-label">{{ 'profile.phone' | translate }}</span>
         <span class="profile-value">{{ user.phone }}</span>
       </div>
       <div class="profile-item">
-        <span class="profile-label">Ofertas guardadas</span>
+        <span class="profile-label">{{ 'profile.favorites' | translate }}</span>
         <span class="profile-value"><b>{{ favoriteCount }}</b></span>
       </div>
       <div class="profile-item">
-        <span class="profile-label">Ubicación</span>
+        <span class="profile-label">{{ 'profile.location' | translate }}</span>
         <span class="profile-value">
           <span class="dot yellow"></span>
-          {{ user.locationPermission === 'ALWAYS' ? 'Siempre' : 'Preguntar' }}
+          {{
+            user.locationPermission === 'ALWAYS'
+              ? ('profile.locationAlways' | translate)
+              : ('profile.locationAsk' | translate)
+          }}
         </span>
       </div>
       <div class="profile-item last">
-        <span class="profile-label">Lugares habituales</span>
+        <span class="profile-label">{{ 'profile.places' | translate }}</span>
         <span class="profile-value places" [innerHTML]="places"></span>
       </div>
     </div>
   </div>
   <footer class="profile-footer">
-    © 2025 Todos los derechos reservados
+    {{ 'profile.rights' | translate }}
   </footer>
 </div>

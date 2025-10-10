@@ -1,20 +1,23 @@
 <div class="register-container">
-  <h2 class="register-title">Datos adicionales del negocio</h2>
+  <div class="register-language-switch">
+    <app-language-switcher />
+  </div>
+  <h2 class="register-title">{{ 'business.title' | translate }}</h2>
   <form class="register-form" (ngSubmit)="onSubmit()" #businessForm="ngForm">
-    <label class="register-label">Nombre del negocio:</label>
+    <label class="register-label">{{ 'business.businessName' | translate }}</label>
     <input class="register-input" type="text" name="businessName" [(ngModel)]="business.businessName" required />
 
-    <label class="register-label">Tipo de negocio:</label>
+    <label class="register-label">{{ 'business.businessType' | translate }}</label>
     <input class="register-input" type="text" name="businessType" [(ngModel)]="business.businessType" required />
 
-    <label class="register-label">Tax ID:</label>
+    <label class="register-label">{{ 'business.taxId' | translate }}</label>
     <input class="register-input" type="text" name="taxId" [(ngModel)]="business.taxId" required />
 
     <!-- Más campos aquí si los necesitas -->
 
     <button class="register-btn" type="submit" [disabled]="submitting || !businessForm.form.valid">
-      Guardar
+      {{ 'business.button' | translate }}
     </button>
   </form>
-  <div *ngIf="errorMessage" class="register-error">{{errorMessage}}</div>
+  <div *ngIf="errorMessage" class="register-error">{{ errorMessage }}</div>
 </div>

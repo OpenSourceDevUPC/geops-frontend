@@ -71,6 +71,16 @@
   padding: 8px 12px;
   text-align: center;
 }
+.register-language-switch {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10;
+  background: #210b4b;
+  border: 1px solid rgba(27, 1, 73, 0.8);
+  padding: 0.5em;
+  border-radius: 6px;
+}
 @media (max-width: 500px) {
   .register-container {
     padding: 18px 8px 12px 8px;
