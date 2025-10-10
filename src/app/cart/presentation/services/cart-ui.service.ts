@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class CartUiService {
   private openCartSubject = new Subject<void>();
-  
+
   openCart$ = this.openCartSubject.asObservable();
 
   /**

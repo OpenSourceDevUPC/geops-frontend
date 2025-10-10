@@ -1,21 +1,33 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CartApi } from '../../../infrastructure/cart-api';
 import { Cart } from '../../../domain/model/cart.entity';
 import { CartItem } from '../../../domain/model/cart-item.entity';
+import { PaymentApi, CreatePaymentRequest } from '../../../../payment/infrastructure/payment-api';
+import { PaymentMethod } from '../../../../payment/domain/model/payment-method.enum';
+import { Payment } from '../../../../payment/domain/model/payment.entity';
+
+export type CartView = 'cart' | 'checkout' | 'confirmation';
+export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
 
 @Component({
   selector: 'app-cart-sidebar',
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
     MatDividerModule,
+    MatFormFieldModule,
+    MatInputModule,
     TranslateModule
   ],
   templateUrl: './cart-sidebar.component.html',
@@ -23,12 +35,33 @@ import { CartItem } from '../../../domain/model/cart-item.entity';
 })
 export class CartSidebarComponent implements OnInit {
   private readonly cartApi = inject(CartApi);
+  private readonly paymentApi = inject(PaymentApi);
+  private readonly fb = inject(FormBuilder);
   private readonly translateService = inject(TranslateService);
 
   // Signals
   isOpen = signal(false);
   cart = signal<Cart | null>(null);
   isLoading = signal(false);
+  currentView = signal<CartView>('cart');
+  completedPayment = signal<Payment | null>(null);
+
+  // Payment state
+  paymentStep: PaymentStep = 'methods';
+  selectedPaymentMethod = signal<PaymentMethod | null>(null);
+  isProcessingPayment = signal(false);
+
+  // Form
+  cardForm: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    cardNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
+    cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]]
+  });
+
+  // Constants
+  readonly userId = 'f255'; // In real app would come from auth service
 
   ngOnInit() {
     // Subscribe to cart changes
@@ -52,6 +85,7 @@ export class CartSidebarComponent implements OnInit {
    */
   open() {
     this.isOpen.set(true);
+    this.currentView.set('cart'); // Always start with cart view
   }
 
   /**
@@ -66,8 +100,7 @@ export class CartSidebarComponent implements OnInit {
    */
   private loadCart() {
     this.isLoading.set(true);
-    // Using hardcoded user ID for now - in real app would come from auth service
-    this.cartApi.getCartByUserId('f255').subscribe({
+    this.cartApi.getCartByUserId(this.userId).subscribe({
       next: () => {
         this.isLoading.set(false);
       },
@@ -84,7 +117,7 @@ export class CartSidebarComponent implements OnInit {
    * @param quantity - New quantity
    */
   updateQuantity(item: CartItem, quantity: number) {
-    this.cartApi.updateItemQuantity('f255', item.offerId, quantity).subscribe({
+    this.cartApi.updateItemQuantity(this.userId, item.offerId, quantity).subscribe({
       error: (error) => {
         console.error('Error updating quantity:', error);
       }
@@ -96,7 +129,7 @@ export class CartSidebarComponent implements OnInit {
    * @param item - Cart item to remove
    */
   removeItem(item: CartItem) {
-    this.cartApi.removeItemFromCart('f255', item.offerId).subscribe({
+    this.cartApi.removeItemFromCart(this.userId, item.offerId).subscribe({
       error: (error) => {
         console.error('Error removing item:', error);
       }
@@ -107,21 +140,14 @@ export class CartSidebarComponent implements OnInit {
    * Clear entire cart
    */
   clearCart() {
-    this.cartApi.clearCart('f255').subscribe({
+    this.cartApi.clearCart(this.userId).subscribe({
       error: (error) => {
         console.error('Error clearing cart:', error);
       }
     });
   }
 
-  /**
-   * Proceed to checkout (placeholder)
-   */
-  proceedToCheckout() {
-    // TODO: Implement checkout logic
-    console.log('Proceeding to checkout...');
-    this.close();
-  }
+
 
   /**
    * Get total items count
@@ -142,5 +168,152 @@ export class CartSidebarComponent implements OnInit {
    */
   get isEmpty(): boolean {
     return this.totalItems === 0;
+  }
+
+  /**
+   * Select payment method (but don't process yet)
+   */
+  selectPaymentMethod(method: string) {
+    const paymentMethod = method as PaymentMethod;
+    this.selectedPaymentMethod.set(paymentMethod);
+    // Just select the method, don't process payment yet
+  }
+
+  /**
+   * Process payment based on selected method
+   */
+  processPayment() {
+    const method = this.selectedPaymentMethod();
+    if (!method) return;
+
+    if (method === PaymentMethod.CARD) {
+      this.paymentStep = 'card-form';
+    } else {
+      // For Yape and Plin, process payment immediately
+      this.processInstantPayment(method);
+    }
+  }
+
+  /**
+   * Go back to payment methods
+   */
+  goBackToMethods() {
+    this.paymentStep = 'methods';
+    this.selectedPaymentMethod.set(null);
+    this.cardForm.reset();
+  }
+
+  /**
+   * Process card payment
+   */
+  processCardPayment() {
+    if (this.cardForm.invalid) {
+      this.markAllFieldsAsTouched();
+      return;
+    }
+
+    this.isProcessingPayment.set(true);
+
+    const formValue = this.cardForm.value;
+    const request: CreatePaymentRequest = {
+      userId: this.userId,
+      cartId: this.cart()?.id?.toString() || '',
+      amount: this.totalAmount,
+      paymentMethod: PaymentMethod.CARD,
+      customerEmail: formValue.email,
+      customerFirstName: formValue.firstName,
+      customerLastName: formValue.lastName,
+      cvv: formValue.cvv
+    };
+
+    this.paymentApi.createPayment(request).subscribe({
+      next: (payment) => {
+        this.isProcessingPayment.set(false);
+        this.onPaymentCompleted(payment);
+      },
+      error: (error) => {
+        this.isProcessingPayment.set(false);
+        console.error('Payment failed:', error);
+      }
+    });
+  }
+
+  /**
+   * Process instant payment (Yape/Plin)
+   */
+  private processInstantPayment(method: PaymentMethod) {
+    this.isProcessingPayment.set(true);
+
+    const request: CreatePaymentRequest = {
+      userId: this.userId,
+      cartId: this.cart()?.id?.toString() || '',
+      amount: this.totalAmount,
+      paymentMethod: method,
+      customerEmail: `user-${this.userId}@temp.com`,
+      customerFirstName: 'Usuario',
+      customerLastName: 'Temporal'
+    };
+
+    this.paymentApi.createPayment(request).subscribe({
+      next: (payment) => {
+        this.isProcessingPayment.set(false);
+        this.onPaymentCompleted(payment);
+      },
+      error: (error) => {
+        this.isProcessingPayment.set(false);
+        console.error('Payment failed:', error);
+      }
+    });
+  }
+
+  /**
+   * Override payment completed to update step
+   */
+  onPaymentCompleted(payment: Payment) {
+    this.completedPayment.set(payment);
+    this.paymentStep = 'confirmation';
+    // Clear the cart after successful payment
+    this.clearCart();
+  }
+
+  /**
+   * Override close confirmation to reset payment state (but keep sidebar open)
+   */
+  closeConfirmation() {
+    this.completedPayment.set(null);
+    this.paymentStep = 'methods';
+    this.selectedPaymentMethod.set(null);
+    this.cardForm.reset();
+    // Don't close the sidebar - let user continue shopping
+  }
+
+  /**
+   * Mark all form fields as touched
+   */
+  private markAllFieldsAsTouched() {
+    Object.keys(this.cardForm.controls).forEach(key => {
+      this.cardForm.get(key)?.markAsTouched();
+    });
+  }
+
+  /**
+   * Check if form is valid for debugging
+   */
+  get isFormValid(): boolean {
+    return this.cardForm.valid;
+  }
+
+  /**
+   * Get form errors for debugging
+   */
+  get formErrors(): any {
+    const errors: any = {};
+    Object.keys(this.cardForm.controls).forEach(key => {
+      const control = this.cardForm.get(key);
+      if (control && control.errors) {
+        errors[key] = control.errors;
+      }
+    });
+    return errors;
   }
 }
