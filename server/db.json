@@ -1,22 +1,13 @@
 {
   "users": [
     {
-      "id": "a512",
-      "name": "abi",
-      "email": "abi@ejemplo.com",
-      "password": "789456123",
-      "phone": "987654321",
+      "name": "ABIGAIL",
+      "email": "ABIGOE83@GMAIL.COM",
+      "password": "123456789",
+      "phone": "99999999",
       "role": "CONSUMER",
-      "plan": "PREMIUM"
-    },
-    {
-      "id": "lIkCj-M",
-      "name": "Ale",
-      "email": "ale@gmail.com",
-      "password": "123456",
-      "phone": "999222929",
-      "role": "CONSUMER",
-      "plan": "BASIC"
+      "plan": "PREMIUM",
+      "id": 1
     }
   ],
   "offers": [
@@ -190,7 +181,7 @@
     },
     {
       "id": 15,
-      "title": "ARUMA: Gift Card S/ 40 por S/ 29.90",
+      "title": "ARUMA: Gift Card S/40 por S/29.90",
       "partner": "Aruma",
       "price": 29.9,
       "codePrefix": "ARM",
@@ -311,10 +302,32 @@
   ],
   "favorites": [
     {
-      "id": "e565",
-      "userId": "a512",
-      "offerId": 2,
-      "createdAt": "2025-10-10T08:36:28.911Z"
+      "userId": 1,
+      "offerId": 7,
+      "createdAt": "2025-10-10T23:02:39.588Z",
+      "id": 1
+    }
+  ],
+  "reviews": [
+    {
+      "offerId": 7,
+      "userId": 1,
+      "userName": "ABIGAIL",
+      "rating": 3,
+      "text": "YO",
+      "likes": 0,
+      "createdAt": "2025-10-10T22:46:06.048Z",
+      "id": 1
+    },
+    {
+      "offerId": 13,
+      "userId": 1,
+      "userName": "ABIGAIL",
+      "rating": 2,
+      "text": "NO ME GUSTO NADA",
+      "likes": 0,
+      "createdAt": "2025-10-10T22:57:06.136Z",
+      "id": 2
     }
   ],
   "subscriptions": [
@@ -334,56 +347,73 @@
   "cart": [
     {
       "id": 1,
+      "userId": "1",
+      "items": [
+        {
+          "id": 1760137344774,
+          "userId": "1",
+          "offerId": "9",
+          "offerTitle": "BUFFET ALMUERZO O CENA BAILABLE en Restaurante Internacional Mandarín",
+          "offerPrice": 54.9,
+          "offerImageUrl": "assets/offers/9.jpg",
+          "quantity": 1,
+          "total": 54.9
+        }
+      ],
+      "totalItems": 1,
+      "totalAmount": 54.9,
+      "createdAt": "2025-10-10T21:55:00.820Z",
+      "updatedAt": "2025-10-10T23:02:24.774Z"
+    },
+    {
+      "id": 2,
       "userId": "a512",
-      "items": [],
-      "totalItems": 0,
-      "totalAmount": 0,
-      "createdAt": "2025-10-10T12:00:00.000Z",
-      "updatedAt": "2025-10-10T09:50:16.127Z"
+      "items": [
+        {
+          "id": 1760137362380,
+          "userId": "a512",
+          "offerId": "7",
+          "offerTitle": "ALMUERZO BUFFET: Criollo, chifas, pastas, cremas, ensaladas, postres y más",
+          "offerPrice": 44.9,
+          "offerImageUrl": "assets/offers/7.jpg",
+          "quantity": 1,
+          "total": 44.9
+        }
+      ],
+      "totalItems": 1,
+      "totalAmount": 44.9,
+      "createdAt": "2025-10-10T23:02:42.380Z",
+      "updatedAt": "2025-10-10T23:02:42.380Z"
     }
   ],
   "payments": [
     {
-      "userId": "a512",
-      "cartId": "1",
-      "amount": 159.8,
-      "paymentMethod": "YAPE",
+      "userId": "1",
+      "cartId": "0",
+      "amount": 30,
+      "paymentMethod": "PLIN",
       "status": "COMPLETED",
-      "customerEmail": "gilberthuarcaya@gmail.com",
-      "customerFirstName": "Gilbert Alonso",
-      "customerLastName": "Huarcaya Matias",
-      "paymentCode": "YAPE-2430",
-      "createdAt": "2025-10-10T08:31:44.842Z",
-      "completedAt": "2025-10-10T08:31:44.842Z",
+      "customerEmail": "user-1@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "PLIN-0679",
+      "createdAt": "2025-10-10T21:55:18.039Z",
+      "completedAt": "2025-10-10T21:55:18.039Z",
       "id": 1
     },
     {
-      "userId": "a512",
+      "userId": "1",
       "cartId": "1",
-      "amount": 119.9,
-      "paymentMethod": "PLIN",
+      "amount": 213.6,
+      "paymentMethod": "CARD",
       "status": "COMPLETED",
-      "customerEmail": "user-a512@temp.com",
-      "customerFirstName": "Usuario",
-      "customerLastName": "Temporal",
-      "paymentCode": "PLIN-4057",
-      "createdAt": "2025-10-10T09:40:38.801Z",
-      "completedAt": "2025-10-10T09:40:38.801Z",
+      "customerEmail": "ABIGOE83@GMAIL.COM",
+      "customerFirstName": "ABIGAIL",
+      "customerLastName": "GOÑE",
+      "paymentCode": "CARD-7141",
+      "createdAt": "2025-10-10T23:02:06.346Z",
+      "completedAt": "2025-10-10T23:02:06.346Z",
       "id": 2
-    },
-    {
-      "userId": "a512",
-      "cartId": "1",
-      "amount": 39.9,
-      "paymentMethod": "YAPE",
-      "status": "COMPLETED",
-      "customerEmail": "user-a512@temp.com",
-      "customerFirstName": "Usuario",
-      "customerLastName": "Temporal",
-      "paymentCode": "YAPE-7070",
-      "createdAt": "2025-10-10T09:50:16.068Z",
-      "completedAt": "2025-10-10T09:50:16.068Z",
-      "id": 3
     }
   ]
 }
