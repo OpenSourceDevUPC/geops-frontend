@@ -1,0 +1,18 @@
+
+export interface OfferResource {
+  /**
+   * data types for the Offers API
+   */
+  id: number;
+  title: string;
+  partner: string;
+  price: number;
+  codePrefix: string;
+  validTo: string;
+  rating: number;
+  location: string;
+  category: string;
+  imageUrl?: string;
+}
+
+export interface OffersResponse {}
