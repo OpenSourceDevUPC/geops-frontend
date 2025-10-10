@@ -1,10 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
-import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
+import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
+import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
-import {AuthService} from '../../../infrastructure/auth/auth.service';
+import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {CartApi} from '../../../../cart/infrastructure/cart-api';
 import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
 

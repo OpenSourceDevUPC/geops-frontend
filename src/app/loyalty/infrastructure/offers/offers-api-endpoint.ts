@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
-import { Offer } from '../domain/model/offer.entity';
+import { BaseApiEndpoint } from '../../../shared/infrastructure/base-api-endpoint';
+import { Offer } from '../../domain/model/offer.entity';
 import { OfferResource, OffersResponse } from './offers-response';
 import { OffersAssembler } from './offers-assembler';
 import { map, Observable } from 'rxjs';
