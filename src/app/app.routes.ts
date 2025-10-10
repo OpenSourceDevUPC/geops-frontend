@@ -3,9 +3,10 @@ import { Layout } from './shared/presentation/components/layout/layout';
 import { LoginComponent } from './loyalty/presentation/views/login/login.component';
 import { RegisterComponent } from './loyalty/presentation/views/register/register.component';
 import { RegisterBussinesComponent } from './loyalty/presentation/views/register-bussines/register-bussines.component';
+// import { AuthGuard } from 'ruta/del/authguard'; // si tienes guard
 
-// Si tu DashboardOwnerComponent está en shared/presentation/views/dashboard-owner/
 export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: '/login' }, // redirige raíz a login
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-bussines', component: RegisterBussinesComponent },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   {
     path: '',
     component: Layout,
+    // canActivate: [AuthGuard], // descomentar si tienes guard
     children: [
       {
         path: 'home',
@@ -62,13 +64,9 @@ export const routes: Routes = [
           import('./loyalty/presentation/views/settings/settings.component')
             .then(m => m.SettingsComponent),
         title: 'GeoPs - Settings'
-      },
-
-      // Este redirect lleva a home si accedes a '/'
-      { path: '', pathMatch: 'full', redirectTo: 'home' }
+      }
     ]
   },
 
-  // Si accedes a una ruta no válida, redirige a login
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' } // cualquier otra ruta, manda a login
 ];

@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; // <-- nuevo import
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-register-bussines',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule, LanguageSwitcher,
+    MatButtonToggleModule],
   templateUrl: './register-bussines.component.html',
   styleUrls: ['./register-bussines.component.css']
 })
@@ -23,7 +27,6 @@ export class RegisterBussinesComponent {
 
   onSubmit() {
     this.submitting = true;
-    // 1. Obtén el usuario OWNER más reciente (puedes guardar el email en localStorage desde el registro)
     const email = localStorage.getItem('register-owner-email');
     this.http.get<any[]>(`http://localhost:3000/users?email=${email}`).subscribe({
       next: (users) => {
@@ -33,7 +36,6 @@ export class RegisterBussinesComponent {
           return;
         }
         const user = users[0];
-        // 2. Actualiza user con PATCH o PUT
         const id = user.id;
         this.http.patch(`http://localhost:3000/users/${id}`, {
           business: this.business

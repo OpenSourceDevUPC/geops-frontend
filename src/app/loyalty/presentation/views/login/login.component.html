@@ -1,17 +1,24 @@
 <div class="login-container">
-  <h2 class="login-title">Inicio de sesión</h2>
+  <div class="login-language-switch">
+    <app-language-switcher />
+  </div>
+  <h2 class="login-title">{{ 'login.title' | translate }}</h2>
   <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
-    <label class="login-label">Email:</label>
+    <label class="login-label">{{ 'login.email' | translate }}</label>
     <input class="login-input" type="email" name="email" [(ngModel)]="model.email" required />
 
-    <label class="login-label">Contraseña:</label>
+    <label class="login-label">{{ 'login.password' | translate }}</label>
     <input class="login-input" type="password" name="password" [(ngModel)]="model.password" required />
 
-    <button class="login-btn" type="submit" [disabled]="loading || !loginForm.form.valid">Entrar</button>
+    <button class="login-btn" type="submit" [disabled]="loading || !loginForm.form.valid">
+      {{ 'login.button' | translate }}
+    </button>
   </form>
   <p class="login-register-msg">
-    ¿No tienes cuenta?
-    <a class="login-register-link" [routerLink]="['/register']">Regístrate aquí</a>
+    {{ 'login.noAccount' | translate }}
+    <a class="login-register-link" [routerLink]="['/register']">
+      {{ 'login.register' | translate }}
+    </a>
   </p>
   <div *ngIf="errorMessage" class="login-error">{{errorMessage}}</div>
 </div>
