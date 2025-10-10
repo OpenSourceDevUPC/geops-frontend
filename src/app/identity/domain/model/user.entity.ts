@@ -1,15 +1,28 @@
-// src/app/identity/domain/model/user.entity.ts
 import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 
+/**
+ * Defines possible user roles within the system.
+ */
 export type UserRole = 'OWNER' | 'CONSUMER';
+
+/**
+ * Defines available subscription plans for users.
+ */
 export type PlanType = 'BASIC' | 'PREMIUM';
 
+/**
+ * Represents the business profile information for users with OWNER role.
+ */
 export interface BusinessProfile {
   businessName: string;
   businessType: string;
   taxId: string;
 }
 
+/**
+ * Main user entity interface.
+ * Extends BaseEntity and includes personal, business, and preference data.
+ */
 export interface User extends BaseEntity {
   id: number;
   name: string;
@@ -19,7 +32,6 @@ export interface User extends BaseEntity {
   plan: PlanType;
   phone?: string;
   business?: BusinessProfile;
-  // Campos personalizados para settings:
   locationPermission?: string;
   favorites?: string[];
   home?: string;

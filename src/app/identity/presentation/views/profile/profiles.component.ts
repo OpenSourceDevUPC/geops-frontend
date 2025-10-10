@@ -4,9 +4,13 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../infrastructure/auth/auth.service';
 import { User } from '../../../domain/model/user.entity';
 import { FavoritesApiEndpoint } from '../../../../loyalty/infrastructure/favorites/favorites-api-endpoint';
-import {FormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
+/**
+ * ProfilesComponent displays user profile information and favorite count.
+ * Fetches user data and favorites on initialization.
+ */
 @Component({
   selector: 'app-profiles',
   standalone: true,
@@ -18,38 +22,52 @@ export class ProfilesComponent implements OnInit {
   user: User | null = null;
   favoriteCount: number = 0;
 
+  /**
+   * Initializes ProfilesComponent with AuthService and FavoritesApiEndpoint.
+   * @param authService Service for user authentication and data
+   * @param favoritesApi Service for retrieving user favorites
+   */
   constructor(
     private authService: AuthService,
     private favoritesApi: FavoritesApiEndpoint
   ) {}
 
+  /**
+   * Lifecycle hook that runs on component initialization.
+   * Loads current user and fetches favorite count.
+   */
   ngOnInit() {
     this.user = this.authService.getCurrentUser();
 
     if (this.user?.id) {
-
       this.favoritesApi.getByUser(this.user.id).subscribe({
         next: (favoriteRows) => {
           this.favoriteCount = favoriteRows.length;
-          console.log(`Usuario ${this.user?.name} tiene ${this.favoriteCount} favoritos`);
+          console.log(`User ${this.user?.name} has ${this.favoriteCount} favorites`);
         },
         error: (err) => {
-          console.error('Error al obtener favoritos:', err);
+          console.error('Error fetching favorites:', err);
           this.favoriteCount = 0;
         }
       });
     }
   }
 
+  /**
+   * Returns the first letter of the user's name in uppercase for avatar display.
+   */
   get avatar(): string {
     return this.user?.name ? this.user.name.charAt(0).toUpperCase() : '';
   }
 
+  /**
+   * Returns a formatted string with the user's saved places (home, work, university).
+   */
   get places(): string {
     if (!this.user) return '';
-    const casa = this.user.home ? `Casa: ${this.user.home}` : '';
-    const trabajo = this.user.work ? `Trabajo: ${this.user.work}` : '';
-    const universidad = this.user.university ? `Universidad: ${this.user.university}` : '';
-    return [casa, trabajo, universidad].filter(Boolean).join('<br>');
+    const home = this.user.home ? `Home: ${this.user.home}` : '';
+    const work = this.user.work ? `Work: ${this.user.work}` : '';
+    const university = this.user.university ? `University: ${this.user.university}` : '';
+    return [home, work, university].filter(Boolean).join('<br>');
   }
 }
