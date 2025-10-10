@@ -48,13 +48,20 @@
         <span>{{ 'header.profile.menu.settings' | translate }}</span>
       </button>
       <mat-divider></mat-divider>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="onLogout()">
         <mat-icon>logout</mat-icon>
         <span>{{ 'header.profile.menu.logout' | translate }}</span>
       </button>
     </mat-menu>
 
-    <button mat-raised-button class="action-btn cart" [attr.aria-label]="'header.cart' | translate">
+    <button
+      mat-raised-button
+      class="action-btn cart"
+      [attr.aria-label]="'header.cart' | translate"
+      [matBadge]="cartCount()"
+      [matBadgeHidden]="cartCount() === 0"
+      matBadgeColor="warn"
+      (click)="openCart()">
       <mat-icon>shopping_cart</mat-icon>
       <span>{{ 'header.cart' | translate }}</span>
     </button>
@@ -71,3 +78,6 @@
 </main>
 
 <app-footer-content></app-footer-content>
+
+<!-- Cart Sidebar -->
+<app-cart-sidebar></app-cart-sidebar>
