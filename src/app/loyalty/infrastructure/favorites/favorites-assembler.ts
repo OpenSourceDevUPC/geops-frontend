@@ -7,24 +7,24 @@ export class FavoritesAssembler
   implements BaseAssembler<FavoriteRow, FavoriteRowResource, FavoriteRowsResponse>
 {
   /**
-   * convierte un recurso recibido de la api a una entidad de dominio
-   * @param r - recurso recibido de la api
+   * converts a resource received from the API to a domain entity
+   * @param r - resource received from the API
    */
   toEntityFromResource(r: FavoriteRowResource): FavoriteRow {
     return { ...r };
   }
 
   /**
-   * convierte una entidad de dominio al formato de recurso esperado por la api
-   * @param e - entidad de dominio
+   * converts a domain entity to the resource format expected by the API
+   * @param e - domain entity
    */
   toResourceFromEntity(e: FavoriteRow): FavoriteRowResource {
     return { ...e };
   }
 
   /**
-   * convierte una respuesta "envoltorio" de la API a un arreglo de entidades
-   * @param _r - respuesta de la api
+   * converts an API "wrapper" response to an array of entities
+   * @param _r - API response
    */
   toEntitiesFromResponse(_r: FavoriteRowsResponse): FavoriteRow[] {
     return [];

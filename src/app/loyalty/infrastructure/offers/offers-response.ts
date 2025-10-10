@@ -1,7 +1,7 @@
 
 export interface OfferResource {
   /**
-   * tipos de datos para la api de ofertas
+   * data types for the Offers API
    */
   id: number;
   title: string;
