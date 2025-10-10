@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
+import { CartApi } from '../../../../cart/infrastructure/cart-api';
+import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
 import {AuthService} from '../../../infrastructure/auth/auth.service';
 
 type Offer = {
@@ -30,6 +32,9 @@ type Offer = {
 
 export class OfertasComponent implements OnInit, OnDestroy {
 
+  private readonly cartApi = inject(CartApi);
+  private readonly cartUiService = inject(CartUiService);
+
   loading = false;
   all: Offer[] = [];
   featured: Offer[] = [];
@@ -40,6 +45,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
   idx = 0;
   timer?: any;
+  userId = 'a512';
 
   /**
    * filttros de búsqueda
@@ -73,6 +79,13 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * recupera los favoritos del usuario
    */
   ngOnInit(): void {
+
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userId = String(user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
 
     this.currentUserId = this.authService.getCurrentUserId();
     console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
@@ -251,5 +264,61 @@ export class OfertasComponent implements OnInit, OnDestroy {
         console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
+  }
+
+  /**
+   * Añade una oferta al carrito
+   * @param o - Oferta a añadir
+   */
+  addToCart(o: Offer) {
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    this.cartApi.addItemToCart(
+      this.userId,
+      o.id.toString(),
+      offerTitle,
+      o.price,
+      offerImageUrl,
+      1
+    ).subscribe({
+      next: () => {
+        // Reset payment flow when items are added
+        this.cartUiService.resetPaymentFlow();
+        // Could show a success message here
+        console.log('Item added to cart successfully');
+      },
+      error: (error) => {
+        console.error('Error adding item to cart:', error);
+        // Could show an error message here
+      }
+    });
+  }
+
+  /**
+   * Procede a comprar directamente - añade al carrito y abre el sidebar
+   * @param o - Oferta a comprar
+   */
+  buyNow(o: Offer) {
+    // Using hardcoded user ID for now - in real app would come from auth service
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    // Add to cart first, then open cart sidebar
+    this.cartApi
+      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .subscribe({
+        next: () => {
+          console.log('Item added to cart successfully');
+          // Reset payment flow when items are added
+          this.cartUiService.resetPaymentFlow();
+          // Open the cart sidebar after adding the item
+          this.cartUiService.openCart();
+        },
+        error: (error) => {
+          console.error('Error adding item to cart:', error);
+          // Could show an error message here
+        },
+      });
   }
 }
