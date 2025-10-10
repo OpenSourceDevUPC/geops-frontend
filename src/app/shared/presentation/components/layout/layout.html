@@ -54,8 +54,12 @@
       </button>
     </mat-menu>
 
-    <button mat-raised-button class="action-btn cart" [attr.aria-label]="'header.cart' | translate">
-      <mat-icon>shopping_cart</mat-icon>
+    <button
+      mat-raised-button
+      class="action-btn cart"
+      [attr.aria-label]="'header.cart' | translate"
+      (click)="openCart()">
+      <mat-icon [matBadge]="cartCount()" [matBadgeHidden]="cartCount() === 0" matBadgeColor="warn">shopping_cart</mat-icon>
       <span>{{ 'header.cart' | translate }}</span>
     </button>
 
@@ -71,3 +75,6 @@
 </main>
 
 <app-footer-content></app-footer-content>
+
+<!-- Cart Sidebar -->
+<app-cart-sidebar></app-cart-sidebar>

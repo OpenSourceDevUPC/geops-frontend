@@ -1,0 +1,103 @@
+<div class="cart-sidebar-overlay" [class.open]="isOpen()" (click)="close()">
+  <div class="cart-sidebar" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="cart-header">
+      <h2>{{ 'cart.title' | translate }}</h2>
+      <button mat-icon-button (click)="close()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading()" class="loading-container">
+      <div class="loading-text">{{ 'cart.loading' | translate }}</div>
+    </div>
+
+    <!-- Empty cart state -->
+    <div *ngIf="!isLoading() && isEmpty" class="empty-cart">
+      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <h3>{{ 'cart.empty.title' | translate }}</h3>
+      <p>{{ 'cart.empty.message' | translate }}</p>
+    </div>
+
+    <!-- Cart content -->
+    <div *ngIf="!isLoading() && !isEmpty" class="cart-content">
+      <!-- Cart items -->
+      <div class="cart-items">
+        <div *ngFor="let item of cart()?.items" class="cart-item">
+          <div class="item-image">
+            <img [src]="item.offerImageUrl" [alt]="item.offerTitle" onerror="this.src='assets/offers/placeholder.jpg'">
+          </div>
+
+          <div class="item-details">
+            <h4 class="item-title">{{ item.offerTitle }}</h4>
+            <div class="item-price">S/ {{ item.offerPrice | number:'1.2-2' }}</div>
+
+            <div class="quantity-controls">
+              <button
+                mat-icon-button
+                class="quantity-btn decrease"
+                (click)="updateQuantity(item, item.quantity - 1)"
+                [disabled]="item.quantity <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+
+              <span class="quantity">{{ item.quantity }}</span>
+
+              <button
+                mat-icon-button
+                class="quantity-btn increase"
+                (click)="updateQuantity(item, item.quantity + 1)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="item-actions">
+            <div class="item-total">S/ {{ item.total | number:'1.2-2' }}</div>
+            <button
+              mat-icon-button
+              class="remove-btn"
+              (click)="removeItem(item)"
+              [attr.aria-label]="'cart.removeItem' | translate">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Cart summary -->
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span class="summary-label">{{ 'cart.summary.items' | translate }}:</span>
+          <span class="summary-value">{{ totalItems }}</span>
+        </div>
+
+        <div class="summary-row total">
+          <span class="summary-label">{{ 'cart.summary.total' | translate }}:</span>
+          <span class="summary-value">S/ {{ totalAmount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <!-- Cart actions -->
+      <div class="cart-actions">
+        <button
+          mat-stroked-button
+          class="clear-btn"
+          (click)="clearCart()">
+          {{ 'cart.actions.clear' | translate }}
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="checkout-btn"
+          (click)="proceedToCheckout()">
+          {{ 'cart.actions.checkout' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
