@@ -238,6 +238,27 @@
       "continue": "Continue Shopping"
     }
   },
+  "common": {
+    "currency": "s/"
+  },
+  "offerDetail": {
+    "back": "Back",
+    "buy": "Buy",
+    "addToCart": "Add to cart",
+    "bullets": {
+      "valid": "Valid online and at {{partner}} physical stores.",
+      "business": "Business: {{partner}}.",
+      "redeem": "It can be redeemed as a means of payment up to the indicated amount."
+    },
+    "reviews": {
+      "title": "Comments",
+      "count": "{{count}} reviews",
+      "yourRating": "Your rating",
+      "ariaRate": "Choose a rating from 1 to 5",
+      "placeholder": "Tell us about your experience with this offer",
+      "publish": "Publish review"
+    }
+  },
   "helpCenter": {
     "title": "Help Center",
     "registerQuestion": "How do I register as a customer?",

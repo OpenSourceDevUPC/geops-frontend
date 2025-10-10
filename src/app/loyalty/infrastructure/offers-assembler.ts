@@ -6,24 +6,24 @@ export class OffersAssembler
   implements BaseAssembler<Offer, OfferResource, OffersResponse>
 {
   /**
-   * convierte un recurso recibido de la api a una entidad de dominio
-   * @param r - recurso recibido de la api
+   * converts a resource received from the API to a domain entity
+   * @param r - resource received from the API
    */
   toEntityFromResource(r: OfferResource): Offer {
     return { ...r };
   }
 
   /**
-   * convierte una entidad de dominio al formato de recurso esperado por la api
-   * @param e - entidad de dominio
+   * converts a domain entity to the resource format expected by the API
+   * @param e - domain entity
    */
   toResourceFromEntity(e: Offer): OfferResource {
     return { ...e };
   }
 
   /**
-   * convierte una respuesta "envoltorio" de la API a un arreglo de entidades
-   * @param _resp - respuesta de la api
+   * converts an API "wrapper" response to an array of entities
+   * @param _resp - API response
    */
   toEntitiesFromResponse(_resp: OffersResponse): Offer[] {
     return [];
