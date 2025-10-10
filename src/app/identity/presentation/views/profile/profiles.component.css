@@ -1,3 +1,9 @@
+/*
+  ProfileComponent Styles
+  Styles for the user profile display, including layout, card, header, avatar, details, edit button, list, tags, and footer.
+*/
+
+/* Main wrapper for the profile page */
 .profile-wrapper {
   display: flex;
   flex-direction: column;
@@ -6,6 +12,7 @@
   background: #fff;
 }
 
+/* Card container for profile content */
 .profile-card {
   max-width: 510px;
   width: 100%;
@@ -15,6 +22,7 @@
   box-shadow: 0 2px 12px rgba(74,0,114,0.08);
 }
 
+/* Profile header: avatar, name, plan, edit button */
 .profile-header {
   display: flex;
   align-items: center;
@@ -23,6 +31,7 @@
   border-bottom: 1px solid #eee;
 }
 
+/* User avatar styling */
 .profile-avatar {
   width: 52px;
   height: 52px;
@@ -36,6 +45,7 @@
   justify-content: center;
 }
 
+/* User name styling */
 .profile-name {
   font-size: 20px;
   font-weight: 600;
@@ -43,12 +53,14 @@
   margin-bottom: 2px;
 }
 
+/* User plan label styling */
 .profile-plan {
   color: #A751D4;
   font-size: 15px;
   font-weight: 500;
 }
 
+/* Edit profile button styling */
 .profile-edit-btn {
   margin-left: auto;
   background: #fff;
@@ -62,17 +74,18 @@
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-
 .profile-edit-btn:hover {
   background: #F6F4FD;
 }
 
+/* List of profile details */
 .profile-list {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
+/* Individual profile detail item */
 .profile-item {
   display: flex;
   justify-content: space-between;
@@ -81,11 +94,11 @@
   border-bottom: 1px solid #eee;
   font-size: 15px;
 }
-
 .profile-item.last {
   border-bottom: none;
 }
 
+/* Value styling for profile details */
 .profile-value {
   color: #737373;
   font-weight: 500;
@@ -96,7 +109,7 @@
   justify-content: flex-end;
 }
 
-
+/* Tag styles for categories or labels */
 .tag {
   background: #f1edfa;
   color: #A751D4;
@@ -112,6 +125,7 @@
   color: #fff;
 }
 
+/* Dot indicator for location status */
 .dot {
   display: inline-block;
   border-radius: 50%;
@@ -123,12 +137,14 @@
   background: #ffd500;
 }
 
+/* Styling for places (home, work, university) */
 .places {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
 }
 
+/* Footer styling for rights information */
 .profile-footer {
   text-align: center;
   color: #777;
@@ -136,3 +152,4 @@
   margin-bottom: 18px;
   margin-top: 20px;
 }
+

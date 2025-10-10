@@ -1,3 +1,9 @@
+/*
+  LoginComponent Styles
+  Styles for the user login form, including layout, form fields, buttons, error messages, register link, and language switcher.
+*/
+
+/* Main container for the login form */
 .login-container {
   min-width: 340px;
   max-width: 370px;
@@ -11,6 +17,7 @@
   align-items: stretch;
 }
 
+/* Title styling for the login form */
 .login-container h2 {
   font-size: 1.6em;
   font-weight: bold;
@@ -19,12 +26,14 @@
   margin-bottom: 18px;
 }
 
+/* Form layout and spacing */
 .login-container form {
   display: flex;
   flex-direction: column;
   gap: 17px;
 }
 
+/* Label styling for form fields */
 .login-container label {
   font-weight: 600;
   font-size: 1em;
@@ -32,6 +41,7 @@
   margin-bottom: .2em;
 }
 
+/* Input field styling */
 .login-container input[type="email"],
 .login-container input[type="password"] {
   width: 100%;
@@ -51,6 +61,7 @@
   background: #fff;
 }
 
+/* Submit button styling */
 .login-container button[type="submit"] {
   margin-top: 6px;
   background: #a259ff;
@@ -69,12 +80,14 @@
   background: #7c3aed;
 }
 
+/* Disabled button styling */
 .login-container button[disabled] {
   background: #e6e6ea;
   color: #bdbdbd;
   cursor: not-allowed;
 }
 
+/* Error message styling */
 .login-container .error {
   margin-top: 10px;
   color: #e53e3e;
@@ -84,22 +97,23 @@
   text-align: center;
 }
 
+/* Register message and link styling */
 .login-container p {
   text-align: center;
   margin-top: 17px;
   color: #6941fa;
   font-size: .97em;
 }
-
 .login-container a {
   color: #a259ff;
   text-decoration: none;
   font-weight: 600;
 }
-
 .login-container a:hover {
   text-decoration: underline;
 }
+
+/* Language switcher styling */
 .login-language-switch {
   position: absolute;
   top: 2rem;

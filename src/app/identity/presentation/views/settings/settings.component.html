@@ -1,20 +1,34 @@
+<!--
+  SettingsComponent Template
+  All labels and buttons use the translate pipe for internationalization.
+  Keys must match those in es.json.
+-->
+
 <div class="settings-wrapper" *ngIf="user">
   <div class="settings-card">
+    <!-- Profile header: avatar, name, plan, actions -->
     <div class="settings-profile">
       <div class="settings-avatar">{{ avatar }}</div>
       <div>
         <div class="settings-name">{{ user.name }}</div>
-        <div class="settings-plan">{{ user.plan }}</div>
+        <div class="settings-plan">
+          {{ 'settings.plan.' + user.plan | translate }}
+        </div>
       </div>
       <div class="settings-profile-actions">
-        <button class="settings-btn secondary" [disabled]="cargando" (click)="guardar()">Guardar</button>
-        <button class="settings-btn" [disabled]="cargando" type="button" (click)="cancelar()">Cancelar</button>
+        <button class="settings-btn secondary" [disabled]="cargando" (click)="guardar()">
+          {{ 'settings.save' | translate }}
+        </button>
+        <button class="settings-btn" [disabled]="cargando" type="button" (click)="cancelar()">
+          {{ 'settings.cancel' | translate }}
+        </button>
       </div>
     </div>
 
+    <!-- User Settings Form -->
     <form class="settings-form">
       <div class="settings-row">
-        <label>Nombre</label>
+        <label>{{ 'settings.name' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="text" [(ngModel)]="user.name" name="name" [disabled]="!editState['name']"/>
           <button type="button" class="edit-icon-btn" (click)="toggleEdit('name')">
@@ -23,14 +37,14 @@
         </div>
       </div>
       <div class="settings-row">
-        <label>Plan</label>
+        <label>{{ 'settings.plan.label' | translate }}</label>
         <select class="settings-input" [(ngModel)]="user.plan" name="plan">
-          <option value="PREMIUM">Premium</option>
-          <option value="BASIC">Basic</option>
+          <option value="PREMIUM">{{ 'settings.plan.PREMIUM' | translate }}</option>
+          <option value="BASIC">{{ 'settings.plan.BASIC' | translate }}</option>
         </select>
       </div>
       <div class="settings-row">
-        <label>Correo</label>
+        <label>{{ 'settings.email' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="email" [(ngModel)]="user.email" name="email" [disabled]="!editState['email']"/>
           <button type="button" class="edit-icon-btn" (click)="toggleEdit('email')">
@@ -39,7 +53,7 @@
         </div>
       </div>
       <div class="settings-row">
-        <label>Teléfono</label>
+        <label>{{ 'settings.phone' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="text" [(ngModel)]="user.phone" name="phone" [disabled]="!editState['phone']"/>
           <button type="button" class="edit-icon-btn" (click)="toggleEdit('phone')">
@@ -47,18 +61,15 @@
           </button>
         </div>
       </div>
-      <!-- Selects reflejan valores del API -->
       <div class="settings-row">
-        <label>Permiso de ubicación</label>
+        <label>{{ 'settings.locationPermission.label' | translate }}</label>
         <select class="settings-input" [(ngModel)]="user.locationPermission" name="locationPermission">
-          <option value="ASK">Preguntar</option>
-          <option value="ALWAYS">Siempre</option>
+          <option value="ASK">{{ 'settings.locationPermission.ASK' | translate }}</option>
+          <option value="ALWAYS">{{ 'settings.locationPermission.ALWAYS' | translate }}</option>
         </select>
       </div>
-
-      <!-- Inputs con estado de edición -->
       <div class="settings-row">
-        <label>Casa</label>
+        <label>{{ 'settings.home' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="text"
                  [(ngModel)]="user.home" name="home"
@@ -68,9 +79,8 @@
           </button>
         </div>
       </div>
-
       <div class="settings-row">
-        <label>Trabajo</label>
+        <label>{{ 'settings.work' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="text"
                  [(ngModel)]="user.work" name="work"
@@ -80,10 +90,8 @@
           </button>
         </div>
       </div>
-
-      <!-- Checkboxes sincronizados con array -->
       <div class="settings-row">
-        <label>Categoría favorita</label>
+        <label>{{ 'settings.favorites' | translate }}</label>
         <div class="settings-checkbox-group">
           <label *ngFor="let cat of ALL_CATEGORIES" class="category-checkbox">
             <input type="checkbox"
@@ -94,14 +102,13 @@
           </label>
         </div>
       </div>
-
-      <label>Seguridad</label>
+      <label>{{ 'settings.security' | translate }}</label>
       <div class="settings-row">
-        <label>Contraseña actual</label>
+        <label>{{ 'settings.passwordCurrent' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="password"
                  [(ngModel)]="passwordActual"
-                 placeholder="Contraseña actual"
+                 placeholder="{{ 'settings.passwordCurrent' | translate }}"
                  name="passwordActual"
                  [disabled]="!editState['passwordActual']"/>
           <button type="button" class="edit-icon-btn" (click)="toggleEdit('passwordActual')">
@@ -110,11 +117,11 @@
         </div>
       </div>
       <div class="settings-row">
-        <label>Nueva contraseña</label>
+        <label>{{ 'settings.passwordNew' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="password"
                  [(ngModel)]="newPassword"
-                 placeholder="Nueva contraseña"
+                 placeholder="{{ 'settings.passwordNew' | translate }}"
                  name="newPassword"
                  [disabled]="!editState['newPassword']"/>
           <button type="button" class="edit-icon-btn" (click)="toggleEdit('newPassword')">
@@ -123,11 +130,11 @@
         </div>
       </div>
       <div class="settings-row">
-        <label>Confirmar nueva contraseña</label>
+        <label>{{ 'settings.passwordConfirm' | translate }}</label>
         <div class="input-edit-group">
           <input class="settings-input" type="password"
                  [(ngModel)]="confirmPassword"
-                 placeholder="Confirmar nueva contraseña"
+                 placeholder="{{ 'settings.passwordConfirm' | translate }}"
                  name="confirmPassword"
                  [disabled]="!editState['confirmPassword']"/>
           <button type="button" class="edit-icon-btn" (click)="toggleEdit('confirmPassword')">
@@ -136,15 +143,16 @@
         </div>
       </div>
       <div class="settings-actions">
-        <button class="settings-btn secondary" type="reset">Limpiar</button>
-        <button class="settings-btn primary" type="button" (click)="actualizarPassword()">Actualizar contraseña</button>
+        <button class="settings-btn secondary" type="reset">
+          {{ 'settings.clear' | translate }}
+        </button>
+        <button class="settings-btn primary" type="button" (click)="actualizarPassword()">
+          {{ 'settings.changePassword' | translate }}
+        </button>
       </div>
     </form>
 
-    <div *ngIf="cargando" class="settings-loading">Actualizando...</div>
+    <div *ngIf="cargando" class="settings-loading">{{ 'settings.updating' | translate }}</div>
     <div *ngIf="mensaje" class="settings-msg">{{ mensaje }}</div>
   </div>
-  <footer class="settings-footer">
-    © 2025 Todos los derechos reservados
-  </footer>
 </div>

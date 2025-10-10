@@ -27,6 +27,16 @@
       "phone": "999222929",
       "role": "CONSUMER",
       "plan": "BASIC"
+    },
+    {
+      "name": "asfasf",
+      "email": "asfasfasf",
+      "password": "afasfasf",
+      "phone": "999999999",
+      "role": "OWNER",
+      "plan": "BASIC",
+      "business": {},
+      "id": "Y_V5CCN"
     }
   ],
   "offers": [
