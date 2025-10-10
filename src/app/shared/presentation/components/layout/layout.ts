@@ -110,4 +110,7 @@ export class Layout implements OnInit {
     { link: '/favoritos',   label: 'option.favorites' },
     { link: '/mis-cupones', label: 'option.mycoupons' },
   ];
+  goToHelpCenter(): void {
+    this.router.navigate(['/help/help-center']);
+  }
 }

@@ -95,6 +95,35 @@
     "view": "View",
     "remove": "Remove"
   },
+  "home": {
+    "welcome": "Welcome",
+    "hi": "Hi",
+    "free-plan": "Free Plan",
+    "premium-plan": "Premium Plan",
+    "see-more": "See more",
+    "map": {
+      "places": "Places",
+      "use-my-location": "Use my location",
+      "example": "e.g.: cine, buffet",
+      "search": "Search",
+      "radius": "Radius",
+      "settings": "Settings",
+      "all": "All",
+      "cinemas": "Cinemas",
+      "buffets": "Buffets",
+      "parks": "Parks",
+      "for-children": "For children",
+      "makis": "Makis",
+      "beauty": "Beauty",
+      "near-you": "Near you"
+    },
+    "cinemas": "Cinemas",
+    "lunch-buffets": "Lunch buffets",
+    "inflatable-parks": "Inflatable parks",
+    "mechanical-games": "Mechanical games",
+    "maki-open-bar": "Maki open bar",
+    "beauty": "Beauty"
+  },
   "welcomeBanner": {
     "welcome": "Welcome",
     "hello": "Hello,",
@@ -297,5 +326,26 @@
     "locationStep2": "If you denied permissions:",
     "locationStep2a": "<b>Profile:</b> Location permissions → <b>Allow</b> → Reload",
     "locationStep3": "Adjust the radius (e.g. 1–10 km) with the selector to see more/fewer results."
+  },
+  "common": {
+    "currency": "s/"
+  },
+  "offerDetail": {
+    "back": "Back",
+    "buy": "Buy",
+    "addToCart": "Add to cart",
+    "bullets": {
+      "valid": "Valid online and at {{partner}} physical stores.",
+      "business": "Business: {{partner}}.",
+      "redeem": "It can be redeemed as a means of payment up to the indicated amount."
+    },
+    "reviews": {
+      "title": "Comments",
+      "count": "{{count}} reviews",
+      "yourRating": "Your rating",
+      "ariaRate": "Choose a rating from 1 to 5",
+      "placeholder": "Tell us about your experience with this offer",
+      "publish": "Publish review"
+    }
   }
 }

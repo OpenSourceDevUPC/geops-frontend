@@ -157,21 +157,20 @@ export class SettingsComponent implements OnInit {
     if (!this.user) return;
 
     if ((this.user.password ?? '') !== this.passwordActual) {
-      this.mensaje = 'Current password is incorrect';
+      this.mensaje = 'La contraseña actual es incorrecta';
       return;
     }
     if (this.newPassword.trim().length < 6) {
-      this.mensaje = 'The new password must be at least 6 characters';
+      this.mensaje = 'La nueva contraseña debe tener al menos 6 caracteres';
       return;
     }
     if (this.newPassword !== this.confirmPassword) {
-      this.mensaje = 'New passwords do not match';
+      this.mensaje = 'Las nuevas contraseñas no coinciden';
       return;
     }
 
-    // Update in memory; to persist, call guardar() or a specific endpoint
     this.user.password = this.newPassword;
-    this.mensaje = 'Password updated successfully';
+    this.mensaje = 'Contraseña actualizada correctamente';
 
     this.passwordActual = '';
     this.newPassword = '';
@@ -179,5 +178,9 @@ export class SettingsComponent implements OnInit {
     this.editState['passwordActual'] = false;
     this.editState['newPassword'] = false;
     this.editState['confirmPassword'] = false;
+
+    // Persistir el cambio
+    this.guardar();
   }
+
 }

@@ -17,6 +17,13 @@ export const routes: Routes = [
     // canActivate: [AuthGuard], // descomentar si tienes guard
     children: [
       {
+        path: 'help/help-center',
+        loadComponent: () =>
+          import('./help/presentation/views/help-center/help-center.component')
+            .then(m => m.HelpCenterComponent),
+        title: 'GeoPs - Help Center'
+      },
+      {
         path: 'home',
         loadComponent: () =>
           import('./shared/presentation/views/home/home')
@@ -29,6 +36,11 @@ export const routes: Routes = [
           import('./loyalty/presentation/views/ofertas/ofertas.component')
             .then(m => m.OfertasComponent),
         title: 'GeoPs - Ofertas'
+      },
+      { path: 'ofertas/:id',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/ver-oferta/ver-oferta.component')
+            .then(m => m.VerOfertaComponent)
       },
       {
         path: 'categorias',
