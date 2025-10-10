@@ -1,3 +1,323 @@
 {
-
+  "offers": [
+    {
+      "id": "1",
+      "title": "Coney KIDS 2x1 En entrada para niños x 2 horas",
+      "partner": "Coney Park",
+      "price": 25,
+      "codePrefix": "CNY",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Varias Sedes",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/1.jpg"
+    },
+    {
+      "id": "2",
+      "title": "DBS: Kit de cuidado facial con 30% off",
+      "partner": "DBS",
+      "price": 39.9,
+      "codePrefix": "DBS",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Tiendas seleccionadas",
+      "category": "Belleza",
+      "imageUrl": "assets/offers/2.jpg"
+    },
+    {
+      "id": "3",
+      "title": "Belleza MINNA: Combo Lemon Sugar Scrub Lip Mask + Dallism Lip Gloss",
+      "partner": "Belleza MINNA",
+      "price": 80,
+      "codePrefix": "MIN",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "San Miguel, Miraflores",
+      "category": "Belleza",
+      "imageUrl": "assets/offers/3.jpg"
+    },
+    {
+      "id": "4",
+      "title": "Kabuki - Oferta: 2x1 Mixsoon Limpiador Centella Cleansing Foam 150ml",
+      "partner": "Kabuki",
+      "price": 79.9,
+      "codePrefix": "KBK",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Surco",
+      "category": "Belleza",
+      "imageUrl": "assets/offers/4.jpg"
+    },
+    {
+      "id": "5",
+      "title": "ALMUERZO BUFFET: SOLO en sede de CHORRILLOS de Lunes a Domingo",
+      "partner": "Asado Argentino",
+      "price": 29.9,
+      "codePrefix": "ASA",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Chorrillos",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/5.jpg"
+    },
+    {
+      "id": "6",
+      "title": "FUN JUNGLE: 60 o 90 minutos de inflables",
+      "partner": "Fun Jungle",
+      "price": 30,
+      "codePrefix": "FJG",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "San Miguel, Surco",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/6.jpg"
+    },
+    {
+      "id": "7",
+      "title": "ALMUERZO BUFFET: Criollo, chifas, pastas, cremas, ensaladas, postres y más",
+      "partner": "Santa Marina",
+      "price": 44.9,
+      "codePrefix": "STM",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "San Miguel",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/7.jpg"
+    },
+    {
+      "id": "8",
+      "title": "CINEMARK: 2 entradas 2D + 2 bebidas grandes + Pop gigante",
+      "partner": "Cinemark",
+      "price": 10.9,
+      "codePrefix": "CNM",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Varias Sedes",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/8.jpg"
+    },
+    {
+      "id": "9",
+      "title": "BUFFET ALMUERZO O CENA BAILABLE en Restaurante Internacional Mandarín",
+      "partner": "Mandarín",
+      "price": 54.9,
+      "codePrefix": "MND",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "San Borja",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/9.jpg"
+    },
+    {
+      "id": "10",
+      "title": "Paquete 5 juegos + 1 gratis",
+      "partner": "Parque Diversión",
+      "price": 24.9,
+      "codePrefix": "PDV",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Los Olivos",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/10.jpg"
+    },
+    {
+      "id": "11",
+      "title": "FUN JUNGLE TRUJILLO: 60 minutos juegos ilimitados",
+      "partner": "Fun Jungle Trujillo",
+      "price": 30,
+      "codePrefix": "FJT",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Trujillo",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/11.jpg"
+    },
+    {
+      "id": "12",
+      "title": "Shimaya Ramen - 3 tabla de makis o 30 piezas de makis",
+      "partner": "Shimaya Ramen",
+      "price": 50,
+      "codePrefix": "SHM",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Chorrillos, Barranco",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/12.jpg"
+    },
+    {
+      "id": "13",
+      "title": "Infinity Park Peru – AREQUIPA ingresos ilimitados",
+      "partner": "Infinity Park",
+      "price": 27,
+      "codePrefix": "INF",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Arequipa",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/13.jpg"
+    },
+    {
+      "id": "14",
+      "title": "BUFFET Criollo Arequipeño con estación de Ceviche en vivo – CASA ANDINA PREMIUM",
+      "partner": "Casa Andina",
+      "price": 74.9,
+      "codePrefix": "CAN",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Miraflores",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/14.jpg"
+    },
+    {
+      "id": "15",
+      "title": "ARUMA: Gift Card S/ 40 por S/ 29.90",
+      "partner": "Aruma",
+      "price": 29.9,
+      "codePrefix": "ARM",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Online y tiendas",
+      "category": "Gift Card",
+      "imageUrl": "assets/offers/15.jpg"
+    },
+    {
+      "id": "16",
+      "title": "CINEPLANET: 2 entradas 2D + 2 bebidas grandes + Pop gigante",
+      "partner": "Cineplanet",
+      "price": 52.9,
+      "codePrefix": "CPL",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Breña, Cercado de Lima, Comas",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/16.jpg"
+    },
+    {
+      "id": "17",
+      "title": "AQUATICA POOL PARK ICA: Full Day diversión",
+      "partner": "Aquatica",
+      "price": 34.9,
+      "codePrefix": "AQT",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Ica",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/17.jpg"
+    },
+    {
+      "id": "18",
+      "title": "CINEMARK: 2 Entradas + 2 gaseosas + cancha mediana o grande",
+      "partner": "Cinemark",
+      "price": 40.9,
+      "codePrefix": "CNM",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Varias Sedes",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/18.jpg"
+    },
+    {
+      "id": "19",
+      "title": "CINEPLANET PROVINCIAS: 2 entradas 2D + Popcorn gigante + 2 bebidas grandes",
+      "partner": "Cineplanet",
+      "price": 47.9,
+      "codePrefix": "CPP",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Varias Sedes",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/19.jpg"
+    },
+    {
+      "id": "20",
+      "title": "Pulsera Full Day – Juegos Mecánicos",
+      "partner": "Fantasilandia",
+      "price": 39.9,
+      "codePrefix": "FNT",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Ate",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/20.jpg"
+    },
+    {
+      "id": "21",
+      "title": "All you can eat Nikkei",
+      "partner": "Nikkei House",
+      "price": 59.9,
+      "codePrefix": "NKH",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "San Isidro",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/21.jpg"
+    },
+    {
+      "id": "22",
+      "title": "Barra libre de makis + bebida",
+      "partner": "Sakura",
+      "price": 49.9,
+      "codePrefix": "SKR",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Pueblo Libre",
+      "category": "Gastronomía",
+      "imageUrl": "assets/offers/22.jpg"
+    },
+    {
+      "id": "23",
+      "title": "Playland Kids – 2h ilimitados",
+      "partner": "Playland",
+      "price": 19.9,
+      "codePrefix": "PLY",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "Magdalena",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/23.jpg"
+    },
+    {
+      "id": "24",
+      "title": "Mundo Kids – Pase ilimitado día",
+      "partner": "Mundo Kids",
+      "price": 22.9,
+      "codePrefix": "MKD",
+      "validTo": "2025-12-31",
+      "rating": 5,
+      "location": "San Miguel",
+      "category": "Entretenimiento",
+      "imageUrl": "assets/offers/24.jpg"
+    }
+  ],
+  "favorites": [
+    {
+      "userId": 1,
+      "offerId": 2,
+      "createdAt": "2025-10-09T06:45:58.765Z",
+      "id": "1"
+    },
+    {
+      "userId": 1,
+      "offerId": 3,
+      "createdAt": "2025-10-09T06:45:59.549Z",
+      "id": "2"
+    },
+    {
+      "id": "f9d7",
+      "userId": 1,
+      "offerId": "1",
+      "createdAt": "2025-10-10T06:13:43.439Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "f255",
+      "name": "Sofia",
+      "email": "sofiatest@test.com",
+      "password": "password",
+      "phone": "999999999",
+      "role": "CONSUMER",
+      "plan": "BASIC"
+    }
+  ]
 }
