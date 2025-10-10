@@ -1,0 +1,121 @@
+<div class="layout">
+  <h2 class="page-title">{{ 'offersPage.title' | translate }}</h2>
+
+  <div class="content">
+
+    <section *ngIf="!loading && active() as o" class="card">
+      <div class="left">
+        <h1 class="title">{{ ('offersData.titles.' + o.id) | translate }}</h1>
+
+        <div class="partner">{{ o.partner }}</div>
+
+        <div class="rating">
+          <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+          <span class="rate">{{ 'offersPage.hero.rating' | translate:{ value: '5.0' } }}</span>
+        </div>
+
+        <div class="price">
+          <span class="currency">{{ 'offersPage.card.currency' | translate }}</span>
+          <span class="amount">{{ o.price | number:'1.2-2' }}</span>
+        </div>
+
+        <button class="buy">{{ 'offersPage.hero.buy' | translate }}</button>
+      </div>
+
+      <div class="right">
+        <div class="img-wrap">
+          <img [src]="imgFor(o)" [alt]="('offersData.titles.' + o.id) | translate" />
+        </div>
+      </div>
+
+      <div class="lines" *ngIf="featured.length">
+        <span *ngFor="let _ of featured; let i = index"
+              class="line"
+              [class.active]="i === idx"
+              (click)="goTo(i)"></span>
+      </div>
+    </section>
+
+    <section class="filters-bar" *ngIf="!loading">
+      <input class="flt"
+             type="text"
+             [placeholder]="'offersPage.filters.search' | translate"
+             [(ngModel)]="filters.q"
+             (ngModelChange)="applyFilters()" />
+
+      <select class="flt" [(ngModel)]="filters.category" (change)="applyFilters()">
+        <option value="all">{{ 'offersPage.filters.allCategories' | translate }}</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+
+      <select class="flt" [(ngModel)]="filters.sort" (change)="applyFilters()">
+        <option value="relevance">{{ 'offersPage.filters.sort.relevance' | translate }}</option>
+        <option value="priceAsc">{{ 'offersPage.filters.sort.priceAsc' | translate }}</option>
+        <option value="priceDesc">{{ 'offersPage.filters.sort.priceDesc' | translate }}</option>
+        <option value="ratingDesc">{{ 'offersPage.filters.sort.ratingDesc' | translate }}</option>
+      </select>
+
+      <select class="flt" [(ngModel)]="filters.location" (change)="applyFilters()">
+        <option value="all">{{ 'offersPage.filters.allLocations' | translate }}</option>
+        <option *ngFor="let l of locations" [value]="l">{{ l }}</option>
+      </select>
+
+      <button class="flt clear" (click)="clearFilters()">
+        {{ 'offersPage.filters.clear' | translate }}
+      </button>
+    </section>
+
+    <section class="offers-grid" *ngIf="!loading">
+      <article class="offer-card" *ngFor="let o of filtered">
+
+        <div class="img-box" tabindex="0">
+          <img [src]="imgFor(o)" [alt]="('offersData.titles.' + o.id) | translate" />
+          <button class="fav" type="button"
+                  [class.active]="isFav(o.id)"
+                  (click)="toggleFav(o)">
+            <span class="heart">{{ isFav(o.id) ? '❤️' : '💜' }}</span>
+          </button>
+
+          <span class="scrim" aria-hidden="true"></span>
+
+          <button
+            type="button"
+            class="view-offer"
+            [attr.aria-label]="('offersPage.card.view' | translate) + ' ' + (('offersData.titles.' + o.id) | translate)">
+            {{ 'offersPage.card.view' | translate }}
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- título traducido -->
+          <h3 class="ttl">{{ ('offersData.titles.' + o.id) | translate }}</h3>
+          <div class="pname">{{ o.partner }}</div>
+
+          <div class="stars-row">
+            <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+            <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+          </div>
+
+          <hr class="sep" />
+
+          <div class="price-row">
+            <div class="prc">
+              <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+              <span class="amt">{{ o.price | number:'1.2-2' }}</span>
+            </div>
+
+            <div class="loc">
+              <span class="pin" aria-hidden="true">📍</span>
+              {{ o.location }}
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="buy">{{ 'offersPage.card.buy' | translate }}</button>
+            <button class="add">{{ 'offersPage.card.add' | translate }}</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>
