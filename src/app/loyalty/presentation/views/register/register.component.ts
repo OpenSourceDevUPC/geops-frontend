@@ -9,7 +9,8 @@ import { AuthService } from '../../../infrastructure/auth/auth.service';
   selector: 'app-register',
   standalone: true,
   imports: [FormsModule, RouterModule, CommonModule],
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   model: any = {

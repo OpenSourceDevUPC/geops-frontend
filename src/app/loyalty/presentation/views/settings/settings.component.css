@@ -1,0 +1,258 @@
+.settings-wrapper {
+  margin: 0 auto;
+  padding-top: 56px;
+  min-height: 94vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.settings-card {
+  max-width: 600px;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(74,0,114,0.07);
+  padding: 32px 24px 24px 24px;
+  margin-bottom: 24px;
+}
+
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid #EEE;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+}
+
+.settings-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #A751D4;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: #26242A;
+  margin-bottom: 2px;
+}
+
+.settings-plan {
+  color: #A751D4;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.settings-profile-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.settings-btn {
+  font-size: 15px;
+  font-weight: 500;
+  padding: 7px 20px;
+  border-radius: 8px;
+  background: #f1f1f8;
+  border: none;
+  color: #A751D4;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.settings-btn.secondary {
+  background: #fff;
+  border: 1px solid #CCC;
+  color: #26242A;
+}
+.settings-btn.primary {
+  background: #A751D4;
+  color: #fff;
+}
+.settings-btn.primary:hover {
+  background: #8636be;
+}
+
+.settings-input,
+.settings-row input,
+.settings-row select {
+  width: 100%;
+  min-width: 220px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 11px 16px;
+  border-radius: 7px;
+  border: 1.5px solid #e7e7ef;
+  outline: none;
+  font-size: 15px;
+  background: #fafafc;
+  color: #26242A;
+  margin-top: 2px;
+  margin-bottom: 0;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.settings-input:focus,
+.settings-row input:focus,
+.settings-row select:focus {
+  border-color: #a751d4;
+  box-shadow: 0 0 0 2px #a751d421;
+}
+input[disabled], select[disabled] {
+  background: #f2f2f2 !important;
+  color: #8e8e8e !important;
+  border-style: dashed;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  margin-top: 10px;
+}
+
+.settings-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.settings-row input[type="checkbox"] {
+  margin: 0 3px 0 0;
+  transform: scale(1.2);
+}
+
+.settings-tags {
+  margin: 6px 0;
+  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag {
+  background: #f1edfa;
+  color: #A751D4;
+  font-size: 13px;
+  padding: 4px 14px;
+  border-radius: 14px;
+  font-weight: 500;
+  border: none;
+}
+.tag.selected {
+  background: #e4d4fa;
+  color: #a259ff;
+  border-radius: 8px;
+  padding: 2px 13px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.checkbox-label {
+  margin-left: 16px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.settings-footer {
+  text-align: center;
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 18px;
+  margin-top: 20px;
+}
+
+/* CHIPS FAVORITOS */
+.settings-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 4px;
+}
+.category-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  background: #f1edfa;
+  color: #A751D4;
+  border-radius: 16px;
+  padding: 4px 16px 4px 10px;
+  user-select: none;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  min-width: 74px;
+  margin-bottom: 4px;
+  transition: background .18s, color .18s, box-shadow .18s;
+}
+.category-checkbox input[type="checkbox"] {
+  accent-color: #A751D4;
+  margin-right: 2px;
+  transform: scale(1.14);
+  cursor: pointer;
+}
+.category-checkbox input[type="checkbox"]:disabled {
+  opacity: 0.5;
+}
+.category-checkbox input[type="checkbox"]:checked {
+  background: #a259ff;
+  color: #fff;
+  box-shadow: 0 2px 8px #a259ff20;
+}
+.category-checkbox input[type="checkbox"]:checked ~ * {
+  color: #fff;
+}
+.category-checkbox:hover {
+  background: #e8d3ff;
+  color: #7f19cf;
+}
+
+/* GRUPO INPUT + ICONO LÁPIZ */
+.input-edit-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+.edit-icon-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 3px 5px 3px 2px;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-left: 8px;
+  z-index: 1;
+}
+.edit-icon-btn:hover, .input-edit-group:focus-within .edit-icon-btn {
+  background: #f6edfd;
+}
+.edit-icon-btn mat-icon {
+  font-size: 19px;
+  color: #a751d4;
+  opacity: .82;
+}
+.edit-icon-btn:hover mat-icon {
+  color: #8636be;
+  opacity: 1;
+}

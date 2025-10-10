@@ -3,16 +3,16 @@ import { Layout } from './shared/presentation/components/layout/layout';
 import { LoginComponent } from './loyalty/presentation/views/login/login.component';
 import { RegisterComponent } from './loyalty/presentation/views/register/register.component';
 import { RegisterBussinesComponent } from './loyalty/presentation/views/register-bussines/register-bussines.component';
-import { authGuard } from './loyalty/infrastructure/auth/auth.guard';
 
+// Si tu DashboardOwnerComponent está en shared/presentation/views/dashboard-owner/
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-bussines', component: RegisterBussinesComponent },
+
   {
     path: '',
     component: Layout,
-    canActivate: [authGuard],
     children: [
       {
         path: 'home',
@@ -49,8 +49,26 @@ export const routes: Routes = [
             .then(m => m.MisCuponesComponent),
         title: 'GeoPs - Mis Cupones'
       },
-      { path: '', pathMatch: 'full', redirectTo: '/login' },
-    ],
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/profile/profiles.component')
+            .then(m => m.ProfilesComponent),
+        title: 'GeoPs - Profile'
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/settings/settings.component')
+            .then(m => m.SettingsComponent),
+        title: 'GeoPs - Settings'
+      },
+
+      // Este redirect lleva a home si accedes a '/'
+      { path: '', pathMatch: 'full', redirectTo: 'home' }
+    ]
   },
-  { path: '**', redirectTo: '/login' },
+
+  // Si accedes a una ruta no válida, redirige a login
+  { path: '**', redirectTo: '/login' }
 ];

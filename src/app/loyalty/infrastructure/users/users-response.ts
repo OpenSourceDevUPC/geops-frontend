@@ -17,6 +17,12 @@ export interface UserResource {
   plan: PlanType;
   phone?: string;
   business?: BusinessResource; // solo si role === 'OWNER'
+  // AÑADE LOS CAMPOS EXTRA:
+  favorites?: string[];
+  home?: string;
+  work?: string;
+  university?: string;
+  locationPermission?: string;
 }
 
 export interface UsersResponse {}

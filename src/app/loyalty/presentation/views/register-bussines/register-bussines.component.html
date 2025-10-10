@@ -1,14 +1,20 @@
 <div class="register-container">
-  <h2>Datos adicionales del negocio</h2>
-  <form (ngSubmit)="onSubmit()" #businessForm="ngForm">
-    <label>Nombre del negocio:</label>
-    <input type="text" name="businessName" [(ngModel)]="business.businessName" required />
-    <label>Tipo de negocio:</label>
-    <input type="text" name="businessType" [(ngModel)]="business.businessType" required />
-    <label>Tax ID:</label>
-    <input type="text" name="taxId" [(ngModel)]="business.taxId" required />
-    <!-- Puedes añadir más campos aquí -->
-    <button type="submit" [disabled]="submitting || !businessForm.form.valid">Guardar</button>
+  <h2 class="register-title">Datos adicionales del negocio</h2>
+  <form class="register-form" (ngSubmit)="onSubmit()" #businessForm="ngForm">
+    <label class="register-label">Nombre del negocio:</label>
+    <input class="register-input" type="text" name="businessName" [(ngModel)]="business.businessName" required />
+
+    <label class="register-label">Tipo de negocio:</label>
+    <input class="register-input" type="text" name="businessType" [(ngModel)]="business.businessType" required />
+
+    <label class="register-label">Tax ID:</label>
+    <input class="register-input" type="text" name="taxId" [(ngModel)]="business.taxId" required />
+
+    <!-- Más campos aquí si los necesitas -->
+
+    <button class="register-btn" type="submit" [disabled]="submitting || !businessForm.form.valid">
+      Guardar
+    </button>
   </form>
-  <div *ngIf="errorMessage" class="error">{{errorMessage}}</div>
+  <div *ngIf="errorMessage" class="register-error">{{errorMessage}}</div>
 </div>
