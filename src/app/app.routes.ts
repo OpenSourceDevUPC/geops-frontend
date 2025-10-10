@@ -1,7 +1,14 @@
 import { Routes } from '@angular/router';
-import {Layout} from './shared/presentation/components/layout/layout';
+import { Layout } from './shared/presentation/components/layout/layout';
+import { LoginComponent } from './loyalty/presentation/views/login/login.component';
+import { RegisterComponent } from './loyalty/presentation/views/register/register.component';
+// IMPORTA TU COMPONENTE DE NEGOCIO:
+import { RegisterBussinesComponent } from './loyalty/presentation/views/register-bussines/register-bussines.component';
 
 export const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'register-bussines', component: RegisterBussinesComponent }, // <--- ¡AGREGA ESTO!
   {
     path: '',
     component: Layout,
@@ -13,7 +20,6 @@ export const routes: Routes = [
             .then(m => m.Home),
         title: 'GeoPs - Home'
       },
-
       {
         path: 'ofertas',
         loadComponent: () =>
@@ -21,7 +27,6 @@ export const routes: Routes = [
             .then(m => m.OfertasComponent),
         title: 'GeoPs - Ofertas'
       },
-
       {
         path: 'categorias',
         loadComponent: () =>
@@ -29,7 +34,6 @@ export const routes: Routes = [
             .then(m => m.CategoriasComponent),
         title: 'GeoPs - Categorías'
       },
-
       {
         path: 'favoritos',
         loadComponent: () =>
@@ -37,7 +41,6 @@ export const routes: Routes = [
             .then(m => m.FavoritosComponent),
         title: 'GeoPs - Favoritos'
       },
-
       {
         path: 'mis-cupones',
         loadComponent: () =>
@@ -45,10 +48,8 @@ export const routes: Routes = [
             .then(m => m.MisCuponesComponent),
         title: 'GeoPs - Mis Cupones'
       },
-
-      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: '', pathMatch: 'full', redirectTo: '/login' },
     ],
   },
-
-  { path: '**', redirectTo: 'home' },
+  { path: '**', redirectTo: '/login' },
 ];

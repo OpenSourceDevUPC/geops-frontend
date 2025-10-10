@@ -18,7 +18,7 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
    * @param http - cliente http angular
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3001/offers', new OffersAssembler());
+    super(http, 'http://localhost:3000/offers', new OffersAssembler());
   }
 
   /**
