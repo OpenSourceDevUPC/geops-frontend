@@ -100,7 +100,9 @@
     "hello": "Hello,",
     "user": "Ariana",
     "viewMore": "View More",
-    "premium": "Premium"
+    "premium": "Premium",
+    "currentBasic": "Basic Plan",
+    "currentPremium": "Premium Plan"
   },
   "subscriptions": {
     "title": "Plans",

@@ -45,6 +45,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
   idx = 0;
   timer?: any;
+  userId = 'a512';
 
   /**
    * filttros de búsqueda
@@ -78,6 +79,13 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * recupera los favoritos del usuario
    */
   ngOnInit(): void {
+
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userId = String(user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
 
     this.currentUserId = this.authService.getCurrentUserId();
     console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
@@ -263,13 +271,11 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * @param o - Oferta a añadir
    */
   addToCart(o: Offer) {
-    // Using hardcoded user ID for now - in real app would come from auth service
-    const userId = 'a512';
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
     this.cartApi.addItemToCart(
-      userId,
+      this.userId,
       o.id.toString(),
       offerTitle,
       o.price,
@@ -295,30 +301,24 @@ export class OfertasComponent implements OnInit, OnDestroy {
    */
   buyNow(o: Offer) {
     // Using hardcoded user ID for now - in real app would come from auth service
-    const userId = 'a512';
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
     // Add to cart first, then open cart sidebar
-    this.cartApi.addItemToCart(
-      userId,
-      o.id.toString(),
-      offerTitle,
-      o.price,
-      offerImageUrl,
-      1
-    ).subscribe({
-      next: () => {
-        console.log('Item added to cart successfully');
-        // Reset payment flow when items are added
-        this.cartUiService.resetPaymentFlow();
-        // Open the cart sidebar after adding the item
-        this.cartUiService.openCart();
-      },
-      error: (error) => {
-        console.error('Error adding item to cart:', error);
-        // Could show an error message here
-      }
-    });
+    this.cartApi
+      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .subscribe({
+        next: () => {
+          console.log('Item added to cart successfully');
+          // Reset payment flow when items are added
+          this.cartUiService.resetPaymentFlow();
+          // Open the cart sidebar after adding the item
+          this.cartUiService.openCart();
+        },
+        error: (error) => {
+          console.error('Error adding item to cart:', error);
+          // Could show an error message here
+        },
+      });
   }
 }
