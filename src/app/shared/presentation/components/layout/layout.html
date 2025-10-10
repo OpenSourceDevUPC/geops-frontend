@@ -15,15 +15,12 @@
 
     <span class="spacer"></span>
 
-    <button mat-raised-button class="action-btn help">
+    <button mat-raised-button class="action-btn help" (click)="goToHelpCenter()">
       {{ 'header.help' | translate }}
     </button>
 
-    <button
-      mat-icon-button
-      class="action-btn notification"
-      [attr.aria-label]="'header.notifications' | translate">
-      <mat-icon>notifications</mat-icon>
+    <button mat-raised-button class="action-btn help">
+      {{ 'header.help' | translate }}
     </button>
 
     <button
