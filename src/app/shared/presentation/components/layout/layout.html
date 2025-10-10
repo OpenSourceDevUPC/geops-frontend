@@ -15,12 +15,15 @@
 
     <span class="spacer"></span>
 
-    <button mat-raised-button class="action-btn help" (click)="goToHelpCenter()">
+    <button mat-raised-button class="action-btn help">
       {{ 'header.help' | translate }}
     </button>
 
-    <button mat-raised-button class="action-btn help">
-      {{ 'header.help' | translate }}
+    <button
+      mat-icon-button
+      class="action-btn notification"
+      [attr.aria-label]="'header.notifications' | translate">
+      <mat-icon>notifications</mat-icon>
     </button>
 
     <button
@@ -51,8 +54,14 @@
       </button>
     </mat-menu>
 
-
-    <button mat-raised-button class="action-btn cart" [attr.aria-label]="'header.cart' | translate">
+    <button
+      mat-raised-button
+      class="action-btn cart"
+      [attr.aria-label]="'header.cart' | translate"
+      [matBadge]="cartCount()"
+      [matBadgeHidden]="cartCount() === 0"
+      matBadgeColor="warn"
+      (click)="openCart()">
       <mat-icon>shopping_cart</mat-icon>
       <span>{{ 'header.cart' | translate }}</span>
     </button>
@@ -69,3 +78,6 @@
 </main>
 
 <app-footer-content></app-footer-content>
+
+<!-- Cart Sidebar -->
+<app-cart-sidebar></app-cart-sidebar>

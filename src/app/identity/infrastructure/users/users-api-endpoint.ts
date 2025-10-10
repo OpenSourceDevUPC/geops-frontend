@@ -49,4 +49,12 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
     );
   }
 
+
+  // Actualiza un usuario existente
+  updateUser(user: User): Observable<UserResource> {
+    return this.http.put<UserResource>(
+      `${this.endpointUrl}/${encodeURIComponent(user.id)}`,
+      user
+    );
+  }
 }

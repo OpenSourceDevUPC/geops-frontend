@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { Layout } from './shared/presentation/components/layout/layout';
-import { LoginComponent } from './loyalty/presentation/views/login/login.component';
-import { RegisterComponent } from './loyalty/presentation/views/register/register.component';
-import { RegisterBussinesComponent } from './loyalty/presentation/views/register-bussines/register-bussines.component';
+import { LoginComponent } from './identity/presentation/views/login/login.component';
+import { RegisterComponent } from './identity/presentation/views/register/register.component';
+import { RegisterBussinesComponent } from './identity/presentation/views/register-bussines/register-bussines.component';
 // import { AuthGuard } from 'ruta/del/authguard'; // si tienes guard
 
 export const routes: Routes = [
@@ -54,14 +54,14 @@ export const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () =>
-          import('./loyalty/presentation/views/profile/profiles.component')
+          import('./identity/presentation/views/profile/profiles.component')
             .then(m => m.ProfilesComponent),
         title: 'GeoPs - Profile'
       },
       {
         path: 'settings',
         loadComponent: () =>
-          import('./loyalty/presentation/views/settings/settings.component')
+          import('./identity/presentation/views/settings/settings.component')
             .then(m => m.SettingsComponent),
         title: 'GeoPs - Settings'
       }

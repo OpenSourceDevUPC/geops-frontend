@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
-import {AuthService} from '../../../infrastructure/auth/auth.service';
+import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 
 type Offer = {
   id: number;

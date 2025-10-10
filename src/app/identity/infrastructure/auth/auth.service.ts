@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { User } from '../../domain/model/user.entity';
 import { UsersApiEndpoint } from '../users/users-api-endpoint';
 import { UserResource } from '../users/users-response';
@@ -16,6 +16,9 @@ export class AuthService {
     this.loadUserFromStorage();
   }
 
+  /**
+   * Carga el usuario guardado en localStorage
+   */
   private loadUserFromStorage(): void {
     const stored = localStorage.getItem('currentUser');
     if (stored) {
@@ -30,23 +33,36 @@ export class AuthService {
     }
   }
 
+  /**
+   * Obtiene el usuario actual
+   */
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
+  /**
+   * Obtiene el ID del usuario actual
+   */
   getCurrentUserId(): number | null {
     const user = this.currentUserSubject.value;
     return user?.id ?? null;
   }
 
+  /**
+   * Verifica si hay un usuario autenticado
+   */
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
 
+  /**
+   * Inicia sesión con email y password
+   */
   login(email: string, password: string): Observable<User | null> {
     return this.usersApi.login(email, password).pipe(
       map(userResource => {
         if (!userResource) return null;
+
         const user: User = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
         console.log('[AuthService] Login exitoso. Usuario ID:', user.id);
@@ -55,6 +71,9 @@ export class AuthService {
     );
   }
 
+  /**
+   * Registra un nuevo usuario
+   */
   register(userData: Omit<User, 'id'>): Observable<User> {
     return this.usersApi.register(userData as User).pipe(
       map(userResource => {
@@ -66,17 +85,26 @@ export class AuthService {
     );
   }
 
+  /**
+   * Cierra sesión
+   */
   logout(): void {
     console.log('[AuthService] Cerrando sesión');
     this.currentUserSubject.next(null);
     localStorage.removeItem('currentUser');
   }
 
+  /**
+   * Establece el usuario actual y lo guarda en localStorage
+   */
   private setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
+  /**
+   * Convierte UserResource a User
+   */
   private mapResourceToUser(resource: UserResource): User {
     return {
       id: resource.id,
@@ -103,6 +131,30 @@ export class AuthService {
         const updated = this.mapResourceToUser(userResource);
         this.setCurrentUser(updated);
         return updated;
+      })
+    );
+  }
+
+  /**
+   * Refresh current user from API
+   * Useful if user data might have changed
+   */
+  refreshCurrentUser(): Observable<User | null> {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      console.warn('[AuthService] No hay usuario autenticado para refrescar');
+      return new Observable(subscriber => {
+        subscriber.next(null);
+        subscriber.complete();
+      });
+    }
+    return this.usersApi.getById(userId).pipe(
+      map(userResource => {
+        if (!userResource) return null;
+        const user = this.mapResourceToUser(userResource);
+        this.setCurrentUser(user);
+        console.log('[AuthService] Usuario refrescado. ID:', user.id);
+        return user;
       })
     );
   }

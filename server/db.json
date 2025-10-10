@@ -6,50 +6,27 @@
       "email": "abi@ejemplo.com",
       "password": "789456123",
       "role": "CONSUMER",
-      "plan": "premium",
+      "plan": "PREMIUM",
       "phone": "987654321",
-      "notificationsActive": false,
-      "locationPermission": "Preguntar",
-      "usualPlace": "Casa",
-      "work": "sadas",
-      "usualPlaceDetail": "sdadas",
-      "university": "asdasd"
-    },
-    {
-      "name": "Alvaro",
-      "email": "alvaroi@ejemplo.com",
-      "password": "password",
-      "phone": "999999999",
-      "role": "OWNER",
-      "plan": "PREMIUM",
-      "business": {
-        "businessName": "panpun",
-        "businessType": "software",
-        "taxId": "12345678"
-      },
-      "id": "ENMV2pr"
-    },
-    {
-      "id": "ihg6YeG",
-      "name": "Dyron",
-      "email": "dyron@ejemplo.com",
-      "password": "contra123",
-      "role": "OWNER",
-      "plan": "PREMIUM",
-      "phone": "999999999",
-      "business": {},
       "favorites": [
-        "Sushi",
         "Tecnología",
-        "Viajes",
-        "Moda",
-        "Belleza",
-        "Salud"
+        "Sushi",
+        "Salud",
+        "Deporte"
       ],
-      "home": "San Isidro",
-      "work": "Interbank",
+      "home": "",
+      "work": "",
       "university": "",
       "locationPermission": "ASK"
+    },
+    {
+      "id": "lIkCj-M",
+      "name": "Ale",
+      "email": "ale@gmail.com",
+      "password": "123456",
+      "phone": "999222929",
+      "role": "CONSUMER",
+      "plan": "BASIC"
     }
   ],
   "offers": [
@@ -342,24 +319,116 @@
       "imageUrl": "assets/offers/24.jpg"
     }
   ],
-  "favorites": [
+  "favorites": [],
+  "subscriptions": [
     {
-      "id": "e565",
+      "id": 1,
+      "price": 0,
+      "recommended": false,
+      "type": "BASIC"
+    },
+    {
+      "id": 2,
+      "price": 19,
+      "recommended": true,
+      "type": "PREMIUM"
+    }
+  ],
+  "cart": [
+    {
+      "id": 1,
       "userId": "a512",
-      "offerId": 2,
-      "createdAt": "2025-10-10T08:36:28.911Z"
+      "items": [],
+      "totalItems": 0,
+      "totalAmount": 0,
+      "createdAt": "2025-10-10T12:00:00.000Z",
+      "updatedAt": "2025-10-10T18:35:13.232Z"
+    }
+  ],
+  "payments": [
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 159.8,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "gilberthuarcaya@gmail.com",
+      "customerFirstName": "Gilbert Alonso",
+      "customerLastName": "Huarcaya Matias",
+      "paymentCode": "YAPE-2430",
+      "createdAt": "2025-10-10T08:31:44.842Z",
+      "completedAt": "2025-10-10T08:31:44.842Z",
+      "id": 1
     },
     {
-      "userId": "ihg6YeG",
-      "offerId": 2,
-      "createdAt": "2025-10-10T17:10:24.733Z",
-      "id": "SerlpKN"
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 119.9,
+      "paymentMethod": "PLIN",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "PLIN-4057",
+      "createdAt": "2025-10-10T09:40:38.801Z",
+      "completedAt": "2025-10-10T09:40:38.801Z",
+      "id": 2
     },
     {
-      "userId": "ihg6YeG",
-      "offerId": 3,
-      "createdAt": "2025-10-10T17:10:25.525Z",
-      "id": "GTvirBw"
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 39.9,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "YAPE-7070",
+      "createdAt": "2025-10-10T09:50:16.068Z",
+      "completedAt": "2025-10-10T09:50:16.068Z",
+      "id": 3
+    },
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 80,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "YAPE-1222",
+      "createdAt": "2025-10-10T17:54:19.227Z",
+      "completedAt": "2025-10-10T17:54:19.227Z",
+      "id": 4
+    },
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 39.9,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "YAPE-2743",
+      "createdAt": "2025-10-10T18:33:46.392Z",
+      "completedAt": "2025-10-10T18:33:46.392Z",
+      "id": 5
+    },
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 59.8,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "YAPE-9408",
+      "createdAt": "2025-10-10T18:34:27.320Z",
+      "completedAt": "2025-10-10T18:34:27.320Z",
+      "id": 6
     }
   ]
 }
