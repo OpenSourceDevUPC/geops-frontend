@@ -6,5 +6,5 @@ import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 export interface Subscription extends BaseEntity {
   price: number;
   recommended: boolean;
-  type: 'basic' | 'premium';
+  type: 'BASIC' | 'PREMIUM';
 }

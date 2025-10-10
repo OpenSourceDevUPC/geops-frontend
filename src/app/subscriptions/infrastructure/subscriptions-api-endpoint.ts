@@ -1,11 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { Subscription } from '../domain/model/subscription.entity';
 import { SubscriptionResource, SubscriptionsResponse } from './subscriptions-response';
 import { SubscriptionsAssembler } from './subscriptions-assembler';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
 export class SubscriptionsApiEndpoint extends BaseApiEndpoint<
   Subscription,
   SubscriptionResource,
@@ -13,10 +12,14 @@ export class SubscriptionsApiEndpoint extends BaseApiEndpoint<
   SubscriptionsAssembler
 > {
   /**
-   * Creates an instance of the SubscriptionsApiEndpoint service
-   * @param http - Angular HTTP client
+   * Creates an instance of SubscriptionsApiEndpoint
+   * @param http - The HttpClient to be used for making API requests
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3001/subscriptions', new SubscriptionsAssembler());
+    super(
+      http,
+      `${environment.platformProviderApiBaseUrl}${environment.platformProviderSubscriptionsEndpointPath}`,
+      new SubscriptionsAssembler()
+    );
   }
 }

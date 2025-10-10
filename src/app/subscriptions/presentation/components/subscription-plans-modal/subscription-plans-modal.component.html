@@ -21,8 +21,8 @@
         <div
           *ngFor="let plan of subscriptionPlans()"
           class="plan-card"
-          [class.basic-plan]="plan.type === 'basic'"
-          [class.premium-plan]="plan.type === 'premium'"
+          [class.basic-plan]="plan.type === 'BASIC'"
+          [class.premium-plan]="plan.type === 'PREMIUM'"
           [class.recommended]="plan.recommended">
 
           <!-- Recommended Badge -->
@@ -55,10 +55,18 @@
             <!-- Plan Button -->
             <button
               class="plan-button"
-              [class.basic-button]="plan.type === 'basic'"
-              [class.premium-button]="plan.type === 'premium'"
+              [class.basic-button]="plan.type === 'BASIC'"
+              [class.premium-button]="plan.type === 'PREMIUM'"
+              [disabled]="updating()"
               (click)="onPlanSelect(plan)">
-              {{ plan.buttonText }}
+              <span *ngIf="!updating()">{{ plan.buttonText }}</span>
+              <span *ngIf="updating()" class="button-loading">
+                <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.2"/>
+                  <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+                Actualizando...
+              </span>
             </button>
           </div>
         </div>

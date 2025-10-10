@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../domain/model/subscription.entity';
-import { SubscriptionsApiEndpoint } from '../../../infrastructure/subscriptions-api-endpoint';
+import { SubscriptionsApi } from '../../../infrastructure/subscriptions-api';
+import { UsersApi } from '../../../../shared/infrastructure/users-api';
 
 /**
  * Extended subscription interface with translation data
@@ -49,12 +50,29 @@ export class SubscriptionPlansModalComponent implements OnInit {
    */
   loading = signal(false);
 
+  /**
+   * Signal that indicates if a plan is being selected/updated
+   */
+  updating = signal(false);
+
+  /**
+   * Current user ID (this should be injected from a user service in a real app)
+   */
+  private currentUserId = 'f255'; // Using the ID from db.json for demo
+
   constructor(
-    private subscriptionsApiEndpoint: SubscriptionsApiEndpoint,
-    private translateService: TranslateService
+    private SubscriptionsApi: SubscriptionsApi,
+    private translateService: TranslateService,
+    private usersApi: UsersApi
   ) {}
 
   ngOnInit(): void {
+    // Wait for translations to load before loading plans
+    this.translateService.onLangChange.subscribe(() => {
+      if (this.subscriptionPlans().length > 0) {
+        this.loadSubscriptionPlans();
+      }
+    });
     this.loadSubscriptionPlans();
   }
 
@@ -63,16 +81,16 @@ export class SubscriptionPlansModalComponent implements OnInit {
    */
   private loadSubscriptionPlans(): void {
     this.loading.set(true);
-    this.subscriptionsApiEndpoint.getAll().subscribe({
+    this.SubscriptionsApi.getSubscriptions().subscribe({
       next: (plans) => {
-        const plansWithTranslations = plans.map(plan => this.enrichPlanWithTranslations(plan));
+        const plansWithTranslations = plans.map((plan) => this.enrichPlanWithTranslations(plan));
         this.subscriptionPlans.set(plansWithTranslations);
         this.loading.set(false);
       },
       error: (error) => {
         console.error('Error loading subscription plans:', error);
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -82,16 +100,24 @@ export class SubscriptionPlansModalComponent implements OnInit {
    * @returns The plan enriched with translations
    */
   private enrichPlanWithTranslations(plan: Subscription): SubscriptionWithTranslations {
-    const planKey = `subscriptions.plans.${plan.type}`;
+    const planKey = `subscriptions.plans.${plan.type.toLowerCase()}`;
+
+    // Get translations
+    const name = this.translateService.instant(`${planKey}.name`);
+    const description = this.translateService.instant(`${planKey}.description`);
+    const features = this.translateService.instant(`${planKey}.features`);
+    const buttonText = this.translateService.instant(`${planKey}.buttonText`);
+    const currency = this.translateService.instant('subscriptions.currency');
+    const interval = this.translateService.instant('subscriptions.interval');
 
     return {
       ...plan,
-      name: this.translateService.instant(`${planKey}.name`),
-      description: this.translateService.instant(`${planKey}.description`),
-      features: this.translateService.instant(`${planKey}.features`),
-      buttonText: this.translateService.instant(`${planKey}.buttonText`),
-      currency: this.translateService.instant('subscriptions.currency'),
-      interval: this.translateService.instant('subscriptions.interval')
+      name: name || plan.type.toLowerCase(), // Fallback to type if translation fails
+      description: description || '',
+      features: Array.isArray(features) ? features : [],
+      buttonText: buttonText || 'Select',
+      currency: currency || 'S/',
+      interval: interval || 'month',
     };
   }
 
@@ -103,11 +129,37 @@ export class SubscriptionPlansModalComponent implements OnInit {
   }
 
   /**
-   * Handles plan selection
+   * Handles plan selection and updates the user's plan
    * @param plan - The selected plan
    */
   onPlanSelect(plan: SubscriptionWithTranslations): void {
-    this.planSelected.emit(plan);
+    this.updating.set(true);
+
+    // TODO:Convert string ID to number for the API call
+    const userId = this.currentUserId || "1";
+
+    this.usersApi.updateUserPlan(userId, plan.type).subscribe({
+      next: (updatedUser) => {
+        console.log('User plan updated successfully:', updatedUser);
+        this.updating.set(false);
+
+        // Show success message or notification here
+        alert(`¡Plan ${plan.name} seleccionado exitosamente!`);
+
+        // Emit the plan selection event
+        this.planSelected.emit(plan);
+
+        // Close the modal
+        this.onClose();
+      },
+      error: (error) => {
+        console.error('Error updating user plan:', error);
+        this.updating.set(false);
+
+        // Show error message
+        alert('Error al actualizar el plan. Por favor, inténtelo de nuevo.');
+      }
+    });
   }
 
   /**
