@@ -1,8 +1,8 @@
 <div class="layout">
-  <div>
+  <section class="welcome-banner">
     <app-welcome-banner></app-welcome-banner>
-  </div>
-  <div class="map-container">
+  </section>
+  <section class="map-container">
 
     <div class="map-top-bar">
       <div class="map-top-bar-left">
@@ -62,6 +62,368 @@
       </div>
     </div>
 
-  </div>
+  </section>
+  <section class="home-offers">
+    <div class="offers-container">
+      <div class="offer-texts">
+        <span>{{'home.cinemas' | translate}}</span>
+        <button>{{'home.see-more' | translate}}</button>
+      </div>
+      <div class="offer-cards">
+        @for(offer of cinemaOffers; track offer.title) {
+          <div class="offer-card">
+            <div class="img-box" tabindex="0">
+              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <button class="fav" type="button"
+                      [class.active]="this.isFav(offer.id)"
+                      (click)="this.toggleFav(offer)">
+                <span class="heart">{{ this.isFav(offer.id) ? '❤️' : '💜' }}</span>
+              </button>
 
+              <span class="scrim" aria-hidden="true"></span>
+
+              <button
+                type="button"
+                class="view-offer"
+                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
+                (('offersData.titles.' + offer.id) | translate)">
+                {{ 'offersPage.card.view' | translate }}
+              </button>
+            </div>
+
+            <div class="card-body">
+              <!-- título traducido -->
+              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <div class="pname">{{ offer.partner }}</div>
+
+              <div class="stars-row">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+                <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+              </div>
+
+              <hr class="sep" />
+
+              <div class="price-row">
+                <div class="prc">
+                  <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+                  <span class="amt">{{ offer.price | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="loc">
+                  <span class="pin" aria-hidden="true">📍</span>
+                  {{ offer.location }}
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="buy" (click)="this.buyNow(offer)">{{ 'offersPage.card.buy' | translate }}</button>
+                <button class="add" (click)="this.addToCart(offer)">{{ 'offersPage.card.add' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="offers-container">
+      <div class="offer-texts">
+        <span>{{'home.lunch-buffets' | translate}}</span>
+        <button>{{'home.see-more' | translate}}</button>
+      </div>
+
+      <div class="offer-cards">
+        @for(offer of buffetOffers; track offer.title) {
+          <div class="offer-card">
+            <div class="img-box" tabindex="0">
+              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <button class="fav" type="button"
+                      [class.active]="this.isFav(offer.id)"
+                      (click)="this.toggleFav(offer)">
+                <span class="heart">{{ this.isFav(offer.id) ? '❤️' : '💜' }}</span>
+              </button>
+
+              <span class="scrim" aria-hidden="true"></span>
+
+              <button
+                type="button"
+                class="view-offer"
+                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
+                (('offersData.titles.' + offer.id) | translate)">
+                {{ 'offersPage.card.view' | translate }}
+              </button>
+            </div>
+
+            <div class="card-body">
+              <!-- título traducido -->
+              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <div class="pname">{{ offer.partner }}</div>
+
+              <div class="stars-row">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+                <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+              </div>
+
+              <hr class="sep" />
+
+              <div class="price-row">
+                <div class="prc">
+                  <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+                  <span class="amt">{{ offer.price | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="loc">
+                  <span class="pin" aria-hidden="true">📍</span>
+                  {{ offer.location }}
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="buy" (click)="this.buyNow(offer)">{{ 'offersPage.card.buy' | translate }}</button>
+                <button class="add" (click)="this.addToCart(offer)">{{ 'offersPage.card.add' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="offers-container">
+      <div class="offer-texts">
+        <span>{{'home.inflatable-parks' | translate}}</span>
+        <button>{{'home.see-more' | translate}}</button>
+      </div>
+      <div class="offer-cards">
+        @for(offer of parkOffers; track offer.title) {
+          <div class="offer-card">
+            <div class="img-box" tabindex="0">
+              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <button class="fav" type="button"
+                      [class.active]="this.isFav(offer.id)"
+                      (click)="this.toggleFav(offer)">
+                <span class="heart">{{ this.isFav(offer.id) ? '❤️' : '💜' }}</span>
+              </button>
+
+              <span class="scrim" aria-hidden="true"></span>
+
+              <button
+                type="button"
+                class="view-offer"
+                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
+                (('offersData.titles.' + offer.id) | translate)">
+                {{ 'offersPage.card.view' | translate }}
+              </button>
+            </div>
+
+            <div class="card-body">
+              <!-- título traducido -->
+              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <div class="pname">{{ offer.partner }}</div>
+
+              <div class="stars-row">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+                <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+              </div>
+
+              <hr class="sep" />
+
+              <div class="price-row">
+                <div class="prc">
+                  <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+                  <span class="amt">{{ offer.price | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="loc">
+                  <span class="pin" aria-hidden="true">📍</span>
+                  {{ offer.location }}
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="buy" (click)="this.buyNow(offer)">{{ 'offersPage.card.buy' | translate }}</button>
+                <button class="add" (click)="this.addToCart(offer)">{{ 'offersPage.card.add' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="offers-container">
+      <div class="offer-texts">
+        <span>{{'home.mechanical-games' | translate}}</span>
+        <button>{{'home.see-more' | translate}}</button>
+      </div>
+      <div class="offer-cards">
+        @for(offer of mechGamesOffers; track offer.title) {
+          <div class="offer-card">
+            <div class="img-box" tabindex="0">
+              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <button class="fav" type="button"
+                      [class.active]="this.isFav(offer.id)"
+                      (click)="this.toggleFav(offer)">
+                <span class="heart">{{ this.isFav(offer.id) ? '❤️' : '💜' }}</span>
+              </button>
+
+              <span class="scrim" aria-hidden="true"></span>
+
+              <button
+                type="button"
+                class="view-offer"
+                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
+                (('offersData.titles.' + offer.id) | translate)">
+                {{ 'offersPage.card.view' | translate }}
+              </button>
+            </div>
+
+            <div class="card-body">
+              <!-- título traducido -->
+              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <div class="pname">{{ offer.partner }}</div>
+
+              <div class="stars-row">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+                <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+              </div>
+
+              <hr class="sep" />
+
+              <div class="price-row">
+                <div class="prc">
+                  <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+                  <span class="amt">{{ offer.price | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="loc">
+                  <span class="pin" aria-hidden="true">📍</span>
+                  {{ offer.location }}
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="buy" (click)="this.buyNow(offer)">{{ 'offersPage.card.buy' | translate }}</button>
+                <button class="add" (click)="this.addToCart(offer)">{{ 'offersPage.card.add' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="offers-container">
+      <div class="offer-texts">
+        <span>{{'home.maki-open-bar' | translate}}</span>
+        <button>{{'home.see-more' | translate}}</button>
+      </div>
+      <div class="offer-cards">
+        @for(offer of makisOffers; track offer.title) {
+          <div class="offer-card">
+            <div class="img-box" tabindex="0">
+              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <button class="fav" type="button"
+                      [class.active]="this.isFav(offer.id)"
+                      (click)="this.toggleFav(offer)">
+                <span class="heart">{{ this.isFav(offer.id) ? '❤️' : '💜' }}</span>
+              </button>
+
+              <span class="scrim" aria-hidden="true"></span>
+
+              <button
+                type="button"
+                class="view-offer"
+                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
+                (('offersData.titles.' + offer.id) | translate)">
+                {{ 'offersPage.card.view' | translate }}
+              </button>
+            </div>
+
+            <div class="card-body">
+              <!-- título traducido -->
+              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <div class="pname">{{ offer.partner }}</div>
+
+              <div class="stars-row">
+                <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+                <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+              </div>
+
+              <hr class="sep" />
+
+              <div class="price-row">
+                <div class="prc">
+                  <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+                  <span class="amt">{{ offer.price | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="loc">
+                  <span class="pin" aria-hidden="true">📍</span>
+                  {{ offer.location }}
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="buy" (click)="this.buyNow(offer)">{{ 'offersPage.card.buy' | translate }}</button>
+                <button class="add" (click)="this.addToCart(offer)">{{ 'offersPage.card.add' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="offers-container">
+      <div class="offer-texts">
+        <span>{{'home.beauty' | translate}}</span>
+        <button>{{'home.see-more' | translate}}</button>
+      </div>
+      <div class="offer-cards">
+        @for(offer of beautyOffers; track offer.title) {
+          <div class="offer-card">
+          <div class="img-box" tabindex="0">
+            <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+            <button class="fav" type="button"
+                    [class.active]="this.isFav(offer.id)"
+                    (click)="this.toggleFav(offer)">
+              <span class="heart">{{ this.isFav(offer.id) ? '❤️' : '💜' }}</span>
+            </button>
+
+            <span class="scrim" aria-hidden="true"></span>
+
+            <button
+              type="button"
+              class="view-offer"
+              [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
+                (('offersData.titles.' + offer.id) | translate)">
+              {{ 'offersPage.card.view' | translate }}
+            </button>
+          </div>
+
+          <div class="card-body">
+            <!-- título traducido -->
+            <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+            <div class="pname">{{ offer.partner }}</div>
+
+            <div class="stars-row">
+              <span class="star" *ngFor="let s of [1,2,3,4,5]"></span>
+              <span class="score">{{ 'offersPage.card.rating' | translate:{ value: '5.0' } }}</span>
+            </div>
+
+            <hr class="sep" />
+
+            <div class="price-row">
+              <div class="prc">
+                <span class="curr">{{ 'offersPage.card.currency' | translate }}</span>
+                <span class="amt">{{ offer.price | number:'1.2-2' }}</span>
+              </div>
+
+              <div class="loc">
+                <span class="pin" aria-hidden="true">📍</span>
+                {{ offer.location }}
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="buy" (click)="this.buyNow(offer)">{{ 'offersPage.card.buy' | translate }}</button>
+              <button class="add" (click)="this.addToCart(offer)">{{ 'offersPage.card.add' | translate }}</button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
 </div>
