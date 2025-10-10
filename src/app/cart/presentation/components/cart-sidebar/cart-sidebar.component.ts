@@ -14,7 +14,7 @@ import { PaymentApi, CreatePaymentRequest } from '../../../../payment/infrastruc
 import { PaymentMethod } from '../../../../payment/domain/model/payment-method.enum';
 import { Payment } from '../../../../payment/domain/model/payment.entity';
 import { CartUiService } from '../../services/cart-ui.service';
-import { AuthService } from '../../../../loyalty/infrastructure/auth/auth.service';
+import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
 export type CartView = 'cart' | 'checkout' | 'confirmation';
 export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
