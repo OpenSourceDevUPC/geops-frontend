@@ -250,6 +250,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
       1
     ).subscribe({
       next: () => {
+        // Reset payment flow when items are added
+        this.cartUiService.resetPaymentFlow();
         // Could show a success message here
         console.log('Item added to cart successfully');
       },
@@ -281,6 +283,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: () => {
         console.log('Item added to cart successfully');
+        // Reset payment flow when items are added
+        this.cartUiService.resetPaymentFlow();
         // Open the cart sidebar after adding the item
         this.cartUiService.openCart();
       },

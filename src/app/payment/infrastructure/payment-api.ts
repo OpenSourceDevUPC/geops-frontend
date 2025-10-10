@@ -89,7 +89,19 @@ export class PaymentApi extends BaseApi {
   }
 
   private generatePaymentCode(paymentMethod: PaymentMethod): string {
-    const prefix = paymentMethod === PaymentMethod.YAPE ? 'YAPE' : 'CARD';
+    let prefix: string;
+    switch (paymentMethod) {
+      case PaymentMethod.YAPE:
+        prefix = 'YAPE';
+        break;
+      case PaymentMethod.PLIN:
+        prefix = 'PLIN';
+        break;
+      case PaymentMethod.CARD:
+      default:
+        prefix = 'CARD';
+        break;
+    }
     const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     return `${prefix}-${random}`;
   }
