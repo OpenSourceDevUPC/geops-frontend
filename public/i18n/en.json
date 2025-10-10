@@ -94,5 +94,34 @@
     "empty": "You don't have favorites yet.",
     "view": "View",
     "remove": "Remove"
+  },
+  "home": {
+    "welcome": "Welcome",
+    "hi": "Hi",
+    "free-plan": "Free Plan",
+    "premium-plan": "Premium Plan",
+    "see-more": "See more",
+    "map": {
+      "places": "Places",
+      "use-my-location": "Use my location",
+      "example": "e.g.: cine, buffet",
+      "search": "Search",
+      "radius": "Radius",
+      "settings": "Settings",
+      "all": "All",
+      "cinemas": "Cinemas",
+      "buffets": "Buffets",
+      "parks": "Parks",
+      "for-children": "For children",
+      "makis": "Makis",
+      "beauty": "Beauty",
+      "near-you": "Near you"
+    },
+    "cinemas": "Cinemas",
+    "lunch-buffets": "Lunch buffets",
+    "inflatable-parks": "Inflatable parks",
+    "mechanical-games": "Mechanical games",
+    "maki-open-bar": "Maki open bar",
+    "beauty": "Beauty"
   }
 }
