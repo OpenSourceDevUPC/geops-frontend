@@ -126,4 +126,28 @@ export class AuthService {
       business: resource.business
     };
   }
+
+  /**
+   * Refresh current user from API
+   * Useful if user data might have changed
+   */
+  refreshCurrentUser(): Observable<User | null> {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      console.warn('[AuthService] No hay usuario autenticado para refrescar');
+      return new Observable(subscriber => {
+        subscriber.next(null);
+        subscriber.complete();
+      });
+    }
+    return this.usersApi.getById(userId).pipe(
+      map(userResource => {
+        if (!userResource) return null;
+        const user = this.mapResourceToUser(userResource);
+        this.setCurrentUser(user);
+        console.log('[AuthService] Usuario refrescado. ID:', user.id);
+        return user;
+      })
+    );
+  }
 }

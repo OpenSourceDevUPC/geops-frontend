@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,6 +13,9 @@ import { FooterContent } from '../footer-content/footer-content';
 import { TopTabsComponent } from '../../../../loyalty/presentation/components/top-tabs/top-tabs.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
+import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
+import { CartApi } from '../../../../cart/infrastructure/cart-api';
+import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
 import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
 import {CommonModule} from '@angular/common';
 
@@ -34,14 +37,21 @@ import {CommonModule} from '@angular/common';
     TopTabsComponent,
     TranslateModule,
     LanguageSwitcher,
+    CartSidebarComponent,
     CommonModule,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
 })
-export class Layout {
+export class Layout implements OnInit {
+  private readonly cartApi = inject(CartApi);
+  private readonly cartUiService = inject(CartUiService);
+
+  @ViewChild(CartSidebarComponent) cartSidebar!: CartSidebarComponent;
+
   q = '';
   userName = 'Usuario';
+  cartCount = signal(0);
 
   constructor(
     private authService: AuthService,
@@ -56,11 +66,27 @@ export class Layout {
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
+        // Subscribe to cart count changes
+    this.cartApi.getCartCount().subscribe(count => {
+      this.cartCount.set(count);
+    });
+
+    // Subscribe to cart open requests
+    this.cartUiService.openCart$.subscribe(() => {
+      this.openCart();
+    });
   }
 
   get userInitial() {
     const n = this.userName?.trim();
     return n ? n[0].toUpperCase() : '?';
+  }
+
+  /**
+   * Open cart sidebar
+   */
+  openCart() {
+    this.cartSidebar.open();
   }
 
   doSearch() {

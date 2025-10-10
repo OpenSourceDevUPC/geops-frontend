@@ -55,8 +55,8 @@
           </div>
 
           <div class="card-actions">
-            <button class="buy">{{ 'offersPage.card.buy' | translate }}</button>
-            <button class="add">{{ 'offersPage.card.add' | translate }}</button>
+            <button class="buy" (click)="buyNow(o)">{{ 'offersPage.card.buy' | translate }}</button>
+            <button class="add" (click)="addToCart(o)">{{ 'offersPage.card.add' | translate }}</button>
           </div>
         </div>
       </article>

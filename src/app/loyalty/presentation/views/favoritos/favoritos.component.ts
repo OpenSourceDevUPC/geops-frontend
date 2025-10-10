@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
 import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
 import {AuthService} from '../../../infrastructure/auth/auth.service';
+import {CartApi} from '../../../../cart/infrastructure/cart-api';
+import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
 
 type Offer = {
   id: number;
@@ -26,13 +28,27 @@ type Offer = {
   templateUrl: './favoritos.component.html',
   styleUrls: ['./favoritos.component.css'],
 })
+
+/**
+ * favorites screen
+ */
 export class FavoritosComponent implements OnInit {
+  private readonly cartApi = inject(CartApi);
+  private readonly cartUiService = inject(CartUiService);
+
   loading = false;
   offers: Offer[] = [];
+
+
   private currentUserId: number | null = null;
 
+  userId = 'a512';
+
   /**
-   * creates an instance of the 'favoritescomponent' component
+   * creates an instance of the 'favoritesComponent' component
+   * @param favsApi
+   * @param offersApi
+   * @param authService
    */
   constructor(
     private favsApi: FavoritesApiEndpoint,
@@ -53,6 +69,22 @@ export class FavoritosComponent implements OnInit {
     }
 
     this.fetch();
+  }
+
+  /**
+   * checks if a location is a district and should not be translated
+   * @param location - location name
+   */
+  isDistrict(location: string): boolean {
+    const districts = [
+      'Surco', 'San Miguel', 'San Borja', 'Chorrillos', 'Santa Marina', 'Trujillo',
+      'Arequipa', 'Ica', 'Ate', 'Breña', 'Comas', 'Barranco', 'Los Olivos', 'Magdalena',
+      'Miraflores', 'Pueblo Libre', 'San Isidro', 'Tiendas seleccionadas'
+    ];
+    // Divide la ubicación por comas y elimina espacios
+    const locationParts = location.split(',').map(part => part.trim());
+    // Verifica si alguna parte es un distrito
+    return locationParts.some(part => districts.includes(part));
   }
 
   /**
@@ -110,4 +142,61 @@ export class FavoritosComponent implements OnInit {
       });
     });
   }
+
+  /**
+   * Añade una oferta al carrito
+   * @param o - Oferta a añadir
+   */
+  addToCart(o: Offer) {
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    this.cartApi.addItemToCart(
+      this.userId,
+      o.id.toString(),
+      offerTitle,
+      o.price,
+      offerImageUrl,
+      1
+    ).subscribe({
+      next: () => {
+        // Reset payment flow when items are added
+        this.cartUiService.resetPaymentFlow();
+        // Could show a success message here
+        console.log('Item added to cart successfully');
+      },
+      error: (error) => {
+        console.error('Error adding item to cart:', error);
+        // Could show an error message here
+      }
+    });
+  }
+
+  /**
+   * Procede a comprar directamente - añade al carrito y abre el sidebar
+   * @param o - Oferta a comprar
+   */
+  buyNow(o: Offer) {
+    // Using hardcoded user ID for now - in real app would come from auth service
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    // Add to cart first, then open cart sidebar
+    this.cartApi
+      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .subscribe({
+        next: () => {
+          console.log('Item added to cart successfully');
+          // Reset payment flow when items are added
+          this.cartUiService.resetPaymentFlow();
+          // Open the cart sidebar after adding the item
+          this.cartUiService.openCart();
+        },
+        error: (error) => {
+          console.error('Error adding item to cart:', error);
+          // Could show an error message here
+        },
+      });
+  }
+
 }
