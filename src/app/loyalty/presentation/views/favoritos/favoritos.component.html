@@ -23,12 +23,12 @@
           <span class="scrim" aria-hidden="true"></span>
 
           <button
-            type="button"
             class="view-offer"
-            [routerLink]="'/ofertas'"
-            [attr.aria-label]="('offersPage.card.view' | translate) + ' ' + (('offersData.titles.' + o.id) | translate)">
+            [routerLink]="['/ofertas', o.id]"
+            [queryParams]="{ from: 'favorites' }">
             {{ 'offersPage.card.view' | translate }}
           </button>
+
         </div>
 
         <div class="card-body">
