@@ -4,7 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from '../../../domain/model/subscription.entity';
 import { SubscriptionsApi } from '../../../infrastructure/subscriptions-api';
 import { UsersApi } from '../../../../shared/infrastructure/users-api';
-import { AuthService } from '../../../../loyalty/infrastructure/auth/auth.service';
+import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
 /**
  * Extended subscription interface with translation data
@@ -145,7 +145,7 @@ export class SubscriptionPlansModalComponent implements OnInit {
     this.usersApi.updateUserPlan(this.userId, plan.type).subscribe({
       next: (updatedUser) => {
         console.log('User plan updated successfully:', updatedUser);
-        
+
         // Refresh the current user data to reflect the plan change
         this.authService.refreshCurrentUser().subscribe({
           next: (refreshedUser) => {
@@ -164,10 +164,10 @@ export class SubscriptionPlansModalComponent implements OnInit {
           error: (refreshError) => {
             console.error('Error refreshing user data:', refreshError);
             this.updating.set(false);
-            
+
             // Still show success for the plan update, but warn about refresh
             alert(`¡Plan ${plan.name} seleccionado exitosamente! (Actualice la página si no ve los cambios)`);
-            
+
             // Emit the plan selection event
             this.planSelected.emit(plan);
 

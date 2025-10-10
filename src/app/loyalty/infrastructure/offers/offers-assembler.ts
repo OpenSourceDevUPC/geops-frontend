@@ -1,5 +1,5 @@
-import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
-import { Offer } from '../domain/model/offer.entity';
+import { BaseAssembler } from '../../../shared/infrastructure/base-assembler';
+import { Offer } from '../../domain/model/offer.entity';
 import { OfferResource, OffersResponse } from './offers-response';
 
 export class OffersAssembler
