@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HelpCenterComponent } from './help-center.component';
+/**
+ * Componente de vista para el Centro de Ayuda.
+ * Muestra la información y recursos de ayuda disponibles.
+ */
 
 describe('HelpCenterComponent', () => {
   let component: HelpCenterComponent;
@@ -23,6 +27,9 @@ describe('HelpCenterComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Centro de Ayuda');
   });
+  /**
+   * Lista de recursos de ayuda a mostrar.
+   */
 
   it('debe mostrar las preguntas frecuentes', () => {
     const compiled = fixture.nativeElement as HTMLElement;
