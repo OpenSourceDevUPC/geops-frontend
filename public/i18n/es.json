@@ -134,5 +134,22 @@
         "buttonText": "Probar Premium"
       }
     }
+  },
+  "cart": {
+    "title": "Tu Carrito",
+    "loading": "Cargando carrito...",
+    "empty": {
+      "title": "¡Tu carrito está vacío!",
+      "message": "Añade algunos productos para empezar"
+    },
+    "removeItem": "Eliminar producto",
+    "summary": {
+      "items": "Productos",
+      "total": "Total"
+    },
+    "actions": {
+      "clear": "Vaciar Carrito",
+      "checkout": "Pagar Ahora"
+    }
   }
 }
