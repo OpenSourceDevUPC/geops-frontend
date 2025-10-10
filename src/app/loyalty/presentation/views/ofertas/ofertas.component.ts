@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
-import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
+import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
+import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
 import {AuthService} from '../../../infrastructure/auth/auth.service';
 

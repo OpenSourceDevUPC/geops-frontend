@@ -5,9 +5,51 @@
       "name": "abi",
       "email": "abi@ejemplo.com",
       "password": "789456123",
-      "phone": "987654321",
       "role": "CONSUMER",
-      "plan": "BASIC"
+      "plan": "premium",
+      "phone": "987654321",
+      "notificationsActive": false,
+      "locationPermission": "Preguntar",
+      "usualPlace": "Casa",
+      "work": "sadas",
+      "usualPlaceDetail": "sdadas",
+      "university": "asdasd"
+    },
+    {
+      "name": "Alvaro",
+      "email": "alvaroi@ejemplo.com",
+      "password": "password",
+      "phone": "999999999",
+      "role": "OWNER",
+      "plan": "PREMIUM",
+      "business": {
+        "businessName": "panpun",
+        "businessType": "software",
+        "taxId": "12345678"
+      },
+      "id": "ENMV2pr"
+    },
+    {
+      "id": "ihg6YeG",
+      "name": "Dyron",
+      "email": "dyron@ejemplo.com",
+      "password": "contra123",
+      "role": "OWNER",
+      "plan": "PREMIUM",
+      "phone": "999999999",
+      "business": {},
+      "favorites": [
+        "Sushi",
+        "Tecnología",
+        "Viajes",
+        "Moda",
+        "Belleza",
+        "Salud"
+      ],
+      "home": "San Isidro",
+      "work": "Interbank",
+      "university": "",
+      "locationPermission": "ASK"
     }
   ],
   "offers": [
@@ -306,6 +348,24 @@
       "userId": "a512",
       "offerId": 2,
       "createdAt": "2025-10-10T08:36:28.911Z"
+    },
+    {
+      "userId": "ihg6YeG",
+      "offerId": 1,
+      "createdAt": "2025-10-10T14:37:31.999Z",
+      "id": "u-JX-_I"
+    },
+    {
+      "userId": "ihg6YeG",
+      "offerId": 5,
+      "createdAt": "2025-10-10T14:53:53.742Z",
+      "id": "yu-TDDo"
+    },
+    {
+      "userId": "ihg6YeG",
+      "offerId": 2,
+      "createdAt": "2025-10-10T14:53:57.853Z",
+      "id": "zmBeznn"
     }
   ]
 }
