@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer-content',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, TranslateModule],
   templateUrl: './footer-content.html',
-  styleUrl: './footer-content.css'
+  styleUrls: ['./footer-content.css']
 })
 export class FooterContent {
-
+  get currentYear(): number {
+    return new Date().getFullYear();
+  }
 }

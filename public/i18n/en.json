@@ -209,4 +209,29 @@
       "continue": "Continue Shopping"
     }
   }
+  ,
+  "proveedor": {
+    "stats": {
+      "activeCampaigns": "Active campaigns",
+      "impressions": "Total impressions",
+      "ctr": "Avg CTR"
+    },
+    "metrics": {
+      "impressions": "Imp",
+      "clicks": "Clicks"
+    },
+    "actions": {
+      "pause": "Pause",
+      "edit": "Edit",
+      "remove": "Remove",
+      "copy": "Copy"
+    },
+    "latestCampaigns": "Latest campaigns"
+  },
+  "coupons": {
+    "title": "My Coupons"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
 }
