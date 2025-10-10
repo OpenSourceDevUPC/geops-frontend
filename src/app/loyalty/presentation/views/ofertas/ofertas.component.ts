@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
+import { CartApi } from '../../../../cart/infrastructure/cart-api';
 
 type Offer = {
   id: number;
@@ -35,6 +36,8 @@ type FavoriteRow = {
 })
 
 export class OfertasComponent implements OnInit, OnDestroy {
+
+  private readonly cartApi = inject(CartApi);
 
   loading = false;
   all: Offer[] = [];
@@ -224,5 +227,45 @@ export class OfertasComponent implements OnInit, OnDestroy {
     } else {
       this.favoritesApi.add(1, o.id).subscribe(() => this.favSet.add(o.id));
     }
+  }
+
+  /**
+   * Añade una oferta al carrito
+   * @param o - Oferta a añadir
+   */
+  addToCart(o: Offer) {
+    // Using hardcoded user ID for now - in real app would come from auth service
+    const userId = 'f255';
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    this.cartApi.addItemToCart(
+      userId,
+      o.id.toString(),
+      offerTitle,
+      o.price,
+      offerImageUrl,
+      1
+    ).subscribe({
+      next: () => {
+        // Could show a success message here
+        console.log('Item added to cart successfully');
+      },
+      error: (error) => {
+        console.error('Error adding item to cart:', error);
+        // Could show an error message here
+      }
+    });
+  }
+
+  /**
+   * Procede a comprar directamente (placeholder)
+   * @param o - Oferta a comprar
+   */
+  buyNow(o: Offer) {
+    // Add to cart first, then proceed to checkout
+    this.addToCart(o);
+    // TODO: Navigate to checkout or show checkout modal
+    console.log('Proceeding to buy:', o.title);
   }
 }

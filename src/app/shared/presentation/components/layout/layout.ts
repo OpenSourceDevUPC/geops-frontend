@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,6 +13,8 @@ import { FooterContent } from '../footer-content/footer-content';
 import { TopTabsComponent } from '../../../../loyalty/presentation/components/top-tabs/top-tabs.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
+import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
+import { CartApi } from '../../../../cart/infrastructure/cart-api';
 
 @Component({
   selector: 'app-layout',
@@ -31,18 +33,38 @@ import {LanguageSwitcher} from '../language-switcher/language-switcher';
     FooterContent,
     TopTabsComponent,
     TranslateModule,
-    LanguageSwitcher
+    LanguageSwitcher,
+    CartSidebarComponent
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
 })
-export class Layout {
+export class Layout implements OnInit {
+  private readonly cartApi = inject(CartApi);
+
+  @ViewChild(CartSidebarComponent) cartSidebar!: CartSidebarComponent;
+
   q = '';
   userName = 'Ariana';
+  cartCount = signal(0);
+
+  ngOnInit() {
+    // Subscribe to cart count changes
+    this.cartApi.getCartCount().subscribe(count => {
+      this.cartCount.set(count);
+    });
+  }
 
   get userInitial() {
     const n = this.userName?.trim();
     return n ? n[0].toUpperCase() : '?';
+  }
+
+  /**
+   * Open cart sidebar
+   */
+  openCart() {
+    this.cartSidebar.open();
   }
 
   doSearch() {

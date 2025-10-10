@@ -289,26 +289,7 @@
       "imageUrl": "assets/offers/24.jpg"
     }
   ],
-  "favorites": [
-    {
-      "userId": 1,
-      "offerId": 2,
-      "createdAt": "2025-10-09T06:45:58.765Z",
-      "id": "1"
-    },
-    {
-      "userId": 1,
-      "offerId": 3,
-      "createdAt": "2025-10-09T06:45:59.549Z",
-      "id": "2"
-    },
-    {
-      "id": "f9d7",
-      "userId": 1,
-      "offerId": "1",
-      "createdAt": "2025-10-10T06:13:43.439Z"
-    }
-  ],
+  "favorites": [],
   "users": [
     {
       "id": "f255",
@@ -317,7 +298,7 @@
       "password": "password",
       "phone": "999999999",
       "role": "CONSUMER",
-      "plan": "PREMIUM"
+      "plan": "BASIC"
     }
   ],
   "subscriptions": [
@@ -332,6 +313,28 @@
       "price": 19,
       "recommended": true,
       "type": "PREMIUM"
+    }
+  ],
+  "cart": [
+    {
+      "id": 1,
+      "userId": "f255",
+      "items": [
+        {
+          "id": 1760083522854,
+          "userId": "f255",
+          "offerId": "2",
+          "offerTitle": "DBS: Kit de cuidado facial con 30% off",
+          "offerPrice": 39.9,
+          "offerImageUrl": "assets/offers/2.jpg",
+          "quantity": 3,
+          "total": 119.69
+        }
+      ],
+      "totalItems": 3,
+      "totalAmount": 119.69,
+      "createdAt": "2025-10-10T12:00:00.000Z",
+      "updatedAt": "2025-10-10T08:05:28.419Z"
     }
   ]
 }
