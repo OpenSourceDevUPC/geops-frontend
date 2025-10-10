@@ -2,16 +2,17 @@ import { Routes } from '@angular/router';
 import { Layout } from './shared/presentation/components/layout/layout';
 import { LoginComponent } from './loyalty/presentation/views/login/login.component';
 import { RegisterComponent } from './loyalty/presentation/views/register/register.component';
-// IMPORTA TU COMPONENTE DE NEGOCIO:
 import { RegisterBussinesComponent } from './loyalty/presentation/views/register-bussines/register-bussines.component';
+import { authGuard } from './loyalty/infrastructure/auth/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'register-bussines', component: RegisterBussinesComponent }, // <--- ¡AGREGA ESTO!
+  { path: 'register-bussines', component: RegisterBussinesComponent },
   {
     path: '',
     component: Layout,
+    canActivate: [authGuard],
     children: [
       {
         path: 'home',

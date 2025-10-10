@@ -63,7 +63,7 @@ export class CartSidebarComponent implements OnInit {
   });
 
   // Constants
-  readonly userId = 'f255'; // In real app would come from auth service
+  readonly userId = 'a512'; // In real app would come from auth service
 
   ngOnInit() {
     // Subscribe to cart changes
