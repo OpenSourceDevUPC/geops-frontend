@@ -289,5 +289,19 @@
       "imageUrl": "assets/offers/24.jpg"
     }
   ],
-  "favorites": []
+  "favorites": [],
+  "subscriptions": [
+    {
+      "id": 1,
+      "price": 0,
+      "recommended": false,
+      "type": "basic"
+    },
+    {
+      "id": 2,
+      "price": 19,
+      "recommended": true,
+      "type": "premium"
+    }
+  ]
 }
