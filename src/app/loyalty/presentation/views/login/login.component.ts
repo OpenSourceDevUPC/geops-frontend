@@ -34,12 +34,7 @@ export class LoginComponent {
       next: (user) => {
         if (user) {
           console.log('[Login] Usuario autenticado con ID:', user.id);
-          // Redirigir según el rol
-          if (user.role === 'OWNER') {
-            this.router.navigate(['/dashboard-owner']);
-          } else {
-            this.router.navigate(['/home']);
-          }
+          this.router.navigate(['/home']);
         } else {
           this.errorMessage = 'Email o contraseña incorrectos';
         }

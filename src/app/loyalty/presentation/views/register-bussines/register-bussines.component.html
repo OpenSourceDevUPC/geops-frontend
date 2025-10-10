@@ -7,7 +7,6 @@
     <input type="text" name="businessType" [(ngModel)]="business.businessType" required />
     <label>Tax ID:</label>
     <input type="text" name="taxId" [(ngModel)]="business.taxId" required />
-    <!-- Puedes añadir más campos aquí -->
     <button type="submit" [disabled]="submitting || !businessForm.form.valid">Guardar</button>
   </form>
   <div *ngIf="errorMessage" class="error">{{errorMessage}}</div>

@@ -85,14 +85,15 @@
               <button
                 type="button"
                 class="view-offer"
-                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
-                (('offersData.titles.' + offer.id) | translate)">
+                [routerLink]="['/ofertas', offer.id]"
+                [queryParams]="{ from: 'home' }"
+                [queryParamsHandling]="'preserve'">
                 {{ 'offersPage.card.view' | translate }}
               </button>
+
             </div>
 
             <div class="card-body">
-              <!-- título traducido -->
               <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
@@ -111,7 +112,10 @@
 
                 <div class="loc">
                   <span class="pin" aria-hidden="true">📍</span>
-                  {{ offer.location }}
+                  <span *ngIf="isDistrict(offer.location); else translatedLocation">{{ offer.location }}</span>
+                  <ng-template #translatedLocation>
+                    <span>{{ 'offersData.locations.' + offer.location | translate }}</span>
+                  </ng-template>
                 </div>
               </div>
 
@@ -146,10 +150,12 @@
               <button
                 type="button"
                 class="view-offer"
-                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
-                (('offersData.titles.' + offer.id) | translate)">
+                [routerLink]="['/ofertas', offer.id]"
+                [queryParams]="{ from: 'home' }"
+                [queryParamsHandling]="'preserve'">
                 {{ 'offersPage.card.view' | translate }}
               </button>
+
             </div>
 
             <div class="card-body">
@@ -172,7 +178,10 @@
 
                 <div class="loc">
                   <span class="pin" aria-hidden="true">📍</span>
-                  {{ offer.location }}
+                  <span *ngIf="isDistrict(offer.location); else translatedLocation">{{ offer.location }}</span>
+                  <ng-template #translatedLocation>
+                    <span>{{ 'offersData.locations.' + offer.location | translate }}</span>
+                  </ng-template>
                 </div>
               </div>
 
@@ -206,14 +215,14 @@
               <button
                 type="button"
                 class="view-offer"
-                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
-                (('offersData.titles.' + offer.id) | translate)">
+                [routerLink]="['/ofertas', offer.id]"
+                [queryParams]="{ from: 'home' }"
+                [queryParamsHandling]="'preserve'">
                 {{ 'offersPage.card.view' | translate }}
               </button>
             </div>
 
             <div class="card-body">
-              <!-- título traducido -->
               <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
@@ -266,14 +275,14 @@
               <button
                 type="button"
                 class="view-offer"
-                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
-                (('offersData.titles.' + offer.id) | translate)">
+                [routerLink]="['/ofertas', offer.id]"
+                [queryParams]="{ from: 'home' }"
+                [queryParamsHandling]="'preserve'">
                 {{ 'offersPage.card.view' | translate }}
               </button>
             </div>
 
             <div class="card-body">
-              <!-- título traducido -->
               <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
@@ -292,7 +301,10 @@
 
                 <div class="loc">
                   <span class="pin" aria-hidden="true">📍</span>
-                  {{ offer.location }}
+                  <span *ngIf="isDistrict(offer.location); else translatedLocation">{{ offer.location }}</span>
+                  <ng-template #translatedLocation>
+                    <span>{{ 'offersData.locations.' + offer.location | translate }}</span>
+                  </ng-template>
                 </div>
               </div>
 
@@ -326,8 +338,9 @@
               <button
                 type="button"
                 class="view-offer"
-                [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
-                (('offersData.titles.' + offer.id) | translate)">
+                [routerLink]="['/ofertas', offer.id]"
+                [queryParams]="{ from: 'home' }"
+                [queryParamsHandling]="'preserve'">
                 {{ 'offersPage.card.view' | translate }}
               </button>
             </div>
@@ -352,7 +365,10 @@
 
                 <div class="loc">
                   <span class="pin" aria-hidden="true">📍</span>
-                  {{ offer.location }}
+                  <span *ngIf="isDistrict(offer.location); else translatedLocation">{{ offer.location }}</span>
+                  <ng-template #translatedLocation>
+                    <span>{{ 'offersData.locations.' + offer.location | translate }}</span>
+                  </ng-template>
                 </div>
               </div>
 
@@ -386,8 +402,9 @@
             <button
               type="button"
               class="view-offer"
-              [attr.aria-label]="('offersPage.card.view' | translate) + ' ' +
-                (('offersData.titles.' + offer.id) | translate)">
+              [routerLink]="['/ofertas', offer.id]"
+              [queryParams]="{ from: 'home' }"
+              [queryParamsHandling]="'preserve'">
               {{ 'offersPage.card.view' | translate }}
             </button>
           </div>
@@ -412,7 +429,10 @@
 
               <div class="loc">
                 <span class="pin" aria-hidden="true">📍</span>
-                {{ offer.location }}
+                <span *ngIf="isDistrict(offer.location); else translatedLocation">{{ offer.location }}</span>
+                <ng-template #translatedLocation>
+                  <span>{{ 'offersData.locations.' + offer.location | translate }}</span>
+                </ng-template>
               </div>
             </div>
 
