@@ -15,6 +15,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
 import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
 import { CartApi } from '../../../../cart/infrastructure/cart-api';
+import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
 
 @Component({
   selector: 'app-layout',
@@ -41,6 +42,7 @@ import { CartApi } from '../../../../cart/infrastructure/cart-api';
 })
 export class Layout implements OnInit {
   private readonly cartApi = inject(CartApi);
+  private readonly cartUiService = inject(CartUiService);
 
   @ViewChild(CartSidebarComponent) cartSidebar!: CartSidebarComponent;
 
@@ -52,6 +54,11 @@ export class Layout implements OnInit {
     // Subscribe to cart count changes
     this.cartApi.getCartCount().subscribe(count => {
       this.cartCount.set(count);
+    });
+
+    // Subscribe to cart open requests
+    this.cartUiService.openCart$.subscribe(() => {
+      this.openCart();
     });
   }
 
