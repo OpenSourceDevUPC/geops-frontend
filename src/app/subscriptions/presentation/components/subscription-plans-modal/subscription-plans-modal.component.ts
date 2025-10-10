@@ -58,7 +58,7 @@ export class SubscriptionPlansModalComponent implements OnInit {
   /**
    * Current user ID (this should be injected from a user service in a real app)
    */
-  private currentUserId = 'f255'; // Using the ID from db.json for demo
+  private currentUserId = 'a512'; // Using the ID from db.json for demo
 
   constructor(
     private SubscriptionsApi: SubscriptionsApi,
