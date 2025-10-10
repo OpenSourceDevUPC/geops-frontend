@@ -15,6 +15,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
+        path: 'help/help-center',
+        loadComponent: () =>
+          import('./help/presentation/views/help-center/help-center.component')
+            .then(m => m.HelpCenterComponent),
+        title: 'GeoPs - Help Center'
+      },
+      {
         path: 'home',
         loadComponent: () =>
           import('./shared/presentation/views/home/home')
