@@ -95,26 +95,144 @@
     "view": "Ver",
     "remove": "Quitar"
   },
-
-  "helpCenter": {
-    "title": "Centro de Ayuda",
-    "registerQuestion": "¿Cómo me registro como cliente?",
-    "registerSteps": "Ve a <b>Registrarse</b>, ingresa tu correo, contraseña, confirma y verifica tu correo.<br>Pasos:",
-    "registerStep1": "Click en <b>Registrarse</b> (header o landing).",
-    "registerStep2": "Completa correo y contraseña segura (8+ caracteres, 1 mayúscula, 1 número, 1 símbolo).",
-    "registerStep3": "Revisa tu email y verifica la cuenta.",
-    "registerStep4": "Vuelve e inicia sesión.",
-    "couponQuestion": "¿Cómo canjeo un cupón en el local?",
-    "couponSteps": "Muestra tu cupón desde <b>Mis cupones</b> y el negocio lo valida con un código/QR.<br>Pasos:",
-    "couponStep1": "Compra la oferta y ve a <b>Perfil → Mis cupones</b>.",
-    "couponStep2": "Abre el cupón y pulsa <b>Mostrar para canjear</b>.",
-    "couponStep3": "El negocio escanea/ingresa el <b>código único</b> y listo.",
-    "couponNote": "Nota: Necesitas conexión para validar. Si tu cupón marca \"canjeado\" por error, contáctanos con el <b>ID del cupón</b>.",
-    "locationQuestion": "¿Por qué pedimos tu ubicación y cómo activarla?",
-    "locationSteps": "Para mostrarte <b>ofertas cercanas</b> y ordenarlas por <b>distancia</b>.<br>Pasos:",
-    "locationStep1": "En la barra \"Cerca de ti\", pulsa <b>Permitir ubicación</b>.",
-    "locationStep2": "Si negaste permisos:",
-    "locationStep2a": "<b>Perfil:</b> Permisos de ubicación → <b>Permitir</b> → Recargar",
-    "locationStep3": "Ajusta el radio (ej. 1–10 km) con el selector para ver más/menos resultados."
+  "home": {
+    "welcome": "Bienvenido",
+    "hi": "Hola",
+    "free-plan": "Plan Gratis",
+    "premium-plan": "Plan Premium",
+    "see-more": "Ver más",
+    "map": {
+      "places": "Lugares",
+      "use-my-location": "Usar mi ubicación",
+      "search": "Buscar",
+      "example": "ej: cine, buffet",
+      "radius": "Radio",
+      "settings": "Configurar",
+      "all": "Todos",
+      "cinemas": "Cines",
+      "buffets": "Buffets",
+      "parks": "Parques",
+      "for-children": "Infanitles",
+      "makis": "Makis",
+      "beauty": "Belleza",
+      "near-you": "Cerca de ti"
+    },
+    "cinemas": "Cines",
+    "lunch-buffets": "Almuerzos Buffets",
+    "inflatable-parks": "Parques inflables",
+    "mechanical-games": "Juegos mecánicos",
+    "maki-open-bar": "Barra libre de makis",
+    "beauty": "Belleza"
+  },
+  "welcomeBanner": {
+    "welcome": "Bienvenido(a)",
+    "hello": "Hola,",
+    "user": "Ariana",
+    "viewMore": "Ver más",
+    "premium": "Premium",
+    "currentBasic": "Plan Básico",
+    "currentPremium": "Plan Premium"
+  },
+  "subscriptions": {
+    "title": "Planes",
+    "subtitle": "Elige el plan que se ajuste a ti. Puedes cambiar cuando quieras.",
+    "currency": "S/",
+    "interval": "mes",
+    "recommended": "Recomendado",
+    "close": "Cerrar",
+    "plans": {
+      "basic": {
+        "name": "Básico",
+        "description": "Plan gratuito con funcionalidades básicas",
+        "features": [
+          "Acceso a cupones públicos",
+          "Filtro por categoría y radio",
+          "3 cupones activos al mismo tiempo",
+          "Soporte por email"
+        ],
+        "buttonText": "Empezar"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "Plan premium con acceso a funcionalidades exclusivas",
+        "features": [
+          "Todo lo del Básico",
+          "Cupones exclusivos según ubicación",
+          "Mapa en vivo con ofertas/horarios",
+          "Historial y alertas inteligentes",
+          "Soporte prioritario"
+        ],
+        "buttonText": "Probar Premium"
+      }
+    }
+  },
+  "payment": {
+    "form": {
+      "title": "Checkout",
+      "back": "Volver al carrito",
+      "customerInfo": "Información del Cliente",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "firstName": "Nombres",
+      "firstNamePlaceholder": "Ingresa tus nombres",
+      "lastName": "Apellidos",
+      "lastNamePlaceholder": "Ingresa tus apellidos",
+      "paymentMethod": "Método de Pago",
+      "creditCard": "Tarjeta de Crédito",
+      "yape": "Yape",
+      "cardDetails": "Detalles de la Tarjeta",
+      "cardNumber": "Número de Tarjeta",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "orderSummary": "Resumen del Pedido",
+      "total": "Total",
+      "processPayment": "Procesar Pago",
+      "processing": "Procesando...",
+      "errors": {
+        "emailRequired": "El correo electrónico es requerido",
+        "emailInvalid": "Por favor ingresa un correo válido",
+        "firstNameRequired": "Los nombres son requeridos",
+        "firstNameMinLength": "Los nombres deben tener al menos 2 caracteres",
+        "lastNameRequired": "Los apellidos son requeridos",
+        "lastNameMinLength": "Los apellidos deben tener al menos 2 caracteres",
+        "cardNumberRequired": "El número de tarjeta es requerido",
+        "cardNumberPattern": "Por favor ingresa un número de tarjeta válido de 16 dígitos",
+        "cvvRequired": "El CVV es requerido",
+        "cvvPattern": "Por favor ingresa un CVV válido de 3 dígitos"
+      }
+    },
+    "confirmation": {
+      "title": "Pago Confirmado",
+      "subtitle": "Tu código de compra",
+      "codeLabel": "Código de Compra",
+      "amount": "Monto",
+      "paymentMethod": "Método de Pago",
+      "cardPayment": "Tarjeta de Crédito",
+      "yapePayment": "Yape",
+      "plinPayment": "Plin",
+      "customer": "Cliente",
+      "email": "Correo",
+      "date": "Fecha",
+      "continue": "Seguir Comprando"
+    }
+  },
+  "cart": {
+    "title": "Tu Carrito",
+    "loading": "Cargando carrito...",
+    "empty": {
+      "title": "¡Tu carrito está vacío!",
+      "message": "Añade algunos productos para empezar"
+    },
+    "removeItem": "Eliminar producto",
+    "summary": {
+      "items": "Productos",
+      "total": "Total"
+    },
+    "actions": {
+      "clear": "Vaciar Carrito",
+      "checkout": "Pagar Ahora",
+      "payNow": "Pagar Ahora"
+    }
   }
 }

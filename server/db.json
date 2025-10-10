@@ -1,4 +1,24 @@
 {
+  "users": [
+    {
+      "id": "a512",
+      "name": "abi",
+      "email": "abi@ejemplo.com",
+      "password": "789456123",
+      "phone": "987654321",
+      "role": "CONSUMER",
+      "plan": "PREMIUM"
+    },
+    {
+      "id": "lIkCj-M",
+      "name": "Ale",
+      "email": "ale@gmail.com",
+      "password": "123456",
+      "phone": "999222929",
+      "role": "CONSUMER",
+      "plan": "BASIC"
+    }
+  ],
   "offers": [
     {
       "id": 1,
@@ -291,16 +311,79 @@
   ],
   "favorites": [
     {
-      "userId": 1,
+      "id": "e565",
+      "userId": "a512",
       "offerId": 2,
-      "createdAt": "2025-10-10T06:16:28.555Z",
+      "createdAt": "2025-10-10T08:36:28.911Z"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "price": 0,
+      "recommended": false,
+      "type": "BASIC"
+    },
+    {
+      "id": 2,
+      "price": 19,
+      "recommended": true,
+      "type": "PREMIUM"
+    }
+  ],
+  "cart": [
+    {
+      "id": 1,
+      "userId": "a512",
+      "items": [],
+      "totalItems": 0,
+      "totalAmount": 0,
+      "createdAt": "2025-10-10T12:00:00.000Z",
+      "updatedAt": "2025-10-10T09:50:16.127Z"
+    }
+  ],
+  "payments": [
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 159.8,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "gilberthuarcaya@gmail.com",
+      "customerFirstName": "Gilbert Alonso",
+      "customerLastName": "Huarcaya Matias",
+      "paymentCode": "YAPE-2430",
+      "createdAt": "2025-10-10T08:31:44.842Z",
+      "completedAt": "2025-10-10T08:31:44.842Z",
       "id": 1
     },
     {
-      "userId": 1,
-      "offerId": 3,
-      "createdAt": "2025-10-10T06:16:30.101Z",
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 119.9,
+      "paymentMethod": "PLIN",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "PLIN-4057",
+      "createdAt": "2025-10-10T09:40:38.801Z",
+      "completedAt": "2025-10-10T09:40:38.801Z",
       "id": 2
+    },
+    {
+      "userId": "a512",
+      "cartId": "1",
+      "amount": 39.9,
+      "paymentMethod": "YAPE",
+      "status": "COMPLETED",
+      "customerEmail": "user-a512@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "YAPE-7070",
+      "createdAt": "2025-10-10T09:50:16.068Z",
+      "completedAt": "2025-10-10T09:50:16.068Z",
+      "id": 3
     }
   ]
 }
