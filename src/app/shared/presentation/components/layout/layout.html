@@ -48,7 +48,7 @@
         <span>{{ 'header.profile.menu.settings' | translate }}</span>
       </button>
       <mat-divider></mat-divider>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="onLogout()">
         <mat-icon>logout</mat-icon>
         <span>{{ 'header.profile.menu.logout' | translate }}</span>
       </button>
