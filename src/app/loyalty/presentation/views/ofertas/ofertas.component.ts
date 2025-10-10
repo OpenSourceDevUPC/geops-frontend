@@ -6,6 +6,7 @@ import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
 import { CartApi } from '../../../../cart/infrastructure/cart-api';
+import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
 
 type Offer = {
   id: number;
@@ -38,6 +39,7 @@ type FavoriteRow = {
 export class OfertasComponent implements OnInit, OnDestroy {
 
   private readonly cartApi = inject(CartApi);
+  private readonly cartUiService = inject(CartUiService);
 
   loading = false;
   all: Offer[] = [];
@@ -259,13 +261,33 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Procede a comprar directamente (placeholder)
+   * Procede a comprar directamente - añade al carrito y abre el sidebar
    * @param o - Oferta a comprar
    */
   buyNow(o: Offer) {
-    // Add to cart first, then proceed to checkout
-    this.addToCart(o);
-    // TODO: Navigate to checkout or show checkout modal
-    console.log('Proceeding to buy:', o.title);
+    // Using hardcoded user ID for now - in real app would come from auth service
+    const userId = 'f255';
+    const offerTitle = o.title;
+    const offerImageUrl = this.imgFor(o);
+
+    // Add to cart first, then open cart sidebar
+    this.cartApi.addItemToCart(
+      userId,
+      o.id.toString(),
+      offerTitle,
+      o.price,
+      offerImageUrl,
+      1
+    ).subscribe({
+      next: () => {
+        console.log('Item added to cart successfully');
+        // Open the cart sidebar after adding the item
+        this.cartUiService.openCart();
+      },
+      error: (error) => {
+        console.error('Error adding item to cart:', error);
+        // Could show an error message here
+      }
+    });
   }
 }

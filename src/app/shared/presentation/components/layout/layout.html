@@ -58,8 +58,11 @@
       mat-raised-button
       class="action-btn cart"
       [attr.aria-label]="'header.cart' | translate"
+      [matBadge]="cartCount()" 
+      [matBadgeHidden]="cartCount() === 0" 
+      matBadgeColor="warn"
       (click)="openCart()">
-      <mat-icon [matBadge]="cartCount()" [matBadgeHidden]="cartCount() === 0" matBadgeColor="warn">shopping_cart</mat-icon>
+      <mat-icon>shopping_cart</mat-icon>
       <span>{{ 'header.cart' | translate }}</span>
     </button>
 
