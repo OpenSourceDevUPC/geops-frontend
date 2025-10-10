@@ -1,4 +1,74 @@
 <div class="layout">
-  <h2 class="page-title">Home </h2>
-</div>
+  <div class="account-card">
+    <div class="account-card-text">
+      <p>{{'home.welcome' | translate}}</p>
+      <span>{{'home.hi' | translate}}, {{username}} 👋;</span>
+    </div>
+    <div class="account-card-buttons">
+      <button class="btn-premium">{{isPremium(plan) ? ('home.premium-plan' | translate): ('home.free-plan' | translate)}}</button>
+      <button class="btn-more">{{'home.see-more' | translate}}</button>
+    </div>
+  </div>
+  <div class="map-container">
 
+    <div class="map-top-bar">
+      <div class="map-top-bar-left">
+        <label>{{'home.map.places' | translate}}</label>
+        <button class="map-top-bar-left-btn-main">{{'home.map.use-my-location' | translate}}</button>
+      </div>
+
+      <div class="map-top-bar-right">
+        <label>{{'home.map.search' | translate}}:</label>
+        <input type="text" placeholder = "{{'home.map.example' |translate}}" />
+
+        <label>{{'home.map.radius' | translate}}</label>
+        <select>
+          <option>3 km</option>
+          <option>5 km</option>
+          <option>10 km</option>
+        </select>
+
+        <button class="map-top-bar-btn-secondary">Configurar</button>
+      </div>
+    </div>
+
+    <div class="map-categories">
+      @for (cat of categories; track cat.key) {
+        <button
+          class="map-cat"
+          [class.active]="isCategoryActive(cat.key)"
+          (click)="selectCategory(cat.key)">
+          {{ cat.label | translate }}
+        </button>
+      }
+    </div>
+
+    <div class="map">
+      <div class="map-card">
+        <div class="map-image">
+          <img src="" alt="Mapa" />
+          <div class="map-overlay">
+            <div>
+              <p class="map-title">MAPA EN TIEMPO REAL</p>
+              <h2 class="map-subtitle">Lugares cerca de ti</h2>
+            </div>
+            <div class="location-box">
+              <p>
+                <strong>Activa tu ubicación</strong><br>
+                Para mostrar lugares cercanos y cupones en tiempo real.
+              </p>
+              <button class="btn-use">Usar mi ubicación</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-pin">📍</div>
+        <p>Compártenos tu ubicación<br>para ver más lugares cerca de ti</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
