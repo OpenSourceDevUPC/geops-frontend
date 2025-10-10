@@ -1,19 +1,28 @@
 import { Routes } from '@angular/router';
 import { Layout } from './shared/presentation/components/layout/layout';
-import { LoginComponent } from './loyalty/presentation/views/login/login.component';
-import { RegisterComponent } from './loyalty/presentation/views/register/register.component';
-import { RegisterBussinesComponent } from './loyalty/presentation/views/register-bussines/register-bussines.component';
-import { authGuard } from './loyalty/infrastructure/auth/auth.guard';
+import { LoginComponent } from './identity/presentation/views/login/login.component';
+import { RegisterComponent } from './identity/presentation/views/register/register.component';
+import { RegisterBussinesComponent } from './identity/presentation/views/register-bussines/register-bussines.component';
+// import { AuthGuard } from 'ruta/del/authguard'; // si tienes guard
 
 export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: '/login' }, // redirige raíz a login
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-bussines', component: RegisterBussinesComponent },
+
   {
     path: '',
     component: Layout,
-    canActivate: [authGuard],
+    // canActivate: [AuthGuard], // descomentar si tienes guard
     children: [
+      {
+        path: 'help/help-center',
+        loadComponent: () =>
+          import('./help/presentation/views/help-center/help-center.component')
+            .then(m => m.HelpCenterComponent),
+        title: 'GeoPs - Help Center'
+      },
       {
         path: 'home',
         loadComponent: () =>
@@ -27,6 +36,11 @@ export const routes: Routes = [
           import('./loyalty/presentation/views/ofertas/ofertas.component')
             .then(m => m.OfertasComponent),
         title: 'GeoPs - Ofertas'
+      },
+      { path: 'ofertas/:id',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/ver-oferta/ver-oferta.component')
+            .then(m => m.VerOfertaComponent)
       },
       {
         path: 'categorias',
@@ -49,8 +63,22 @@ export const routes: Routes = [
             .then(m => m.MisCuponesComponent),
         title: 'GeoPs - Mis Cupones'
       },
-      { path: '', pathMatch: 'full', redirectTo: '/login' },
-    ],
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./identity/presentation/views/profile/profiles.component')
+            .then(m => m.ProfilesComponent),
+        title: 'GeoPs - Profile'
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./identity/presentation/views/settings/settings.component')
+            .then(m => m.SettingsComponent),
+        title: 'GeoPs - Settings'
+      }
+    ]
   },
-  { path: '**', redirectTo: '/login' },
+
+  { path: '**', redirectTo: '/login' } // cualquier otra ruta, manda a login
 ];
