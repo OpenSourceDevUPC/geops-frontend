@@ -1,0 +1,44 @@
+<div class="profile-wrapper" *ngIf="user">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="profile-avatar">{{ avatar }}</div>
+      <div class="profile-header-details">
+        <div class="profile-name">{{ user.name }}</div>
+        <div class="profile-plan">
+          {{ user.plan === 'PREMIUM' ? 'Plan Premium' : 'Plan Básico' }}
+        </div>
+      </div>
+      <button class="profile-edit-btn" type="button" routerLink="/settings">
+        <span class="material-icons">edit</span> Editar
+      </button>
+    </div>
+    <div class="profile-list">
+      <div class="profile-item">
+        <span class="profile-label">Correo</span>
+        <span class="profile-value">{{ user.email }}</span>
+      </div>
+      <div class="profile-item">
+        <span class="profile-label">Teléfono</span>
+        <span class="profile-value">{{ user.phone }}</span>
+      </div>
+      <div class="profile-item">
+        <span class="profile-label">Ofertas guardadas</span>
+        <span class="profile-value"><b>{{ favoriteCount }}</b></span>
+      </div>
+      <div class="profile-item">
+        <span class="profile-label">Ubicación</span>
+        <span class="profile-value">
+          <span class="dot yellow"></span>
+          {{ user.locationPermission === 'ALWAYS' ? 'Siempre' : 'Preguntar' }}
+        </span>
+      </div>
+      <div class="profile-item last">
+        <span class="profile-label">Lugares habituales</span>
+        <span class="profile-value places" [innerHTML]="places"></span>
+      </div>
+    </div>
+  </div>
+  <footer class="profile-footer">
+    © 2025 Todos los derechos reservados
+  </footer>
+</div>

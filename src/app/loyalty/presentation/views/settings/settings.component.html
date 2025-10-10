@@ -1,0 +1,150 @@
+<div class="settings-wrapper" *ngIf="user">
+  <div class="settings-card">
+    <div class="settings-profile">
+      <div class="settings-avatar">{{ avatar }}</div>
+      <div>
+        <div class="settings-name">{{ user.name }}</div>
+        <div class="settings-plan">{{ user.plan }}</div>
+      </div>
+      <div class="settings-profile-actions">
+        <button class="settings-btn secondary" [disabled]="cargando" (click)="guardar()">Guardar</button>
+        <button class="settings-btn" [disabled]="cargando" type="button" (click)="cancelar()">Cancelar</button>
+      </div>
+    </div>
+
+    <form class="settings-form">
+      <div class="settings-row">
+        <label>Nombre</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="text" [(ngModel)]="user.name" name="name" [disabled]="!editState['name']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('name')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <label>Plan</label>
+        <select class="settings-input" [(ngModel)]="user.plan" name="plan">
+          <option value="PREMIUM">Premium</option>
+          <option value="BASIC">Basic</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Correo</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="email" [(ngModel)]="user.email" name="email" [disabled]="!editState['email']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('email')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <label>Teléfono</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="text" [(ngModel)]="user.phone" name="phone" [disabled]="!editState['phone']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('phone')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- Selects reflejan valores del API -->
+      <div class="settings-row">
+        <label>Permiso de ubicación</label>
+        <select class="settings-input" [(ngModel)]="user.locationPermission" name="locationPermission">
+          <option value="ASK">Preguntar</option>
+          <option value="ALWAYS">Siempre</option>
+        </select>
+      </div>
+
+      <!-- Inputs con estado de edición -->
+      <div class="settings-row">
+        <label>Casa</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="text"
+                 [(ngModel)]="user.home" name="home"
+                 [disabled]="!editState['home']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('home')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <label>Trabajo</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="text"
+                 [(ngModel)]="user.work" name="work"
+                 [disabled]="!editState['work']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('work')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Checkboxes sincronizados con array -->
+      <div class="settings-row">
+        <label>Categoría favorita</label>
+        <div class="settings-checkbox-group">
+          <label *ngFor="let cat of ALL_CATEGORIES" class="category-checkbox">
+            <input type="checkbox"
+                   [value]="cat"
+                   [checked]="user?.favorites?.includes(cat)"
+                   (change)="onCategoryChange($event, cat)">
+            {{ cat }}
+          </label>
+        </div>
+      </div>
+
+      <label>Seguridad</label>
+      <div class="settings-row">
+        <label>Contraseña actual</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="password"
+                 [(ngModel)]="passwordActual"
+                 placeholder="Contraseña actual"
+                 name="passwordActual"
+                 [disabled]="!editState['passwordActual']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('passwordActual')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <label>Nueva contraseña</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="password"
+                 [(ngModel)]="newPassword"
+                 placeholder="Nueva contraseña"
+                 name="newPassword"
+                 [disabled]="!editState['newPassword']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('newPassword')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <label>Confirmar nueva contraseña</label>
+        <div class="input-edit-group">
+          <input class="settings-input" type="password"
+                 [(ngModel)]="confirmPassword"
+                 placeholder="Confirmar nueva contraseña"
+                 name="confirmPassword"
+                 [disabled]="!editState['confirmPassword']"/>
+          <button type="button" class="edit-icon-btn" (click)="toggleEdit('confirmPassword')">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="settings-actions">
+        <button class="settings-btn secondary" type="reset">Limpiar</button>
+        <button class="settings-btn primary" type="button" (click)="actualizarPassword()">Actualizar contraseña</button>
+      </div>
+    </form>
+
+    <div *ngIf="cargando" class="settings-loading">Actualizando...</div>
+    <div *ngIf="mensaje" class="settings-msg">{{ mensaje }}</div>
+  </div>
+  <footer class="settings-footer">
+    © 2025 Todos los derechos reservados
+  </footer>
+</div>

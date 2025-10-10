@@ -39,11 +39,11 @@
     </button>
 
     <mat-menu #profileMenu="matMenu">
-      <button mat-menu-item>
+      <button mat-menu-item [routerLink]="'/profile'">
         <mat-icon>person</mat-icon>
         <span>{{ 'header.profile.menu.myProfile' | translate }}</span>
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item [routerLink]="'/settings'">
         <mat-icon>settings</mat-icon>
         <span>{{ 'header.profile.menu.settings' | translate }}</span>
       </button>
@@ -53,6 +53,7 @@
         <span>{{ 'header.profile.menu.logout' | translate }}</span>
       </button>
     </mat-menu>
+
 
     <button mat-raised-button class="action-btn cart" [attr.aria-label]="'header.cart' | translate">
       <mat-icon>shopping_cart</mat-icon>

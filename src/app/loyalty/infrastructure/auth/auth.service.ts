@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { User } from '../../domain/model/user.entity';
-import { UsersApiEndpoint } from '../users-api-endpoint';
-import { UserResource } from '../users-response';
+import { UsersApiEndpoint } from '../users/users-api-endpoint';
+import { UserResource } from '../users/users-response';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +16,6 @@ export class AuthService {
     this.loadUserFromStorage();
   }
 
-  /**
-   * Carga el usuario guardado en localStorage
-   */
   private loadUserFromStorage(): void {
     const stored = localStorage.getItem('currentUser');
     if (stored) {
@@ -33,36 +30,23 @@ export class AuthService {
     }
   }
 
-  /**
-   * Obtiene el usuario actual
-   */
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Obtiene el ID del usuario actual
-   */
   getCurrentUserId(): number | null {
     const user = this.currentUserSubject.value;
     return user?.id ?? null;
   }
 
-  /**
-   * Verifica si hay un usuario autenticado
-   */
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
 
-  /**
-   * Inicia sesión con email y password
-   */
   login(email: string, password: string): Observable<User | null> {
     return this.usersApi.login(email, password).pipe(
       map(userResource => {
         if (!userResource) return null;
-
         const user: User = this.mapResourceToUser(userResource);
         this.setCurrentUser(user);
         console.log('[AuthService] Login exitoso. Usuario ID:', user.id);
@@ -71,9 +55,6 @@ export class AuthService {
     );
   }
 
-  /**
-   * Registra un nuevo usuario
-   */
   register(userData: Omit<User, 'id'>): Observable<User> {
     return this.usersApi.register(userData as User).pipe(
       map(userResource => {
@@ -85,26 +66,17 @@ export class AuthService {
     );
   }
 
-  /**
-   * Cierra sesión
-   */
   logout(): void {
     console.log('[AuthService] Cerrando sesión');
     this.currentUserSubject.next(null);
     localStorage.removeItem('currentUser');
   }
 
-  /**
-   * Establece el usuario actual y lo guarda en localStorage
-   */
   private setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
-  /**
-   * Convierte UserResource a User
-   */
   private mapResourceToUser(resource: UserResource): User {
     return {
       id: resource.id,
@@ -114,7 +86,24 @@ export class AuthService {
       role: resource.role,
       plan: resource.plan,
       phone: resource.phone,
-      business: resource.business
+      business: resource.business,
+      favorites: resource.favorites ?? [],
+      home: resource.home ?? '',
+      work: resource.work ?? '',
+      university: resource.university ?? '',
+      locationPermission: resource.locationPermission ?? 'ASK'
     };
+  }
+
+
+  // --- CÓDIGO CORREGIDO ABAJO ---
+  updateUser(user: User): Observable<User> {
+    return this.usersApi.update(user, user.id).pipe(
+      map((userResource: any) => {
+        const updated = this.mapResourceToUser(userResource);
+        this.setCurrentUser(updated);
+        return updated;
+      })
+    );
   }
 }
