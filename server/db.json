@@ -289,5 +289,18 @@
       "imageUrl": "assets/offers/24.jpg"
     }
   ],
-  "favorites": []
+  "favorites": [
+    {
+      "userId": 1,
+      "offerId": 2,
+      "createdAt": "2025-10-10T06:16:28.555Z",
+      "id": 1
+    },
+    {
+      "userId": 1,
+      "offerId": 3,
+      "createdAt": "2025-10-10T06:16:30.101Z",
+      "id": 2
+    }
+  ]
 }

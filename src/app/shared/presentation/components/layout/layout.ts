@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,8 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { FooterContent } from '../footer-content/footer-content';
 import { TopTabsComponent } from '../../../../loyalty/presentation/components/top-tabs/top-tabs.component';
-import {TranslateModule} from '@ngx-translate/core';
-import {LanguageSwitcher} from '../language-switcher/language-switcher';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'app-layout',
@@ -34,7 +35,7 @@ import {LanguageSwitcher} from '../language-switcher/language-switcher';
     LanguageSwitcher
   ],
   templateUrl: './layout.html',
-  styleUrl: './layout.css'
+  styleUrls: ['./layout.css']
 })
 export class Layout {
   q = '';
@@ -52,6 +53,12 @@ export class Layout {
 
   onGlobalSearch(term: string) {
     console.log('Buscar:', term);
+  }
+
+  constructor(private router: Router) {}
+
+  goToHelpCenter() {
+    this.router.navigate(['/help/help-center']);
   }
 
   options = [
