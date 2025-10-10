@@ -14,16 +14,16 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
   FavoritesAssembler
 > {
   /**
-   * crea una instancia del servicio favoritesApiEndpoint
-   * @param http - cliente http angular
+   * creates an instance of the favoritesApiEndpoint service
+   * @param http - angular http client
    */
   constructor(http: HttpClient) {
     super(http, 'http://localhost:3000/favorites', new FavoritesAssembler());
   }
 
   /**
-   * Obtiene las 'fila' favoritas del usuario
-   * @param userId - id del usuario
+   * gets the user's favorite rows
+   * @param userId - user id
    */
   getByUser(userId: number): Observable<FavoriteRow[]> {
     return this.http
@@ -32,9 +32,9 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * busca un favorito del usuario especifica
-   * @param userId - id del usuario
-   * @param offerId - id de la oferta
+   * search for a specific user favorite
+   * @param userId - user id
+   * @param offerId - offer id
    */
   findRow(userId: number, offerId: number): Observable<FavoriteRow[]> {
     return this.http
@@ -45,9 +45,9 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * crea una nueva fila de favoritos
-   * @param userId - id del usuario
-   * @param offerId - id de la oferta
+   * create a new favorites row
+   * @param userId
+   * @param offerId
    */
   add(userId: number, offerId: number): Observable<FavoriteRow> {
     const body = { userId, offerId, createdAt: new Date().toISOString() };
@@ -57,8 +57,8 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * elimina el favorito
-   * @param rowId - id en la fila de la seccion favoritos
+   * delete the favorite
+   * @param rowId - go to the favorites section row
    */
   removeRow(rowId: number): Observable<void> {
     return this.http.delete<void>(`${this.endpointUrl}/${rowId}`);

@@ -14,16 +14,16 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
   OffersAssembler
 > {
   /**
-   * crea una instancia del servicio offersApiEndpoint
-   * @param http - cliente http angular
+   * creates an instance of the offersApiEndpoint service
+   * @param http - angular http client
    */
   constructor(http: HttpClient) {
     super(http, 'http://localhost:3000/offers', new OffersAssembler());
   }
 
   /**
-   * obtiene un conjunto de ofertas por sus ids
-   * @param ids - lista de ids
+   * gets a set of offers for its ids
+   * @param ids - list of ids
    */
   getByIds(ids: number[]): Observable<Offer[]> {
     const qs = ids.map(id => `id=${encodeURIComponent(String(id))}`).join('&');

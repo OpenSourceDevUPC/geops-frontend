@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,11 +25,14 @@ type Offer = {
 @Component({
   selector: 'app-ofertas',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, RouterLink],
   templateUrl: './ofertas.component.html',
   styleUrls: ['./ofertas.component.css'],
 })
 
+/**
+ * offers screen
+ */
 export class OfertasComponent implements OnInit, OnDestroy {
 
   private readonly cartApi = inject(CartApi);
@@ -48,7 +51,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   userId = 'a512';
 
   /**
-   * filttros de búsqueda
+   * search filters
    */
   filters = {
     q: '',
@@ -62,7 +65,12 @@ export class OfertasComponent implements OnInit, OnDestroy {
   private currentUserId: number | null = null;
 
   /**
-   * crea una instancia del componente ofertascomponent
+   * creates an instance of the 'offersComponent' component
+   * @param route
+   * @param router
+   * @param offersApi
+   * @param favoritesApi
+   * @param authService
    */
   constructor(
     private route: ActivatedRoute,
@@ -73,14 +81,13 @@ export class OfertasComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
-   * obtiene las ofertas de la API
-   * carga todo lo que tiene que tener ofertas
-   * inicia el carrusel de las ofertas destacadas
-   * recupera los favoritos del usuario
+   * initialize the page
    */
   ngOnInit(): void {
 
     const user = this.authService.getCurrentUser();
+    this.currentUserId = this.authService.getCurrentUserId();
+    this.userId = user ? String(user.id) : 'guest';
     if (user) {
       this.userId = String(user.id);
     } else {
@@ -88,12 +95,9 @@ export class OfertasComponent implements OnInit, OnDestroy {
     }
 
     this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
 
     if (!this.currentUserId) {
       console.warn('[Ofertas] No hay usuario autenticado');
-      // Opcional: redirigir al login
-      // this.router.navigate(['/login']);
     }
 
     this.loading = true;
@@ -130,7 +134,23 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * inicia el desplazamiento automático del carrusel
+   * checks if a location is a district and should not be translated
+   * @param location - location name
+   */
+  isDistrict(location: string): boolean {
+    const districts = [
+      'Surco', 'San Miguel', 'San Borja', 'Chorrillos', 'Santa Marina', 'Trujillo',
+      'Arequipa', 'Ica', 'Ate', 'Breña', 'Comas', 'Barranco', 'Los Olivos', 'Magdalena',
+      'Miraflores', 'Pueblo Libre', 'San Isidro', 'Tiendas seleccionadas'
+    ];
+    // Divide la ubicación por comas y elimina espacios
+    const locationParts = location.split(',').map(part => part.trim());
+    // Verifica si alguna parte es un distrito
+    return locationParts.some(part => districts.includes(part));
+  }
+
+  /**
+   * starts the automatic scrolling of the carousel
    */
   startAuto() {
     clearInterval(this.timer);
@@ -138,14 +158,14 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * cambia la oferta destacada en el carrusel
+   * change the featured offer in the carousel
    */
   next() {
     this.idx = (this.idx + 1) % this.featured.length;
   }
 
   /**
-   * cambia el carrusel a una oferta especifica
+   * change the carousel to a specific offer
    * @param index
    */
   goTo(index: number) {
@@ -154,15 +174,14 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * obtiene la oferta destacada actualmente activa
+   * get the currently active featured offer
    */
   active(): Offer | null {
     return this.featured[this.idx] ?? null;
   }
 
   /**
-   * devuelve la url de la imagen correspondiente de una oferta, en caso no haya imagen
-   * devuelve una ruta
+   * returns the URL of the corresponding image of an offer, if there is no image
    * @param o
    */
   imgFor(o: Offer | null): string {
@@ -170,7 +189,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * se aplican filtros
+   * filters are applied
    */
   applyFilters() {
     const q = this.filters.q.trim().toLowerCase();
@@ -194,18 +213,21 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
     this.filtered = list;
 
-    if (this.dataLoaded) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { q: this.filters.q || null },
-        queryParamsHandling: 'merge',
-        replaceUrl: true,
-      });
-    }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        q: this.filters.q || null,
+        category: this.filters.category !== 'all' ? this.filters.category : null,
+        location: this.filters.location !== 'all' ? this.filters.location : null,
+        sort: this.filters.sort !== 'relevance' ? this.filters.sort : null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   /**
-   * limpia los filtros aplicados
+   * clears the applied filters
    */
   clearFilters() {
     this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
@@ -213,7 +235,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * obtiene los favoritos del usuario actual desde la API
+   * get the current users favorites from the API
    * @private
    */
   private fetchFavs() {
@@ -224,44 +246,38 @@ export class OfertasComponent implements OnInit, OnDestroy {
     this.favoritesApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
         this.favSet = new Set(rows.map((r) => r.offerId));
-        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
       },
       error: () => this.favSet.clear(),
     });
   }
 
   /**
-   * verifica si una oferta esta marcada como favorita
+   * check if an offer is marked as a favorite
    * @param id
    */
   isFav(id: number) { return this.favSet.has(id); }
 
   /**
-   * aqui basicamente se actualiza el estado de favorito de una oferta
-   * si ya esta marcada, la elimina de favoritos, sino la agrega
+   * this basically updates the favorite status of an offer.
+   * If its already marked, it removes it from your favorites; if not, it adds it.
    * @param o
    */
   toggleFav(o: Offer) {
     if (!this.currentUserId) {
-      console.warn('[Ofertas] Debes iniciar sesión para agregar favoritos');
       alert('Debes iniciar sesión para agregar favoritos');
       return;
     }
 
     if (this.favSet.has(o.id)) {
-      // REMOVER favorito
       this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
         if (!rows.length) return;
         this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
           this.favSet.delete(o.id);
-          console.log('[Ofertas] Favorito eliminado:', o.id);
         });
       });
     } else {
-      // AGREGAR favorito
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
         this.favSet.add(o.id);
-        console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
   }
