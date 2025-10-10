@@ -18,7 +18,7 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
    * @param http - cliente http angular
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3001/favorites', new FavoritesAssembler());
+    super(http, 'http://localhost:3000/favorites', new FavoritesAssembler());
   }
 
   /**
