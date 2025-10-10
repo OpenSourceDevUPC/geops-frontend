@@ -8,6 +8,33 @@
       "phone": "987654321",
       "role": "CONSUMER",
       "plan": "BASIC"
+    },
+    {
+      "id": "8c87",
+      "name": "asdad",
+      "email": "asdasdad",
+      "password": "asdadad",
+      "phone": "asdasdad",
+      "role": "CONSUMER",
+      "plan": "BASIC"
+    },
+    {
+      "id": "8295",
+      "name": "adadwqdqwdqw",
+      "email": "dqasdasd",
+      "password": "asdasd",
+      "phone": "asdadasdad",
+      "role": "CONSUMER",
+      "plan": "BASIC"
+    },
+    {
+      "id": "8be1",
+      "name": "ESTHER",
+      "email": "A",
+      "password": "A",
+      "phone": "A",
+      "role": "CONSUMER",
+      "plan": "BASIC"
     }
   ],
   "offers": [
@@ -181,7 +208,7 @@
     },
     {
       "id": 15,
-      "title": "ARUMA: Gift Card S/ 40 por S/ 29.90",
+      "title": "ARUMA: Gift Card S/40 por S/29.90",
       "partner": "Aruma",
       "price": 29.9,
       "codePrefix": "ARM",
@@ -302,10 +329,32 @@
   ],
   "favorites": [
     {
-      "id": "e565",
-      "userId": "a512",
+      "id": "b536",
+      "userId": "8295",
+      "offerId": 3,
+      "createdAt": "2025-10-10T12:02:16.534Z"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "9a36",
       "offerId": 2,
-      "createdAt": "2025-10-10T08:36:28.911Z"
+      "userId": "8295",
+      "userName": "adadwqdqwdqw",
+      "rating": 2,
+      "text": "NO ME GUSTO PAER ANADA",
+      "likes": 0,
+      "createdAt": "2025-10-10T10:38:19.022Z"
+    },
+    {
+      "id": "af64",
+      "offerId": 2,
+      "userId": "8be1",
+      "userName": "ESTHER",
+      "rating": 5,
+      "text": "hola",
+      "likes": 0,
+      "createdAt": "2025-10-10T12:35:02.329Z"
     }
   ]
 }

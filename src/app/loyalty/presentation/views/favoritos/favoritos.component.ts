@@ -32,7 +32,7 @@ export class FavoritosComponent implements OnInit {
   private currentUserId: number | null = null;
 
   /**
-   * crea una instancia del componente 'favoritoscomponent'
+   * creates an instance of the 'favoritescomponent' component
    */
   constructor(
     private favsApi: FavoritesApiEndpoint,
@@ -41,7 +41,7 @@ export class FavoritosComponent implements OnInit {
   ) {}
 
   /**
-   * Carga las ofertas favoritas del usuario
+   * load the users favorite offers
    * @returns {void}
    */
   ngOnInit(): void {
@@ -49,8 +49,6 @@ export class FavoritosComponent implements OnInit {
     console.log('[Favoritos] Usuario actual ID:', this.currentUserId);
     if (!this.currentUserId) {
       console.warn('[Favoritos] No hay usuario autenticado');
-      // Opcional: redirigir al login
-      // this.router.navigate(['/login']);
       return;
     }
 
@@ -58,7 +56,7 @@ export class FavoritosComponent implements OnInit {
   }
 
   /**
-   * Obtiene los favoritos del usuario y recupera las ofertas según el id del usuario
+   * gets the users favorites and retrieves offers based on the users ID.
    */
   fetch() {
     if (!this.currentUserId) {
@@ -71,7 +69,6 @@ export class FavoritosComponent implements OnInit {
     this.favsApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
         const ids = rows.map((r) => r.offerId);
-        console.log('[Favoritos] IDs de ofertas favoritas:', ids);
 
         if (!ids.length) {
           this.offers = [];
@@ -83,7 +80,6 @@ export class FavoritosComponent implements OnInit {
           next: (list) => {
             const map = new Map(list.map((o) => [o.id, o]));
             this.offers = ids.map((id) => map.get(id)!).filter(Boolean) as Offer[];
-            console.log('[Favoritos] Ofertas cargadas:', this.offers.length);
             this.loading = false;
           },
           error: () => (this.loading = false),
@@ -94,14 +90,14 @@ export class FavoritosComponent implements OnInit {
   }
 
   /**
-   * devuelve la url de la imagen asociada a una oferta
-   * @param o
+   * Returns the URL of the image associated with an offer.
+   * @param o - offer
    */
   imgFor(o: Offer) { return o.imageUrl ?? `assets/offers/${o.id}.jpg`; }
 
   /**
-   * Elimina la oferta de la lista de favoritos del usuario
-   * @param o
+   * removes the offer from the user's favorites list
+   * @param o - offer you want to remove from favorites
    */
   remove(o: Offer) {
     if (!this.currentUserId) return;
@@ -111,7 +107,6 @@ export class FavoritosComponent implements OnInit {
 
       this.favsApi.removeRow(rows[0].id!).subscribe(() => {
         this.offers = this.offers.filter((x) => x.id !== o.id);
-        console.log('[Favoritos] Favorito eliminado:', o.id);
       });
     });
   }

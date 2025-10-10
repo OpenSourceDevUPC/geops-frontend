@@ -1,255 +1,258 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
-import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
-import { TranslateModule } from '@ngx-translate/core';
-import {AuthService} from '../../../infrastructure/auth/auth.service';
+  import { Component, OnDestroy, OnInit } from '@angular/core';
+  import { CommonModule } from '@angular/common';
+  import { FormsModule } from '@angular/forms';
+  import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+  import { OffersApiEndpoint } from '../../../infrastructure/offers-api-endpoint';
+  import { FavoritesApiEndpoint } from '../../../infrastructure/favorites-api-endpoint';
+  import { TranslateModule } from '@ngx-translate/core';
+  import {AuthService} from '../../../infrastructure/auth/auth.service';
 
-type Offer = {
-  id: number;
-  title: string;
-  partner: string;
-  price: number;
-  codePrefix: string;
-  validTo: string;
-  rating: number;
-  location: string;
-  category: string;
-  imageUrl?: string;
-};
-
-@Component({
-  selector: 'app-ofertas',
-  standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
-  templateUrl: './ofertas.component.html',
-  styleUrls: ['./ofertas.component.css'],
-})
-
-export class OfertasComponent implements OnInit, OnDestroy {
-
-  loading = false;
-  all: Offer[] = [];
-  featured: Offer[] = [];
-  filtered: Offer[] = [];
-
-  categories: string[] = [];
-  locations: string[] = [];
-
-  idx = 0;
-  timer?: any;
-
-  /**
-   * filttros de búsqueda
-   */
-  filters = {
-    q: '',
-    category: 'all',
-    location: 'all',
-    sort: 'relevance' as 'relevance' | 'priceAsc' | 'priceDesc' | 'ratingDesc',
+  type Offer = {
+    id: number;
+    title: string;
+    partner: string;
+    price: number;
+    codePrefix: string;
+    validTo: string;
+    rating: number;
+    location: string;
+    category: string;
+    imageUrl?: string;
   };
 
-  private favSet = new Set<number>();
-  private dataLoaded = false;
-  private currentUserId: number | null = null;
+  @Component({
+    selector: 'app-ofertas',
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule, RouterLink  ],
+    templateUrl: './ofertas.component.html',
+    styleUrls: ['./ofertas.component.css'],
+  })
 
-  /**
-   * crea una instancia del componente ofertascomponent
-   */
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private offersApi: OffersApiEndpoint,
-    private favoritesApi: FavoritesApiEndpoint,
-    private authService: AuthService
-  ) {}
+  export class OfertasComponent implements OnInit, OnDestroy {
 
-  /**
-   * obtiene las ofertas de la API
-   * carga todo lo que tiene que tener ofertas
-   * inicia el carrusel de las ofertas destacadas
-   * recupera los favoritos del usuario
-   */
-  ngOnInit(): void {
+    loading = false;
+    all: Offer[] = [];
+    featured: Offer[] = [];
+    filtered: Offer[] = [];
 
-    this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
+    categories: string[] = [];
+    locations: string[] = [];
 
-    if (!this.currentUserId) {
-      console.warn('[Ofertas] No hay usuario autenticado');
-      // Opcional: redirigir al login
-      // this.router.navigate(['/login']);
+    idx = 0;
+    timer?: any;
+
+    /**
+     * search filters
+     */
+    filters = {
+      q: '',
+      category: 'all',
+      location: 'all',
+      sort: 'relevance' as 'relevance' | 'priceAsc' | 'priceDesc' | 'ratingDesc',
+    };
+
+    private favSet = new Set<number>();
+    private dataLoaded = false;
+    private currentUserId: number | null = null;
+
+    /**
+     * creates an instance of the 'offersComponent' component
+     */
+    constructor(
+      private route: ActivatedRoute,
+      private router: Router,
+      private offersApi: OffersApiEndpoint,
+      private favoritesApi: FavoritesApiEndpoint,
+      private authService: AuthService
+    ) {}
+
+    /**
+     * initialize the page
+     */
+    ngOnInit(): void {
+
+      this.currentUserId = this.authService.getCurrentUserId();
+      console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
+
+      if (!this.currentUserId) {
+        console.warn('[Ofertas] No hay usuario autenticado');
+      }
+
+      this.loading = true;
+
+      /*change to maintain the filters*/
+      this.route.queryParamMap.subscribe(params => {
+        this.filters.q        = params.get('q') ?? '';
+        this.filters.category = (params.get('category') ?? 'all') as any;
+        this.filters.location = (params.get('location') ?? 'all') as any;
+        this.filters.sort     = (params.get('sort') ?? 'relevance') as any;
+
+        if (this.dataLoaded) this.applyFilters(); // evita aplicar antes de tener data
+      });
+
+      /* load of offers */
+      this.offersApi.getAll().subscribe({
+        next: (offers) => {
+          const order = [14, 8, 18, 21];
+          this.all = offers as Offer[];
+          this.featured = order
+            .map((id) => this.all.find((o) => o.id === id))
+            .filter((o): o is Offer => !!o);
+
+          this.categories = Array.from(new Set(this.all.map((o) => o.category))).sort();
+          this.locations = Array.from(new Set(this.all.map((o) => o.location))).sort();
+
+          this.dataLoaded = true;
+          this.applyFilters();
+          this.loading = false;
+          this.startAuto();
+        },
+        error: () => (this.loading = false),
+      });
+
+      this.fetchFavs();
     }
 
-    this.loading = true;
-
-    this.offersApi.getAll().subscribe({
-      next: (offers) => {
-        const order = [14, 8, 18, 21];
-        this.all = offers as Offer[];
-        this.featured = order
-          .map((id) => this.all.find((o) => o.id === id))
-          .filter((o): o is Offer => !!o);
-
-        this.categories = Array.from(new Set(this.all.map((o) => o.category))).sort();
-        this.locations = Array.from(new Set(this.all.map((o) => o.location))).sort();
-
-        this.dataLoaded = true;
-        this.applyFilters();
-        this.loading = false;
-        this.startAuto();
-      },
-      error: () => (this.loading = false),
-    });
-
-    this.fetchFavs();
-  }
-
-  /**
-   * se ejecuta al destruir el componente
-   * y tambien detiene el temporizador del carrusel
-   * @return { void}
-   */
-  ngOnDestroy(): void {
-    clearInterval(this.timer);
-  }
-
-  /**
-   * inicia el desplazamiento automático del carrusel
-   */
-  startAuto() {
-    clearInterval(this.timer);
-    this.timer = setInterval(() => this.next(), 2000);
-  }
-
-  /**
-   * cambia la oferta destacada en el carrusel
-   */
-  next() {
-    this.idx = (this.idx + 1) % this.featured.length;
-  }
-
-  /**
-   * cambia el carrusel a una oferta especifica
-   * @param index
-   */
-  goTo(index: number) {
-    this.idx = index;
-    this.startAuto();
-  }
-
-  /**
-   * obtiene la oferta destacada actualmente activa
-   */
-  active(): Offer | null {
-    return this.featured[this.idx] ?? null;
-  }
-
-  /**
-   * devuelve la url de la imagen correspondiente de una oferta, en caso no haya imagen
-   * devuelve una ruta
-   * @param o
-   */
-  imgFor(o: Offer | null): string {
-    return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
-  }
-
-  /**
-   * se aplican filtros
-   */
-  applyFilters() {
-    const q = this.filters.q.trim().toLowerCase();
-
-    let list = this.all.filter((o) => {
-      const byText =
-        !q || [o.title, o.partner, o.category, o.location].some((s) =>
-          s.toLowerCase().includes(q)
-        );
-      const byCat = this.filters.category === 'all' || o.category === this.filters.category;
-      const byLoc = this.filters.location === 'all' || o.location === this.filters.location;
-      return byText && byCat && byLoc;
-    });
-
-    switch (this.filters.sort) {
-      case 'priceAsc':  list = list.sort((a, b) => a.price - b.price); break;
-      case 'priceDesc': list = list.sort((a, b) => b.price - a.price); break;
-      case 'ratingDesc':list = list.sort((a, b) => b.rating - a.rating); break;
-      default: break;
+    /**
+     * cleans up resources by destroying the component
+     * stop the carousel
+     * @return { void}
+     */
+    ngOnDestroy(): void {
+      clearInterval(this.timer);
     }
 
-    this.filtered = list;
+    /**
+     * Starts automatic carousel scrolling
+     */
+    startAuto() {
+      clearInterval(this.timer);
+      this.timer = setInterval(() => this.next(), 2000);
+    }
 
-    if (this.dataLoaded) {
+    /**
+     * change the featured offer in the carousel
+     */
+    next() {
+      this.idx = (this.idx + 1) % this.featured.length;
+    }
+
+    /**
+     * jump the carousel to a specific index
+     * @param index
+     */
+    goTo(index: number) {
+      this.idx = index;
+      this.startAuto();
+    }
+
+    /**
+     * get the currently active featured offer
+     */
+    active(): Offer | null {
+      return this.featured[this.idx] ?? null;
+    }
+
+    /**
+     * returns the URL of an offer's image
+     * @param o - offer or null
+     */
+    imgFor(o: Offer | null): string {
+      return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
+    }
+
+    /**
+     * apply current filters and sorting to the offer list
+     * and sync query params to the URL
+     */
+    applyFilters() {
+      const q = this.filters.q.trim().toLowerCase();
+
+      let list = this.all.filter((o) => {
+        const byText =
+          !q || [o.title, o.partner, o.category, o.location].some((s) =>
+            s.toLowerCase().includes(q)
+          );
+        const byCat = this.filters.category === 'all' || o.category === this.filters.category;
+        const byLoc = this.filters.location === 'all' || o.location === this.filters.location;
+        return byText && byCat && byLoc;
+      });
+
+      switch (this.filters.sort) {
+        case 'priceAsc':  list = list.sort((a, b) => a.price - b.price); break;
+        case 'priceDesc': list = list.sort((a, b) => b.price - a.price); break;
+        case 'ratingDesc':list = list.sort((a, b) => b.rating - a.rating); break;
+        default: break;
+      }
+
+      this.filtered = list;
+
+      /*Reflects filters in the URL */
       this.router.navigate([], {
         relativeTo: this.route,
-        queryParams: { q: this.filters.q || null },
+        queryParams: {
+          q: this.filters.q || null,
+          category: this.filters.category !== 'all' ? this.filters.category : null,
+          location: this.filters.location !== 'all' ? this.filters.location : null,
+          sort: this.filters.sort !== 'relevance' ? this.filters.sort : null,
+        },
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
     }
-  }
 
-  /**
-   * limpia los filtros aplicados
-   */
-  clearFilters() {
-    this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
-    this.applyFilters();
-  }
-
-  /**
-   * obtiene los favoritos del usuario actual desde la API
-   * @private
-   */
-  private fetchFavs() {
-    if (!this.currentUserId) {
-      this.favSet.clear();
-      return;
-    }
-    this.favoritesApi.getByUser(this.currentUserId).subscribe({
-      next: (rows) => {
-        this.favSet = new Set(rows.map((r) => r.offerId));
-        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
-      },
-      error: () => this.favSet.clear(),
-    });
-  }
-
-  /**
-   * verifica si una oferta esta marcada como favorita
-   * @param id
-   */
-  isFav(id: number) { return this.favSet.has(id); }
-
-  /**
-   * aqui basicamente se actualiza el estado de favorito de una oferta
-   * si ya esta marcada, la elimina de favoritos, sino la agrega
-   * @param o
-   */
-  toggleFav(o: Offer) {
-    if (!this.currentUserId) {
-      console.warn('[Ofertas] Debes iniciar sesión para agregar favoritos');
-      alert('Debes iniciar sesión para agregar favoritos');
-      return;
+    /**
+     * clear all applied filters
+     */
+    clearFilters() {
+      this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
+      this.applyFilters();
     }
 
-    if (this.favSet.has(o.id)) {
-      // REMOVER favorito
-      this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
-        if (!rows.length) return;
-        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
-          this.favSet.delete(o.id);
-          console.log('[Ofertas] Favorito eliminado:', o.id);
+    /**
+     * get the current user's favorites from the API
+     * @private
+     */
+    private fetchFavs() {
+      if (!this.currentUserId) {
+        this.favSet.clear();
+        return;
+      }
+      this.favoritesApi.getByUser(this.currentUserId).subscribe({
+        next: (rows) => {
+          this.favSet = new Set(rows.map((r) => r.offerId));
+        },
+        error: () => this.favSet.clear(),
+      });
+    }
+
+    /**
+     * check if an offer is marked as a favorite
+     * @param id - offerID
+     */
+    isFav(id: number) { return this.favSet.has(id); }
+
+    /**
+     * this basically updates the favorite status of an offer
+     * if it's already marked, it removes it from your favorites; if not, it adds it.
+     * @param o - offer to be checked/unchecked
+     */
+    toggleFav(o: Offer) {
+      if (!this.currentUserId) {
+        return;
+      }
+
+      if (this.favSet.has(o.id)) {
+        this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
+          if (!rows.length) return;
+          this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
+            this.favSet.delete(o.id);
+          });
         });
-      });
-    } else {
-      // AGREGAR favorito
-      this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(o.id);
-        console.log('[Ofertas] Favorito agregado:', o.id);
-      });
+      } else {
+        this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
+          this.favSet.add(o.id);
+        });
+      }
     }
   }
-}

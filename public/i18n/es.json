@@ -94,5 +94,26 @@
     "empty": "No tienes favoritos aún.",
     "view": "Ver",
     "remove": "Quitar"
+  },
+  "common": {
+    "currency": "s/"
+  },
+  "offerDetail": {
+    "back": "Volver",
+    "buy": "Comprar",
+    "addToCart": "Añadir al carrito",
+    "bullets": {
+      "valid": "Válido online y en tiendas físicas {{partner}}.",
+      "business": "Negocio: {{partner}}.",
+      "redeem": "Se canjea como medio de pago hasta por el monto indicado."
+    },
+    "reviews": {
+      "title": "Comentarios",
+      "count": "{{count}} reseñas",
+      "yourRating": "Tu calificación",
+      "ariaRate": "Elegir calificación de 1 a 5",
+      "placeholder": "Cuéntanos tu experiencia con esta oferta",
+      "publish": "Publicar reseña"
+    }
   }
 }
