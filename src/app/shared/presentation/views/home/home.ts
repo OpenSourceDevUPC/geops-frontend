@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
+import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 
 @Component({
   selector: 'app-home',
   imports: [
-    TranslatePipe
-
+    TranslatePipe,
+    WelcomeBannerComponent
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'

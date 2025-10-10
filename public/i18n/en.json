@@ -123,5 +123,119 @@
     "mechanical-games": "Mechanical games",
     "maki-open-bar": "Maki open bar",
     "beauty": "Beauty"
+  },
+  "welcomeBanner": {
+    "welcome": "Welcome",
+    "hello": "Hello,",
+    "user": "Ariana",
+    "viewMore": "View More",
+    "premium": "Premium",
+    "currentBasic": "Basic Plan",
+    "currentPremium": "Premium Plan"
+  },
+  "subscriptions": {
+    "title": "Plans",
+    "subtitle": "Choose the plan that suits you. You can change whenever you want.",
+    "currency": "S/",
+    "interval": "month",
+    "recommended": "Recommended",
+    "close": "Close",
+    "plans": {
+      "basic": {
+        "name": "Basic",
+        "description": "Free plan with basic functionalities",
+        "features": [
+          "Access to public coupons",
+          "Filter by category and radius",
+          "3 active coupons at the same time",
+          "Email support"
+        ],
+        "buttonText": "Get Started"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "Premium plan with access to exclusive functionalities",
+        "features": [
+          "Everything from Basic",
+          "Exclusive coupons by location",
+          "Live map with offers/schedules",
+          "Smart history and alerts",
+          "Priority support"
+        ],
+        "buttonText": "Try Premium"
+      }
+    }
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "loading": "Loading...",
+    "empty": {
+      "title": "Your cart is empty",
+      "message": "Add some offers to get started!"
+    },
+    "removeItem": "Remove item",
+    "summary": {
+      "items": "Items",
+      "total": "Total"
+    },
+    "actions": {
+      "clear": "Clear Cart",
+      "checkout": "Checkout",
+      "payNow": "Pay Now"
+    }
+  },
+  "payment": {
+    "form": {
+      "title": "Checkout",
+      "back": "Back to Cart",
+      "customerInfo": "Customer Information",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "paymentMethod": "Payment Method",
+      "selectPaymentMethod": "Select Payment Method",
+      "chooseMethod": "Choose how you want to pay",
+      "creditCard": "Credit/Debit Card",
+      "yape": "Yape",
+      "plin": "Plin",
+      "cardDetails": "Card Details",
+      "cardNumber": "Card Number",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "orderSummary": "Order Summary",
+      "total": "Total",
+      "processPayment": "Process Payment",
+      "processing": "Processing...",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email",
+        "firstNameRequired": "First name is required",
+        "firstNameMinLength": "First name must be at least 2 characters",
+        "lastNameRequired": "Last name is required",
+        "lastNameMinLength": "Last name must be at least 2 characters",
+        "cardNumberRequired": "Card number is required",
+        "cardNumberPattern": "Please enter a valid 16-digit card number",
+        "cvvRequired": "CVV is required",
+        "cvvPattern": "Please enter a valid 3-digit CVV"
+      }
+    },
+    "confirmation": {
+      "title": "Payment Confirmed",
+      "subtitle": "Your payment code",
+      "codeLabel": "Payment Code",
+      "amount": "Amount",
+      "paymentMethod": "Payment Method",
+      "cardPayment": "Credit/Debit Card",
+      "yapePayment": "Yape",
+      "plinPayment": "Plin",
+      "customer": "Customer",
+      "email": "Email",
+      "date": "Date",
+      "continue": "Continue Shopping"
+    }
   }
 }
