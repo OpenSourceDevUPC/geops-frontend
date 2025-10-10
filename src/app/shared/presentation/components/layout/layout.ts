@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +16,8 @@ import {LanguageSwitcher} from '../language-switcher/language-switcher';
 import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
 import { CartApi } from '../../../../cart/infrastructure/cart-api';
 import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
+import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-layout',
@@ -35,7 +37,8 @@ import { CartUiService } from '../../../../cart/presentation/services/cart-ui.se
     TopTabsComponent,
     TranslateModule,
     LanguageSwitcher,
-    CartSidebarComponent
+    CartSidebarComponent,
+    CommonModule,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
@@ -47,11 +50,23 @@ export class Layout implements OnInit {
   @ViewChild(CartSidebarComponent) cartSidebar!: CartSidebarComponent;
 
   q = '';
-  userName = 'Ariana';
+  userName = 'Usuario';
   cartCount = signal(0);
 
-  ngOnInit() {
-    // Subscribe to cart count changes
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user.name;
+      console.log('[Layout] Usuario actual:', this.userName, 'ID:', user.id);
+    } else {
+      console.warn('[Layout] No hay usuario autenticado');
+    }
+        // Subscribe to cart count changes
     this.cartApi.getCartCount().subscribe(count => {
       this.cartCount.set(count);
     });
@@ -76,11 +91,16 @@ export class Layout implements OnInit {
 
   doSearch() {
     const term = this.q.trim();
-    console.log('[Layout] Buscar:', term);
+    if (term) {
+      console.log('[Layout] Buscar:', term);
+      this.router.navigate(['/ofertas'], { queryParams: { q: term } });
+    }
   }
 
-  onGlobalSearch(term: string) {
-    console.log('Buscar:', term);
+  onLogout() {
+    console.log('[Layout] Cerrando sesión');
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   options = [

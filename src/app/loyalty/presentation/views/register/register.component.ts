@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { UsersApiEndpoint } from '../../../infrastructure/users-api-endpoint';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../infrastructure/auth/auth.service';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, RouterModule],
+  standalone: true,
+  imports: [FormsModule, RouterModule, CommonModule],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {
@@ -22,7 +24,10 @@ export class RegisterComponent {
   registering = false;
   errorMessage = '';
 
-  constructor(private usersApi: UsersApiEndpoint, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   onSubmit() {
     if (!this.model.name || !this.model.email || !this.model.password || !this.model.role) {
@@ -30,20 +35,25 @@ export class RegisterComponent {
       this.registering = false;
       return;
     }
+
     this.registering = true;
     this.errorMessage = '';
+
+    // Si no es OWNER, eliminar datos de negocio
     if (this.model.role !== 'OWNER') {
       delete this.model.business;
     }
 
-    // Clone model y elimina id SI existía:
+    // Crear payload sin ID
     const payload = { ...this.model };
-    delete payload.id; // Esto es lo nuevo y CLAVE
+    delete payload.id;
 
-    this.usersApi.register(payload).subscribe({
-      next: () => {
+    // USAR AuthService que guarda el usuario automáticamente
+    this.authService.register(payload).subscribe({
+      next: (user) => {
+        console.log('[Register] Usuario registrado con ID:', user.id);
+
         if (this.model.role === 'OWNER') {
-          // Guarda el email para identificar después al usuario en la pantalla de negocio
           localStorage.setItem('register-owner-email', this.model.email);
           this.router.navigate(['/register-bussines']);
         } else {
@@ -51,8 +61,9 @@ export class RegisterComponent {
         }
         this.registering = false;
       },
-      error: err => {
-        this.errorMessage = 'Error al registrar usuario';
+      error: (err) => {
+        console.error('[Register] Error:', err);
+        this.errorMessage = 'Error al registrar usuario. El email puede estar en uso.';
         this.registering = false;
       }
     });
