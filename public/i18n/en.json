@@ -238,6 +238,74 @@
       "continue": "Continue Shopping"
     }
   },
+  "login": {
+  "title": "Sign In",
+  "email": "Email:",
+  "password": "Password:",
+  "button": "Login",
+  "noAccount": "Don't have an account?",
+  "register": "Register here"
+  },
+  "profile": {
+  "planPremium": "Premium Plan",
+  "planBasic": "Basic Plan",
+  "edit": "Edit",
+  "email": "Email",
+  "phone": "Phone",
+  "favorites": "Saved offers",
+  "location": "Location",
+  "locationAlways": "Always",
+  "locationAsk": "Ask",
+  "places": "Usual places",
+  "rights": "© 2025 All rights reserved"
+  },
+  "register": {
+    "title": "User Registration",
+    "name": "Name:",
+    "email": "Email:",
+    "password": "Password:",
+    "phone": "Phone:",
+    "role": "User type:",
+    "owner": "Business (Owner)",
+    "consumer": "Consumer",
+    "plan": "Plan:",
+    "basic": "Basic",
+    "premium": "Premium",
+    "button": "Register",
+    "hasAccount": "Already have an account?",
+    "loginHere": "Login here"
+  },
+  "business": {
+    "title": "Additional Business Details",
+    "businessName": "Business Name:",
+    "businessType": "Business Type:",
+    "taxId": "Tax ID:",
+    "button": "Save"
+  },
+  "settings": {
+    "plan.label": "Plan",
+    "plan.BASIC": "Basic",
+    "plan.PREMIUM": "Premium",
+    "save": "Save",
+    "cancel": "Cancel",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "locationPermission.label": "Location Permission",
+    "locationPermission.ASK": "Ask",
+    "locationPermission.ALWAYS": "Always",
+    "home": "Home",
+    "work": "Work",
+    "favorites": "Favorite Category",
+    "security": "Security",
+    "passwordCurrent": "Current password",
+    "passwordNew": "New password",
+    "passwordConfirm": "Confirm new password",
+    "clear": "Clear",
+    "changePassword": "Change password",
+    "updating": "Updating...",
+    "rights": "© 2025 All rights reserved"
+  },
   "helpCenter": {
     "title": "Help Center",
     "registerQuestion": "How do I register as a customer?",
@@ -258,6 +326,27 @@
     "locationStep2": "If you denied permissions:",
     "locationStep2a": "<b>Profile:</b> Location permissions → <b>Allow</b> → Reload",
     "locationStep3": "Adjust the radius (e.g. 1–10 km) with the selector to see more/fewer results."
+  },
+  "common": {
+    "currency": "s/"
+  },
+  "offerDetail": {
+    "back": "Back",
+    "buy": "Buy",
+    "addToCart": "Add to cart",
+    "bullets": {
+      "valid": "Valid online and at {{partner}} physical stores.",
+      "business": "Business: {{partner}}.",
+      "redeem": "It can be redeemed as a means of payment up to the indicated amount."
+    },
+    "reviews": {
+      "title": "Comments",
+      "count": "{{count}} reviews",
+      "yourRating": "Your rating",
+      "ariaRate": "Choose a rating from 1 to 5",
+      "placeholder": "Tell us about your experience with this offer",
+      "publish": "Publish review"
+    }
   },
   "categoriesBar": {
     "cines": "Cinemas",

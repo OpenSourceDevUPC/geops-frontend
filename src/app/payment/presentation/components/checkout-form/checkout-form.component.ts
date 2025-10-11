@@ -101,7 +101,7 @@ export class CheckoutFormComponent {
       error: (error) => {
         this.isProcessing.set(false);
         console.error('Payment failed:', error);
-        // TODO: Show error message to user
+
       }
     });
   }
@@ -134,7 +134,6 @@ export class CheckoutFormComponent {
       error: (error) => {
         this.isProcessing.set(false);
         console.error('Payment failed:', error);
-        // TODO: Show error message to user
       }
     });
   }

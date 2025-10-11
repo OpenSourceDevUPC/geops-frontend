@@ -1,13 +1,14 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 import {Offer} from '../../../../loyalty/domain/model/offer.entity';
-import {OffersApiEndpoint} from '../../../../loyalty/infrastructure/offers-api-endpoint';
-import {DecimalPipe, NgForOf} from '@angular/common';
-import {FavoritesApiEndpoint} from '../../../../loyalty/infrastructure/favorites-api-endpoint';
+import {OffersApiEndpoint} from '../../../../loyalty/infrastructure/offers/offers-api-endpoint';
+import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
+import {FavoritesApiEndpoint} from '../../../../loyalty/infrastructure/favorites/favorites-api-endpoint';
 import {CartApi} from '../../../../cart/infrastructure/cart-api';
 import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
-import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service';
+import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,8 @@ import {AuthService} from '../../../../loyalty/infrastructure/auth/auth.service'
     WelcomeBannerComponent,
     DecimalPipe,
     NgForOf,
+    RouterLink,
+    NgIf
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
@@ -129,6 +132,22 @@ export class Home implements OnInit {
   }
 
   /**
+   * checks if a location is a district and should not be translated
+   * @param location - location name
+   */
+  isDistrict(location: string): boolean {
+    const districts = [
+      'Surco', 'San Miguel', 'San Borja', 'Chorrillos', 'Santa Marina', 'Trujillo',
+      'Arequipa', 'Ica', 'Ate', 'Breña', 'Comas', 'Barranco', 'Los Olivos', 'Magdalena',
+      'Miraflores', 'Pueblo Libre', 'San Isidro', 'Tiendas seleccionadas'
+    ];
+    // Divide la ubicación por comas y elimina espacios
+    const locationParts = location.split(',').map(part => part.trim());
+    // Verifica si alguna parte es un distrito
+    return locationParts.some(part => districts.includes(part));
+  }
+
+  /**
    * Selects the categories selected in the map filter. If the user selects All, it will only
    * select All category and unselects the other categories.
    * @param catKey - Detects which category was selected and pushes into selectedCategories array.
@@ -163,7 +182,7 @@ export class Home implements OnInit {
    * @returns the url of the image, if there is not one, returns an empty string
    */
   imgFor(o: Offer | null): string {
-    return !o ? '' : (o.imageUrl ?? `../../assets/offers/${o.id}.jpg`);
+    return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
   }
 
   isFav(id: number) { return this.favSet.has(id); }
