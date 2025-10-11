@@ -9,6 +9,15 @@ import { CouponsApi } from '../../coupons/infrastructure/coupons-api';
 import { CartApi } from '../../cart/infrastructure/cart-api';
 import { Cart } from '../../cart/domain/model/cart.entity';
 import { CartItem } from '../../cart/domain/model/cart-item.entity';
+import { Coupon } from '../../coupons/domain/model/coupon.entity';
+
+// Local helper type for purchased items
+// Represent minimal shape needed for payment processing.
+export interface PurchaseItem {
+  offerId: string;
+  price: number;
+  quantity?: number;
+}
 
 export interface CreatePaymentRequest {
   userId: string;
@@ -17,7 +26,7 @@ export interface CreatePaymentRequest {
   productType?: string;
   productId?: string;
   // items indicates what was purchased; we'll generate a coupon per item.offerId
-  items?: Array<{ offerId: string; price: number; quantity?: number }>;
+  items?: Array<PurchaseItem>;
   paymentMethod: PaymentMethod;
   customerEmail: string;
   customerFirstName: string;
@@ -61,7 +70,7 @@ export class PaymentApi extends BaseApi {
         if (items && items.length > 0) {
           for (const it of items) {
             const qty = (it.quantity && it.quantity > 0) ? it.quantity : 1;
-            for (let i = 0; i < qty; i++) {
+            for (let k = 0; k < qty; k++) {
               const code = this.generateRandomCouponCode();
               paymentCodes.push({ offerId: it.offerId, code });
             }
@@ -99,12 +108,13 @@ export class PaymentApi extends BaseApi {
                   paymentCode: pc.code,
                   productType: request.productType,
                   offerId: pc.offerId,
+                  offer: items.find((i) => i.offerId === pc.offerId) as unknown,
                   code: pc.code,
-                  createdAt: new Date().toISOString()
-                } as any;
+                  createdAt: new Date().toISOString(),
+                } as unknown;
 
                 // fire-and-forget; subscribe to ensure request is executed
-                this.couponsApi.createCoupon(couponPayload).subscribe();
+                this.couponsApi.createCoupon(couponPayload as Coupon).subscribe();
               }
             }
           })
