@@ -1,5 +1,5 @@
+import { OfferResource } from '../../loyalty/infrastructure/offers/offers-response';
 import { BaseResponse, BaseResource } from '../../shared/infrastructure/base-response';
-import { OfferResource } from '../../loyalty/infrastructure/offers-response';
 
 export interface CouponResource extends BaseResource {
   userId: string;

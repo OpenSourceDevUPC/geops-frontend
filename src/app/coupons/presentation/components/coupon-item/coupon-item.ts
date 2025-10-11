@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { OffersApiEndpoint } from '../../../../loyalty/infrastructure/offers-api-endpoint';
+import { OffersApiEndpoint } from '../../../../loyalty/infrastructure/offers/offers-api-endpoint';
 
 @Component({
   selector: 'app-coupon-item',

@@ -14,18 +14,9 @@
       "name": "Sofia",
       "email": "sofiatest@gmail.com",
       "password": "123456",
-      "role": "CONSUMER",
-      "plan": "PREMIUM",
       "phone": "999999999",
-      "favorites": [
-        "Tecnología",
-        "Sushi",
-        "Belleza"
-      ],
-      "home": "",
-      "work": "",
-      "university": "",
-      "locationPermission": "ASK"
+      "role": "CONSUMER",
+      "plan": "PREMIUM"
     }
   ],
   "offers": [

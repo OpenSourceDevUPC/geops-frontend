@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CouponListComponent } from '../../../../coupons/presentation/components/coupon-list/coupon-list';
 import { TranslateModule } from '@ngx-translate/core';
 import { CouponsApi } from '../../../../coupons/infrastructure/coupons-api';
-import { AuthService } from '../../../infrastructure/auth/auth.service';
+import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'app-mis-cupones',
@@ -14,13 +14,11 @@ import { AuthService } from '../../../infrastructure/auth/auth.service';
 })
 export class MisCuponesComponent implements OnInit {
   private couponsApi = inject(CouponsApi);
-  private auth = inject(AuthService);
+  private authService = inject(AuthService);
 
   /**
    * crea una instancia del componente ofertascomponent
    */
-  constructor(private authService: AuthService) {}
-
   ngOnInit(): void {
     const userId = this.authService.getCurrentUserId();
     if (userId !== null && userId !== undefined) {
