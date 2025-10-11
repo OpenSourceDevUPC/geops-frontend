@@ -1,0 +1,83 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <mat-toolbar-row class="toolbar-content">
+    <a routerLink="/home" class="logo">{{ 'header.logo' | translate }}</a>
+
+    <span class="spacer"></span>
+
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        [(ngModel)]="q"
+        [placeholder]="'header.search.placeholder' | translate"
+        (keyup.enter)="doSearch()">
+    </mat-form-field>
+
+    <span class="spacer"></span>
+
+    <button mat-raised-button class="action-btn help" (click)="goToHelpCenter()">
+      {{ 'header.help' | translate }}
+    </button>
+
+    <button
+      mat-icon-button
+      class="action-btn notification"
+      [attr.aria-label]="'header.notifications' | translate">
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <button
+      mat-button
+      class="action-btn profile"
+      [matMenuTriggerFor]="profileMenu"
+      [attr.aria-label]="'header.profile.menu.myProfile' | translate">
+      <div class="profile-content">
+        <div class="avatar">{{ userInitial }}</div>
+        <span class="user-name">{{ userName }}</span>
+      </div>
+      <mat-icon class="dropdown-icon">expand_more</mat-icon>
+    </button>
+
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item [routerLink]="'/profile'">
+        <mat-icon>person</mat-icon>
+        <span>{{ 'header.profile.menu.myProfile' | translate }}</span>
+      </button>
+      <button mat-menu-item [routerLink]="'/settings'">
+        <mat-icon>settings</mat-icon>
+        <span>{{ 'header.profile.menu.settings' | translate }}</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>logout</mat-icon>
+        <span>{{ 'header.profile.menu.logout' | translate }}</span>
+      </button>
+    </mat-menu>
+
+    <button
+      mat-raised-button
+      class="action-btn cart"
+      [attr.aria-label]="'header.cart' | translate"
+      [matBadge]="cartCount()"
+      [matBadgeHidden]="cartCount() === 0"
+      matBadgeColor="warn"
+      (click)="openCart()">
+      <mat-icon>shopping_cart</mat-icon>
+      <span>{{ 'header.cart' | translate }}</span>
+    </button>
+
+    <app-language-switcher/>
+
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<app-top-tabs></app-top-tabs>
+
+<main class="layout-content">
+  <router-outlet></router-outlet>
+</main>
+
+<app-footer-content></app-footer-content>
+
+<!-- Cart Sidebar -->
+<app-cart-sidebar></app-cart-sidebar>
