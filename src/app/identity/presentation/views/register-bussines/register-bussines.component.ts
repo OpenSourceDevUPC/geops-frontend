@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { environment } from '../../../../../environments/environment';
 
 /**
  * RegisterBussinesComponent handles business profile registration for OWNER users.
@@ -45,7 +46,7 @@ export class RegisterBussinesComponent {
   onSubmit() {
     this.submitting = true;
     const email = localStorage.getItem('register-owner-email');
-    this.http.get<any[]>(`http://localhost:3000/users?email=${email}`).subscribe({
+    this.http.get<any[]>(`${environment.platformProviderApiBaseUrl}/users?email=${email}`).subscribe({
       next: (users) => {
         if (!users.length) {
           this.errorMessage = 'User not found';
@@ -54,7 +55,7 @@ export class RegisterBussinesComponent {
         }
         const user = users[0];
         const id = user.id;
-        this.http.patch(`http://localhost:3000/users/${id}`, {
+        this.http.patch(`${environment.platformProviderApiBaseUrl}/users/${id}`, {
           business: this.business
         }).subscribe({
           next: () => {
