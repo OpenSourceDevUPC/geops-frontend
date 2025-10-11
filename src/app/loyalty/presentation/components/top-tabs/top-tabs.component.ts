@@ -26,7 +26,7 @@ import { TranslateModule } from '@ngx-translate/core';
          routerLink="/categorias"
          routerLinkActive="active"
          [routerLinkActiveOptions]="{exact:true}">
-        {{ 'option.categories' | translate }}
+        {{ 'option.categorias' | translate }}
       </a>
 
       <a class="tab"

@@ -18,7 +18,7 @@
   "option": {
     "home": "Inicio",
     "offers": "Ofertas",
-    "categories": "Categorías",
+    "categorias": "Categorías",
     "favorites": "Favoritos",
     "coupons": "Mis cupones"
   },
@@ -371,5 +371,12 @@
   },
   "footer": {
     "rights": "Todos los derechos reservados."
+  },
+  "categorias": {
+    "Entretenimiento": "Entretenimiento",
+    "Gastronomía": "Gastronomía",
+    "Belleza": "Belleza",
+    "Gift Card": "Gift Card",
+    "title": "Categorias"
   }
 }
