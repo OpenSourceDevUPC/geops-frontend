@@ -357,10 +357,12 @@
     "belleza": "Beauty"
   },
   "categorias": {
+
     "Entretenimiento": "Entertainment",
     "Gastronomía": "Buffets",
     "Belleza": "Beauty",
-    "Gift Card": "Gift Card"
+    "Gift Card": "Gift Card",
+    "title": "Categories"
   }
 
 }
