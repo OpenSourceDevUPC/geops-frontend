@@ -2,8 +2,8 @@ import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SubscriptionPlansModalComponent, SubscriptionWithTranslations } from '../subscription-plans-modal/subscription-plans-modal.component';
-import { AuthService } from '../../../../loyalty/infrastructure/auth/auth.service';
-import { User } from '../../../../loyalty/domain/model/user.entity';
+import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
+import { User } from '../../../../identity/domain/model/user.entity';
 
 @Component({
   selector: 'app-welcome-banner',
