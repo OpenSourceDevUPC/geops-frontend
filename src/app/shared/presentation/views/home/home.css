@@ -277,29 +277,37 @@
   z-index: 2;
 }
 
-.offer-card .img-box .fav {
-  position: absolute;
-  right: 14px;
-  top: 14px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,.08);
-  background: rgba(255,255,255,.71);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: background .15s ease, box-shadow .15s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,.12);
-  z-index: 3;
+.offer-card .img-box .fav{
+  position:absolute;
+  right:14px;
+  top:14px;
+  width:50px;
+  height:50px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(0,0,0,.08);
+  background:rgba(255,255,255,.71);
+  cursor:pointer;
+  box-shadow:0 2px 4px rgba(0,0,0,.12);
+  transition:background .15s ease, box-shadow .15s ease, transform .12s ease;
+  z-index: 4;
 }
 
-.offer-card .img-box .fav:hover {
-  background: rgba(255,255,255,.62);
+.offer-card .img-box .fav:hover{
+  background:rgba(255,255,255,.62);
+  transform:translateY(-1px);
 }
 
-.offer-card .img-box .fav.active {
-  background: #fff;
+.offer-card .img-box .fav.active{
+  background:#fff;
+}
+
+.offer-card .img-box .fav .heart{
+  font-size:22px;
+  line-height:1;
+  user-select:none;
+  pointer-events:none;
 }
 
 .offer-card .img-box .view-offer {
