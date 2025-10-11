@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -13,7 +14,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 @Component({
   selector: 'app-register-bussines',
   standalone: true,
-  imports: [FormsModule, TranslateModule, LanguageSwitcher,
+  imports: [CommonModule, FormsModule, TranslateModule, LanguageSwitcher,
     MatButtonToggleModule],
   templateUrl: './register-bussines.component.html',
   styleUrls: ['./register-bussines.component.css']
