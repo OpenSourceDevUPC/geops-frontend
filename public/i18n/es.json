@@ -348,8 +348,31 @@
       "publish": "Publicar reseña"
     }
   },
+  "proveedor": {
+    "stats": {
+      "activeCampaigns": "Campañas activas",
+      "impressions": "Impresiones totales",
+      "ctr": "CTR promedio"
+    },
+    "metrics": {
+      "impressions": "Imp",
+      "clicks": "Clicks"
+    },
+    "actions": {
+      "pause": "Pausar",
+      "edit": "Editar",
+      "remove": "Eliminar",
+      "copy": "Copiar"
+    },
+    "latestCampaigns": "Últimas campañas"
+  },
+  "coupons": {
+    "title": "Mis Cupones"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
+  },
   "categorias": {
-
     "Entretenimiento": "Entretenimiento",
     "Gastronomía": "Gastronomía",
     "Belleza": "Belleza",
