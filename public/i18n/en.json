@@ -18,7 +18,7 @@
   "option": {
     "home": "Home",
     "offers": "Offers",
-    "categories": "Categories",
+    "categorias": "Categories",
     "favorites": "Favorites",
     "coupons": "My Coupons"
   },
@@ -347,5 +347,22 @@
       "placeholder": "Tell us about your experience with this offer",
       "publish": "Publish review"
     }
+  },
+  "categoriesBar": {
+    "cines": "Cinemas",
+    "buffets": "Buffets",
+    "parques": "Parks",
+    "infantiles": "For children",
+    "makis": "Makis",
+    "belleza": "Beauty"
+  },
+  "categorias": {
+
+    "Entretenimiento": "Entertainment",
+    "Gastronomía": "Buffets",
+    "Belleza": "Beauty",
+    "Gift Card": "Gift Card",
+    "title": "Categories"
   }
+
 }

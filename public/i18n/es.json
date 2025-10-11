@@ -18,7 +18,7 @@
   "option": {
     "home": "Inicio",
     "offers": "Ofertas",
-    "categories": "Categorías",
+    "categorias": "Categorías",
     "favorites": "Favoritos",
     "coupons": "Mis cupones"
   },
@@ -347,5 +347,13 @@
       "placeholder": "Cuéntanos tu experiencia con esta oferta",
       "publish": "Publicar reseña"
     }
+  },
+  "categorias": {
+
+    "Entretenimiento": "Entretenimiento",
+    "Gastronomía": "Gastronomía",
+    "Belleza": "Belleza",
+    "Gift Card": "Gift Card",
+    "title": "Categorias"
   }
 }
