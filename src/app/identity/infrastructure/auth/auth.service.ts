@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { User } from '../../domain/model/user.entity';
 import { UsersApiEndpoint } from '../users/users-api-endpoint';
 import { UserResource } from '../users/users-response';
