@@ -17,7 +17,5 @@ export class CouponListComponent {
   constructor(private couponsApi: CouponsApi) {
     // subscribe to the shared coupons stream
     this.couponsApi.coupons$.subscribe((list: any[]) => this.coupons = list);
-    // ensure there's an initial load (the route or parent may also call getAllWithRelationsByUser)
-    this.couponsApi.getAllCoupons().subscribe();
   }
 }

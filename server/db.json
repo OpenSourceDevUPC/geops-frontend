@@ -391,7 +391,7 @@
       "totalItems": 0,
       "totalAmount": 0,
       "createdAt": "2025-10-11T00:10:52.704Z",
-      "updatedAt": "2025-10-11T00:41:55.135Z"
+      "updatedAt": "2025-10-11T22:36:28.038Z"
     }
   ],
   "payments": [
@@ -660,6 +660,20 @@
       "createdAt": "2025-10-11T00:41:55.096Z",
       "completedAt": "2025-10-11T00:41:55.096Z",
       "id": 19
+    },
+    {
+      "userId": "2",
+      "cartId": "3",
+      "amount": 522.9,
+      "paymentMethod": "PLIN",
+      "status": "COMPLETED",
+      "customerEmail": "user-2@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "PLIN-0871",
+      "createdAt": "2025-10-11T22:36:27.627Z",
+      "completedAt": "2025-10-11T22:36:27.627Z",
+      "id": 20
     }
   ],
   "coupons": [
@@ -788,6 +802,105 @@
       "code": "VCGK7M",
       "createdAt": "2025-10-11T00:41:55.133Z",
       "id": 14
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "OKDXW7",
+      "offerId": 16,
+      "code": "OKDXW7",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 15
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "B4WSM7",
+      "offerId": 8,
+      "code": "B4WSM7",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 16
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "2Y39O1",
+      "offerId": 5,
+      "code": "2Y39O1",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 17
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "JR2XDJ",
+      "offerId": 7,
+      "code": "JR2XDJ",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 18
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "YJGRW7",
+      "offerId": 9,
+      "code": "YJGRW7",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 19
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "8ZVKH3",
+      "offerId": 9,
+      "code": "8ZVKH3",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 20
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "MKSEK6",
+      "offerId": 9,
+      "code": "MKSEK6",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 21
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "RDMF6P",
+      "offerId": 9,
+      "code": "RDMF6P",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 22
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "OG2LSE",
+      "offerId": 9,
+      "code": "OG2LSE",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 23
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "VRRMSE",
+      "offerId": 9,
+      "code": "VRRMSE",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 24
+    },
+    {
+      "userId": "2",
+      "paymentId": "20",
+      "paymentCode": "JR3YEE",
+      "offerId": 9,
+      "code": "JR3YEE",
+      "createdAt": "2025-10-11T22:36:27.665Z",
+      "id": 25
     }
   ]
 }
