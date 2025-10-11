@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  platformProviderApiBaseUrl: 'https://json-server-1-p24l.onrender.com',
+  platformProviderApiBaseUrl: 'http://localhost:3000/api/v1',
   platformProviderSubscriptionsEndpointPath: '/subscriptions',
   platformProviderUserEndpointPath: '/users',
   platformProviderPaymentEndpointPath: '/payments',
