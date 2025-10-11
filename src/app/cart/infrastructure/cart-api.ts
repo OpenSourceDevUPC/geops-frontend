@@ -13,6 +13,8 @@ export class CartApi extends BaseApi {
   private readonly cartEndpoint: CartApiEndpoint;
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   public cart$ = this.cartSubject.asObservable();
+  // Cache in-flight requests per user to avoid duplicate HTTP calls
+  private inFlightRequests = new Map<string, Observable<Cart>>();
 
   constructor(http: HttpClient) {
     super();
@@ -24,27 +26,50 @@ export class CartApi extends BaseApi {
    * @param userId - User ID
    */
   getCartByUserId(userId: string): Observable<Cart> {
-    return this.cartEndpoint.getAll().pipe(
+    // If we already have a cart cached for this user, return it synchronously
+    const cached = this.cartSubject.value;
+    if (cached && cached.userId === userId) {
+      return new Observable<Cart>(subscriber => {
+        subscriber.next(cached);
+        subscriber.complete();
+      });
+    }
+
+    // If there's an in-flight request for this user, return it
+    if (this.inFlightRequests.has(userId)) {
+      return this.inFlightRequests.get(userId)!;
+    }
+
+    const req$ = this.cartEndpoint.getAll().pipe(
       map((carts: Cart[]) => carts.find(cart => cart.userId === userId)),
-      tap(cart => {
-        if (cart) {
-          this.cartSubject.next(cart);
-        } else {
-          // Create empty cart if none exists
-          const emptyCart: Cart = {
-            id: 0,
-            userId,
-            items: [],
-            totalItems: 0,
-            totalAmount: 0,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          };
-          this.cartSubject.next(emptyCart);
-        }
+      map(cart => {
+        if (cart) return cart;
+        // Create empty cart if none exists
+        return {
+          id: 0,
+          userId,
+          items: [],
+          totalItems: 0,
+          totalAmount: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as Cart;
       }),
-      map(cart => cart || this.cartSubject.value!)
+      tap(cart => this.cartSubject.next(cart))
     );
+
+    // Store in-flight request with share to avoid multiple executions
+    const shared$ = req$;
+    this.inFlightRequests.set(userId, shared$);
+
+    // Clean up cache when the request completes
+    shared$.subscribe({
+      next: () => this.inFlightRequests.delete(userId),
+      error: () => this.inFlightRequests.delete(userId),
+      complete: () => this.inFlightRequests.delete(userId)
+    });
+
+    return shared$;
   }
 
   /**

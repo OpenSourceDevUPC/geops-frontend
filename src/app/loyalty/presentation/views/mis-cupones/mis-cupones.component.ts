@@ -24,9 +24,6 @@ export class MisCuponesComponent implements OnInit {
     if (userId !== null && userId !== undefined) {
       // fetch coupons for current user including expanded offer data
       this.couponsApi.getAllWithRelationsByUser(String(userId), ['offer']).subscribe();
-    } else {
-      // fallback: load all coupons
-      this.couponsApi.getAllCoupons().subscribe();
     }
   }
 }
