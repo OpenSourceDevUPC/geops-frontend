@@ -5,6 +5,8 @@ import { map, Observable } from 'rxjs';
 import { User } from '../../domain/model/user.entity';
 import { UserResource, UsersResponse } from './users-response';
 import { UsersAssembler } from './users-assembler';
+import { environment } from '../../../../environments/environment';
+
 
 @Injectable({ providedIn: 'root' })
 /**
@@ -22,7 +24,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    * @param http Angular HttpClient for HTTP requests
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3000/users', new UsersAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}/users`, new UsersAssembler());
   }
 
   /**
@@ -42,7 +44,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    * @returns Observable with the created UserResource
    */
   register(user: User): Observable<UserResource> {
-    return this.http.post<UserResource>('http://localhost:3000/users', user);
+    return this.http.post<UserResource>(`${environment.platformProviderApiBaseUrl}/users`, user);
   }
 
   /**
@@ -53,7 +55,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    */
   login(email: string, password: string): Observable<UserResource | undefined> {
     return this.http
-      .get<UserResource[]>(`http://localhost:3000/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+      .get<UserResource[]>(`${environment.platformProviderApiBaseUrl}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
       .pipe(
         map(users => users.length ? users[0] : undefined)
       );
