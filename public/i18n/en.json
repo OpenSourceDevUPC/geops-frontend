@@ -239,25 +239,25 @@
     }
   },
   "login": {
-  "title": "Sign In",
-  "email": "Email:",
-  "password": "Password:",
-  "button": "Login",
-  "noAccount": "Don't have an account?",
-  "register": "Register here"
+    "title": "Sign In",
+    "email": "Email:",
+    "password": "Password:",
+    "button": "Login",
+    "noAccount": "Don't have an account?",
+    "register": "Register here"
   },
   "profile": {
-  "planPremium": "Premium Plan",
-  "planBasic": "Basic Plan",
-  "edit": "Edit",
-  "email": "Email",
-  "phone": "Phone",
-  "favorites": "Saved offers",
-  "location": "Location",
-  "locationAlways": "Always",
-  "locationAsk": "Ask",
-  "places": "Usual places",
-  "rights": "© 2025 All rights reserved"
+    "planPremium": "Premium Plan",
+    "planBasic": "Basic Plan",
+    "edit": "Edit",
+    "email": "Email",
+    "phone": "Phone",
+    "favorites": "Saved offers",
+    "location": "Location",
+    "locationAlways": "Always",
+    "locationAsk": "Ask",
+    "places": "Usual places",
+    "rights": "© 2025 All rights reserved"
   },
   "register": {
     "title": "User Registration",
@@ -356,13 +356,35 @@
     "makis": "Makis",
     "belleza": "Beauty"
   },
+  "proveedor": {
+    "stats": {
+      "activeCampaigns": "Active campaigns",
+      "impressions": "Total impressions",
+      "ctr": "Avg CTR"
+    },
+    "metrics": {
+      "impressions": "Imp",
+      "clicks": "Clicks"
+    },
+    "actions": {
+      "pause": "Pause",
+      "edit": "Edit",
+      "remove": "Remove",
+      "copy": "Copy"
+    },
+    "latestCampaigns": "Latest campaigns"
+  },
+  "coupons": {
+    "title": "My Coupons"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
   "categorias": {
-
     "Entretenimiento": "Entertainment",
     "Gastronomía": "Buffets",
     "Belleza": "Beauty",
     "Gift Card": "Gift Card",
     "title": "Categories"
   }
-
 }
