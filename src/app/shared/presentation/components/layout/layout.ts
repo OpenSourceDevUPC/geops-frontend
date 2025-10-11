@@ -106,7 +106,7 @@ export class Layout implements OnInit {
   options = [
     { link: '/home',        label: 'option.home' },
     { link: '/ofertas',     label: 'option.offers' },
-    { link: '/categorias',  label: 'option.categories' },
+    { link: '/categories',  label: 'option.categories' },
     { link: '/favoritos',   label: 'option.favorites' },
     { link: '/mis-cupones', label: 'option.mycoupons' },
   ];
