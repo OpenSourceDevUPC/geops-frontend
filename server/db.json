@@ -383,6 +383,15 @@
       "totalAmount": 0,
       "createdAt": "2025-10-10T23:24:10.017Z",
       "updatedAt": "2025-10-10T23:45:44.473Z"
+    },
+    {
+      "id": 3,
+      "userId": "2",
+      "items": [],
+      "totalItems": 0,
+      "totalAmount": 0,
+      "createdAt": "2025-10-11T00:10:52.704Z",
+      "updatedAt": "2025-10-11T00:12:42.775Z"
     }
   ],
   "payments": [
@@ -553,130 +562,54 @@
       "createdAt": "2025-10-10T23:45:44.144Z",
       "completedAt": "2025-10-10T23:45:44.144Z",
       "id": 12
+    },
+    {
+      "userId": "2",
+      "cartId": "3",
+      "amount": 79.8,
+      "paymentMethod": "PLIN",
+      "status": "COMPLETED",
+      "customerEmail": "user-2@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "PLIN-3174",
+      "createdAt": "2025-10-11T00:10:55.390Z",
+      "completedAt": "2025-10-11T00:10:55.390Z",
+      "id": 13
+    },
+    {
+      "userId": "2",
+      "cartId": "3",
+      "amount": 79.8,
+      "paymentMethod": "PLIN",
+      "status": "COMPLETED",
+      "customerEmail": "user-2@temp.com",
+      "customerFirstName": "Usuario",
+      "customerLastName": "Temporal",
+      "paymentCode": "PLIN-9877",
+      "createdAt": "2025-10-11T00:12:42.717Z",
+      "completedAt": "2025-10-11T00:12:42.717Z",
+      "id": 14
     }
   ],
   "coupons": [
     {
-      "id": 1,
-      "userId": "a512",
-      "paymentId": 3,
-      "paymentCode": "ABC123",
-      "productType": "offer",
-      "offerId": 15,
-      "code": "8888-XSJF",
-      "createdAt": "2025-10-10T09:51:00.000Z"
-    },
-    {
-      "id": 2,
-      "userId": "a512",
-      "paymentId": 2,
-      "paymentCode": "DEF456",
-      "productType": "offer",
-      "offerId": 1,
-      "code": "1234-ABCDE",
-      "createdAt": "2025-10-10T09:41:00.000Z"
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 8,
-      "paymentCode": "JBBWSY",
+      "userId": "2",
+      "paymentId": 14,
+      "paymentCode": "1TNY4Y",
       "offerId": "2",
-      "offer": {
-        "id": 2,
-        "title": "DBS: Kit de cuidado facial con 30% off",
-        "partner": "DBS",
-        "price": 39.9,
-        "codePrefix": "DBS",
-        "validTo": "2025-12-31",
-        "rating": 5,
-        "location": "Tiendas seleccionadas",
-        "category": "Belleza",
-        "imageUrl": "assets/offers/2.jpg"
-      },
-      "code": "JBBWSY",
-      "createdAt": "2025-10-10T23:30:20.970Z",
-      "id": 3
+      "code": "1TNY4Y",
+      "createdAt": "2025-10-11T00:12:42.748Z",
+      "id": 1
     },
     {
-      "userId": "lIkCj-M",
-      "paymentId": 9,
-      "paymentCode": "XGFZGZ",
+      "userId": "2",
+      "paymentId": 14,
+      "paymentCode": "81GMGZ",
       "offerId": "2",
-      "code": "XGFZGZ",
-      "createdAt": "2025-10-10T23:38:35.018Z",
-      "id": 4
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 9,
-      "paymentCode": "7WDP34",
-      "offerId": "3",
-      "code": "7WDP34",
-      "createdAt": "2025-10-10T23:38:35.020Z",
-      "id": 5
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 10,
-      "paymentCode": "GZC68X",
-      "offerId": "11",
-      "code": "GZC68X",
-      "createdAt": "2025-10-10T23:39:29.241Z",
-      "id": 6
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 11,
-      "paymentCode": "M1Y2UG",
-      "offerId": "2",
-      "code": "M1Y2UG",
-      "createdAt": "2025-10-10T23:44:44.543Z",
-      "id": 7
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 11,
-      "paymentCode": "YRTTK7",
-      "offerId": "2",
-      "code": "YRTTK7",
-      "createdAt": "2025-10-10T23:44:44.547Z",
-      "id": 8
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 11,
-      "paymentCode": "KJ6AV9",
-      "offerId": "2",
-      "code": "KJ6AV9",
-      "createdAt": "2025-10-10T23:44:44.549Z",
-      "id": 9
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 12,
-      "paymentCode": "JQY8A0",
-      "offerId": "5",
-      "code": "JQY8A0",
-      "createdAt": "2025-10-10T23:45:44.176Z",
-      "id": 10
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 12,
-      "paymentCode": "ASGDA4",
-      "offerId": "5",
-      "code": "ASGDA4",
-      "createdAt": "2025-10-10T23:45:44.177Z",
-      "id": 11
-    },
-    {
-      "userId": "lIkCj-M",
-      "paymentId": 12,
-      "paymentCode": "Q3KB2Y",
-      "offerId": "5",
-      "code": "Q3KB2Y",
-      "createdAt": "2025-10-10T23:45:44.178Z",
-      "id": 12
+      "code": "81GMGZ",
+      "createdAt": "2025-10-11T00:12:42.751Z",
+      "id": 2
     }
   ]
 }
