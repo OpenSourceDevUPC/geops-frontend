@@ -1,0 +1,52 @@
+<div class="container">
+  <h1>{{ 'helpCenter.title' | translate }}</h1>
+
+  <section class="faq-section">
+    <details>
+      <summary class="faq-question">{{ 'helpCenter.registerQuestion' | translate }}</summary>
+      <div class="faq-answer">
+        <span [innerHTML]="'helpCenter.registerSteps' | translate"></span>
+        <ol>
+          <li [innerHTML]="'helpCenter.registerStep1' | translate"></li>
+          <li [innerHTML]="'helpCenter.registerStep2' | translate"></li>
+          <li [innerHTML]="'helpCenter.registerStep3' | translate"></li>
+          <li [innerHTML]="'helpCenter.registerStep4' | translate"></li>
+        </ol>
+      </div>
+    </details>
+  </section>
+
+  <section class="faq-section">
+    <details>
+      <summary class="faq-question">{{ 'helpCenter.couponQuestion' | translate }}</summary>
+      <div class="faq-answer">
+        <span [innerHTML]="'helpCenter.couponSteps' | translate"></span>
+        <ol>
+          <li [innerHTML]="'helpCenter.couponStep1' | translate"></li>
+          <li [innerHTML]="'helpCenter.couponStep2' | translate"></li>
+          <li [innerHTML]="'helpCenter.couponStep3' | translate"></li>
+        </ol>
+        <small [innerHTML]="'helpCenter.couponNote' | translate"></small>
+      </div>
+    </details>
+  </section>
+
+  <section class="faq-section">
+    <details>
+      <summary class="faq-question">{{ 'helpCenter.locationQuestion' | translate }}</summary>
+      <div class="faq-answer">
+        <span [innerHTML]="'helpCenter.locationSteps' | translate"></span>
+        <ol>
+          <li [innerHTML]="'helpCenter.locationStep1' | translate"></li>
+          <li>
+            {{ 'helpCenter.locationStep2' | translate }}
+            <ul>
+              <li [innerHTML]="'helpCenter.locationStep2a' | translate"></li>
+            </ul>
+          </li>
+          <li [innerHTML]="'helpCenter.locationStep3' | translate"></li>
+        </ol>
+      </div>
+    </details>
+  </section>
+</div>
