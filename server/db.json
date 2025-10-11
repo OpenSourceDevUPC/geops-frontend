@@ -335,11 +335,22 @@
     {
       "id": 1,
       "userId": "a512",
-      "items": [],
-      "totalItems": 0,
-      "totalAmount": 0,
+      "items": [
+        {
+          "id": 1760143696855,
+          "userId": "a512",
+          "offerId": "3",
+          "offerTitle": "Belleza MINNA: Combo Lemon Sugar Scrub Lip Mask + Dallism Lip Gloss",
+          "offerPrice": 80,
+          "offerImageUrl": "assets/offers/3.jpg",
+          "quantity": 1,
+          "total": 80
+        }
+      ],
+      "totalItems": 1,
+      "totalAmount": 80,
       "createdAt": "2025-10-10T12:00:00.000Z",
-      "updatedAt": "2025-10-10T09:50:16.127Z"
+      "updatedAt": "2025-10-11T00:48:16.855Z"
     }
   ],
   "payments": [
