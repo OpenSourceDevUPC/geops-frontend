@@ -5,6 +5,7 @@ import { Offer } from '../../domain/model/offer.entity';
 import { OfferResource, OffersResponse } from './offers-response';
 import { OffersAssembler } from './offers-assembler';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class OffersApiEndpoint extends BaseApiEndpoint<
@@ -18,7 +19,7 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
    * @param http - angular http client
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3000/offers', new OffersAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}/offers`, new OffersAssembler());
   }
 
   /**

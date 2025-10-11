@@ -5,6 +5,7 @@ import { FavoriteRow } from './favorites-assembler';
 import { FavoriteRowResource, FavoriteRowsResponse } from './favorites-response';
 import { FavoritesAssembler } from './favorites-assembler';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesApiEndpoint extends BaseApiEndpoint<
@@ -18,7 +19,7 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
    * @param http - angular http client
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3000/favorites', new FavoritesAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}/favorites`, new FavoritesAssembler());
   }
 
   /**

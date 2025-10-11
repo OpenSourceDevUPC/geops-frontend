@@ -6,6 +6,7 @@ import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { Review } from '../domain/model/review.entity';
 import { ReviewResource, ReviewsResponse } from './reviews-response';
 import { ReviewsAssembler } from './reviews-assembler';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewsApiEndpoint extends BaseApiEndpoint<
@@ -19,7 +20,7 @@ export class ReviewsApiEndpoint extends BaseApiEndpoint<
    * @param http - angular http client
    */
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:3000/reviews', new ReviewsAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}/reviews`, new ReviewsAssembler());
   }
 
   /**
