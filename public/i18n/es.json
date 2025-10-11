@@ -349,9 +349,11 @@
     }
   },
   "categorias": {
+
     "Entretenimiento": "Entretenimiento",
     "Gastronomía": "Gastronomía",
     "Belleza": "Belleza",
-    "Gift Card": "Gift Card"
+    "Gift Card": "Gift Card",
+    "title": "Categorias"
   }
 }
