@@ -95,28 +95,30 @@ export class PaymentApi extends BaseApi {
         };
 
         return this.paymentEndpoint.create(newPayment as Payment).pipe(
-          tap(payment => {
+          switchMap(payment => {
             const currentPayments = this.paymentsSubject.value;
             this.paymentsSubject.next([...currentPayments, payment]);
 
             // After payment persisted, create coupons for each generated payment code
             if (paymentCodes.length > 0) {
-              for (const pc of paymentCodes) {
-                const couponPayload = {
-                  userId: request.userId,
-                  paymentId: payment.id,
-                  paymentCode: pc.code,
-                  productType: request.productType,
-                  offerId: pc.offerId,
-                  offer: items.find((i) => i.offerId === pc.offerId) as unknown,
-                  code: pc.code,
-                  createdAt: new Date().toISOString(),
-                } as unknown;
+              const couponsPayload = paymentCodes.map(pc => ({
+                userId: request.userId,
+                paymentId: String(payment.id),
+                paymentCode: pc.code,
+                productType: request.productType,
+                offerId: Number(pc.offerId),
+                code: pc.code,
+                createdAt: new Date().toISOString()
+              } as Omit<Coupon, 'id'>));
 
-                // fire-and-forget; subscribe to ensure request is executed
-                this.couponsApi.createCoupon(couponPayload as Coupon).subscribe();
-              }
+              // Use bulk create to avoid flooding the server with many requests. CouponsApi.createMany will
+              // attempt the bulk endpoint and fall back to a throttled per-item creation if unavailable.
+              return this.couponsApi.createMany(couponsPayload).pipe(
+                map(() => payment)
+              );
             }
+
+            return of(payment);
           })
         );
       })

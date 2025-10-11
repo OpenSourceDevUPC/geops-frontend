@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap, catchError, from, mergeMap, toArray, of, lastValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Coupon } from '../domain/model/coupon.entity';
@@ -17,6 +17,43 @@ export class CouponsApi extends BaseApi {
   constructor(private http: HttpClient) {
     super();
     this.endpoint = new CouponsApiEndpoint(http);
+  }
+
+  /**
+   * Create multiple coupons in a single request.
+   * Expects the backend to expose a bulk endpoint at /coupons/bulk that accepts an array of coupon resources.
+   */
+  createMany(coupons: Array<Omit<Coupon, 'id'>>): Observable<Coupon[]> {
+    const url = `${environment.platformProviderApiBaseUrl}/coupons/bulk`;
+    const assembler = new CouponsAssembler();
+     const asyncOp = async (): Promise<Coupon[]> => {
+       try {
+         const response = await lastValueFrom(this.http.post<CouponResource[] | CouponsResponse>(url, coupons));
+         const created = Array.isArray(response)
+           ? response.map(r => assembler.toEntityFromResource(r as CouponResource))
+           : assembler.toEntitiesFromResponse(response as CouponsResponse);
+
+         this.couponsSubject.next([...this.couponsSubject.value, ...created]);
+         return created;
+       } catch (err) {
+         const createdSequential: Coupon[] = [];
+         for (const c of coupons) {
+           try {
+             const createdCoupon = await lastValueFrom(this.createCoupon(c));
+             createdSequential.push(createdCoupon);
+           } catch (e) {
+             // console.warn('Failed to create coupon', e);
+           }
+         }
+
+         if (createdSequential.length > 0) {
+           this.couponsSubject.next([...this.couponsSubject.value, ...createdSequential]);
+         }
+         return createdSequential;
+       }
+     };
+
+     return from(asyncOp());
   }
 
   getAllCoupons(): Observable<Coupon[]> {
