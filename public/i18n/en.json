@@ -18,7 +18,7 @@
   "option": {
     "home": "Home",
     "offers": "Offers",
-    "categories": "Categories",
+    "categorias": "Categories",
     "favorites": "Favorites",
     "coupons": "My Coupons"
   },
@@ -258,5 +258,20 @@
     "locationStep2": "If you denied permissions:",
     "locationStep2a": "<b>Profile:</b> Location permissions → <b>Allow</b> → Reload",
     "locationStep3": "Adjust the radius (e.g. 1–10 km) with the selector to see more/fewer results."
+  },
+  "categoriesBar": {
+    "cines": "Cinemas",
+    "buffets": "Buffets",
+    "parques": "Parks",
+    "infantiles": "For children",
+    "makis": "Makis",
+    "belleza": "Beauty"
+  },
+  "categorias": {
+    "Entretenimiento": "Entertainment",
+    "Gastronomía": "Buffets",
+    "Belleza": "Beauty",
+    "Gift Card": "Gift Card"
   }
+
 }

@@ -18,7 +18,7 @@
   "option": {
     "home": "Inicio",
     "offers": "Ofertas",
-    "categories": "Categorías",
+    "categorias": "Categorías",
     "favorites": "Favoritos",
     "coupons": "Mis Cupones"
   },
@@ -255,5 +255,11 @@
     "locationStep2": "Si negaste permisos:",
     "locationStep2a": "<b>Perfil:</b> Permisos de ubicación → <b>Permitir</b> → Recargar",
     "locationStep3": "Ajusta el radio (ej. 1–10 km) con el selector para ver más/menos resultados."
+  },
+  "categorias": {
+    "Entretenimiento": "Entretenimiento",
+    "Gastronomía": "Gastronomía",
+    "Belleza": "Belleza",
+    "Gift Card": "Gift Card"
   }
 }
