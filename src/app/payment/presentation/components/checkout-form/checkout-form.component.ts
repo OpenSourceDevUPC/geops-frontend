@@ -88,7 +88,7 @@ export class CheckoutFormComponent {
       cartId: this.cartId,
       amount: this.totalAmount,
       paymentMethod: method,
-      customerEmail: `user-${this.userId}@temp.com`, // Temporal for instant payments
+      customerEmail: this.checkoutForm.get('email')?.value, // Use user-provided email
       customerFirstName: 'Usuario',
       customerLastName: 'Temporal'
     };
