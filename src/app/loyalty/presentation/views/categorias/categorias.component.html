@@ -1,12 +1,12 @@
 <div class="layout">
-  <h2 class="page-title">{{ 'offersPage.title' | translate }}</h2>
+  <h2 class="page-title">{{ 'categorias.title' | translate }}</h2>
 
   <div class="content">
     <nav class="categories-navbar">
       <button *ngFor="let c of categories"
               [class.active]="filters.category === c"
               (click)="filters.category = c; applyFilters()">
-        {{ c }}
+        {{ ('categorias.' + c) | translate }}
       </button>
     </nav>
 
