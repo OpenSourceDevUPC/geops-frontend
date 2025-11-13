@@ -47,6 +47,8 @@ export class Home implements OnInit {
   mechGamesOffers:Offer[] = [];
   makisOffers:Offer[] = [];
   beautyOffers:Offer[] = [];
+  latitude: number | undefined;
+  longitude: number | undefined;
 
   constructor(
     private offersApi: OffersApiEndpoint,
@@ -272,5 +274,20 @@ export class Home implements OnInit {
     });
   }
 
-
+  /**
+   *
+   */
+  getLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        console.log('Latitud:', this.latitude);
+        console.log('Longitud:', this.longitude);
+      },
+      (error) => {
+        console.log('Error getting location:', error.message);
+      }
+    )
+  }
 }
