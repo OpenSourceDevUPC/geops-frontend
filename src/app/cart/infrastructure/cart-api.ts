@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, map, tap } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap, switchMap, of } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Cart } from '../domain/model/cart.entity';
 import { CartItem } from '../domain/model/cart-item.entity';
 import { CartApiEndpoint } from './cart-api-endpoint';
 import { HttpClient } from '@angular/common/http';
+import { CartItemResource, CartResource } from './cart-response';
+import { CartAssembler } from './cart-assembler';
 
 @Injectable({
   providedIn: 'root'
@@ -40,11 +42,10 @@ export class CartApi extends BaseApi {
       return this.inFlightRequests.get(userId)!;
     }
 
-    const req$ = this.cartEndpoint.getAll().pipe(
-      map((carts: Cart[]) => carts.find(cart => cart.userId === userId)),
+    // Use dedicated endpoint to fetch user's cart
+    const req$ = this.cartEndpoint.getByUser(userId).pipe(
       map(cart => {
         if (cart) return cart;
-        // Create empty cart if none exists
         return {
           id: 0,
           userId,
@@ -89,39 +90,31 @@ export class CartApi extends BaseApi {
     offerImageUrl: string,
     quantity: number = 1
   ): Observable<Cart> {
+    // Use server-side add/update item endpoints when possible
     return this.getCartByUserId(userId).pipe(
-      map(cart => {
-        const existingItemIndex = cart.items.findIndex(item => item.offerId === offerId);
-
-        if (existingItemIndex >= 0) {
-          // Update existing item quantity
-          cart.items[existingItemIndex].quantity += quantity;
-          cart.items[existingItemIndex].total = cart.items[existingItemIndex].quantity * offerPrice;
-        } else {
-          // Add new item
-          const newItem: CartItem = {
-            id: Date.now(), // Simple ID generation
-            userId,
-            offerId,
-            offerTitle,
-            offerPrice,
-            offerImageUrl,
-            quantity,
-            total: quantity * offerPrice
-          };
-          cart.items.push(newItem);
+      switchMap(cart => {
+        const existingItem = cart.items.find(item => item.offerId === offerId);
+        if (existingItem) {
+          const newQuantity = existingItem.quantity + quantity;
+          return this.cartEndpoint.updateItemQuantityByUser(userId, offerId, { quantity: newQuantity }).pipe(
+            tap(c => this.cartSubject.next(c))
+          );
         }
 
-        // Recalculate totals
-        cart.totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-        cart.totalAmount = cart.items.reduce((sum, item) => sum + item.total, 0);
-        cart.updatedAt = new Date().toISOString();
+        const itemResource: CartItemResource = {
+          id: Date.now(),
+          userId,
+          offerId,
+          offerTitle,
+          offerPrice,
+          offerImageUrl,
+          quantity,
+          total: quantity * offerPrice
+        };
 
-        return cart;
-      }),
-      tap(updatedCart => {
-        this.updateCart(updatedCart).subscribe();
-        this.cartSubject.next(updatedCart);
+        return this.cartEndpoint.addItemToUser(userId, itemResource).pipe(
+          tap(c => this.cartSubject.next(c))
+        );
       })
     );
   }
@@ -133,32 +126,9 @@ export class CartApi extends BaseApi {
    * @param quantity - New quantity
    */
   updateItemQuantity(userId: string, offerId: string, quantity: number): Observable<Cart> {
-    return this.getCartByUserId(userId).pipe(
-      map(cart => {
-        const itemIndex = cart.items.findIndex(item => item.offerId === offerId);
-
-        if (itemIndex >= 0) {
-          if (quantity <= 0) {
-            // Remove item if quantity is 0 or less
-            cart.items.splice(itemIndex, 1);
-          } else {
-            // Update quantity and total
-            cart.items[itemIndex].quantity = quantity;
-            cart.items[itemIndex].total = quantity * cart.items[itemIndex].offerPrice;
-          }
-
-          // Recalculate totals
-          cart.totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-          cart.totalAmount = cart.items.reduce((sum, item) => sum + item.total, 0);
-          cart.updatedAt = new Date().toISOString();
-        }
-
-        return cart;
-      }),
-      tap(updatedCart => {
-        this.updateCart(updatedCart).subscribe();
-        this.cartSubject.next(updatedCart);
-      })
+    // Use backend route to update item quantity which returns the new cart
+    return this.cartEndpoint.updateItemQuantityByUser(userId, offerId, { quantity }).pipe(
+      tap(c => this.cartSubject.next(c))
     );
   }
 
@@ -176,17 +146,20 @@ export class CartApi extends BaseApi {
    * @param userId - User ID
    */
   clearCart(userId: string): Observable<Cart> {
-    return this.getCartByUserId(userId).pipe(
-      map(cart => {
-        cart.items = [];
-        cart.totalItems = 0;
-        cart.totalAmount = 0;
-        cart.updatedAt = new Date().toISOString();
-        return cart;
-      }),
-      tap(updatedCart => {
-        this.updateCart(updatedCart).subscribe();
-        this.cartSubject.next(updatedCart);
+    // Call the dedicated clear endpoint and then set local state to an empty cart
+    return this.cartEndpoint.clearCartForUser(userId).pipe(
+      switchMap(() => {
+        const empty: Cart = {
+          id: 0,
+          userId,
+          items: [],
+          totalItems: 0,
+          totalAmount: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        this.cartSubject.next(empty);
+        return of(empty);
       })
     );
   }
@@ -196,13 +169,15 @@ export class CartApi extends BaseApi {
    * @param cart - Cart to update
    */
   private updateCart(cart: Cart): Observable<Cart> {
+    const assembler = new CartAssembler();
     if (cart.id === 0) {
-      // Create new cart
-      return this.cartEndpoint.create(cart);
-    } else {
-      // Update existing cart
-      return this.cartEndpoint.update(cart, cart.id);
+      // Create cart for user using API that expects userId as query parameter
+      const resource: CartResource = assembler.toResourceFromEntity(cart);
+      return this.cartEndpoint.createCartForUser(cart.userId, resource);
     }
+
+    // Update existing cart by id
+    return this.cartEndpoint.update(cart, cart.id);
   }
 
   /**
