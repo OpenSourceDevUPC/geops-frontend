@@ -3,24 +3,37 @@ import { Coupon } from '../domain/model/coupon.entity';
 import { CouponResource, CouponsResponse } from './coupons-response';
 import { Offer } from '../../loyalty/domain/model/offer.entity';
 
-function mapOfferResourceToEntity(r?: any): Offer | undefined {
-  if (!r) return undefined;
-  return {
-    id: r.id,
-    title: r.title,
-    partner: r.partner,
-    price: r.price,
-    codePrefix: r.codePrefix,
-    validTo: r.validTo,
-    rating: r.rating,
-    location: r.location,
-    category: r.category,
-    imageUrl: r.imageUrl
-  } as Offer;
-}
-
+/**
+ * Assembler to convert between Coupon entities, resources, and API responses.
+ * Implements BaseAssembler interface
+ * @see BaseAssembler
+ * @see Coupon
+ * @see CouponResource
+ * @see CouponsResponse
+ */
 export class CouponsAssembler implements BaseAssembler<Coupon, CouponResource, CouponsResponse> {
+  /**
+   * Converts a resource to a domain entity
+   * @param resource - The API resource
+   * @returns The domain entity
+   */
   toEntityFromResource(resource: CouponResource): Coupon {
+    function mapOfferResourceToEntity(r?: any): Offer | undefined {
+      if (!r) return undefined;
+      return {
+        id: r.id,
+        title: r.title,
+        partner: r.partner,
+        price: r.price,
+        codePrefix: r.codePrefix,
+        validTo: r.validTo,
+        rating: r.rating,
+        location: r.location,
+        category: r.category,
+        imageUrl: r.imageUrl,
+      } as Offer;
+    }
+
     return {
       id: resource.id,
       userId: resource.userId,
@@ -35,6 +48,11 @@ export class CouponsAssembler implements BaseAssembler<Coupon, CouponResource, C
     };
   }
 
+  /**
+   * Converts a domain entity to a resource
+   * @param entity - The domain entity
+   * @returns The API resource
+   */
   toResourceFromEntity(entity: Coupon): CouponResource {
     return {
       id: entity.id,
@@ -50,6 +68,11 @@ export class CouponsAssembler implements BaseAssembler<Coupon, CouponResource, C
     };
   }
 
+  /**
+   * Converts an API response to an array of entities
+   * @param response - The API response
+   * @returns Array of domain entities
+   */
   toEntitiesFromResponse(response: CouponsResponse): Coupon[] {
     return response.data.map(r => this.toEntityFromResource(r));
   }
