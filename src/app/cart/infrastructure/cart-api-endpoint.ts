@@ -11,6 +11,6 @@ import { environment } from '../../../environments/environment';
 })
 export class CartApiEndpoint extends BaseApiEndpoint<Cart, CartResource, CartResponse, CartAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}/cart`, new CartAssembler());
+    super(http, `${environment.platformProviderApiBaseUrlOld}/cart`, new CartAssembler());
   }
 }
