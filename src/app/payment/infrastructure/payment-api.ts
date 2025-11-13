@@ -11,8 +11,12 @@ import { Cart } from '../../cart/domain/model/cart.entity';
 import { CartItem } from '../../cart/domain/model/cart-item.entity';
 import { Coupon } from '../../coupons/domain/model/coupon.entity';
 
-// Local helper type for purchased items
-// Represent minimal shape needed for payment processing.
+/**
+ * PurchaseItem
+ *
+ * Minimal representation of an item included in a payment. Used to generate
+ * one or more coupon/payment codes per purchased unit.
+ */
 export interface PurchaseItem {
   offerId: string;
   price: number;
@@ -34,6 +38,11 @@ export interface CreatePaymentRequest {
   cvv?: string; // Only for card payments, not stored
 }
 
+/**
+ * Creates a payment request describing the data required to process a payment.
+ * See `createPayment` for the behavior applied when this request is processed.
+ */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,8 +57,22 @@ export class PaymentApi extends BaseApi {
   }
 
   /**
-   * Creates a new payment
-   * @param request - Payment creation request
+    * Creates a new payment and generates coupons for purchased items.
+    *
+    * Behavior:
+    * - Determines purchased items from `request.items` or the user's cart.
+    * - Generates a `paymentCode` for the transaction and a `paymentCodes` array
+    *   containing a generated coupon code for each purchased unit (respects `quantity`).
+    * - Persists the Payment record via the payments endpoint.
+    * - After the payment is persisted, creates coupons based on the generated
+    *   payment codes by calling `CouponsApi.createMany(...)`. If the backend
+    *   does not support a bulk endpoint, the client will fall back to serial
+    *   creation of coupons and wait for each POST to complete before proceeding.
+    *
+    * Returns an Observable that emits the persisted `Payment` after coupon
+    * creation has completed (or immediately if no coupons were generated).
+    *
+    * @param request - Payment creation request
    */
   createPayment(request: CreatePaymentRequest): Observable<Payment> {
     // Determine items either from request or from the user's cart
@@ -125,6 +148,23 @@ export class PaymentApi extends BaseApi {
     );
   }
 
+  /**
+   * Generate a short random coupon code.
+   *
+   * The code is produced by taking a base36 representation of a random number,
+   * extracting a substring and converting to upper-case. Resulting codes are
+   * 6 characters long, containing the characters 0-9 and A-Z.
+   *
+   * Notes:
+   * - This method is intended for lightweight demo codes and is not
+   *   cryptographically secure. For production use consider a server-side
+   *   generator with uniqueness guarantees or use UUIDs with a display-safe
+   *   transformation.
+   * - Collisions are possible; the system creates one coupon per purchased
+   *   unit, and the persistence layer should enforce uniqueness if required.
+   *
+   * @returns A 6-character alphanumeric uppercase coupon code.
+   */
   private generateRandomCouponCode(): string {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
