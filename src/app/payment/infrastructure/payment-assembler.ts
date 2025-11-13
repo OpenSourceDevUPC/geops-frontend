@@ -2,6 +2,14 @@ import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { Payment } from '../domain/model/payment.entity';
 import { PaymentResource, PaymentResponse } from './payment-response';
 
+/**
+ * Assembler class to convert between Payment entities, resources, and API responses.
+ * Implements the BaseAssembler interface.
+ * @see BaseAssembler
+ * @see Payment
+ * @see PaymentResource
+ * @see PaymentResponse
+ */
 export class PaymentAssembler
   implements BaseAssembler<Payment, PaymentResource, PaymentResponse>
 {
