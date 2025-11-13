@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  platformProviderApiBaseUrl: 'http://localhost:3000/api/v1',
+  platformProviderApiBaseUrlOld: 'http://localhost:3000/api/v1',
+  platformProviderApiBaseUrl: 'http://localhost:8080/api/v1',
   platformProviderSubscriptionsEndpointPath: '/subscriptions',
   platformProviderUserEndpointPath: '/users',
   platformProviderPaymentEndpointPath: '/payments',

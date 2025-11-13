@@ -5,6 +5,15 @@ import { SubscriptionsAssembler } from './subscriptions-assembler';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
+/**
+ * API endpoint for subscriptions
+ * extends BaseApiEndpoint with Subscription entity, SubscriptionResource, SubscriptionsResponse, and SubscriptionsAssembler
+ * @see BaseApiEndpoint
+ * @see Subscription
+ * @see SubscriptionResource
+ * @see SubscriptionsResponse
+ * @see SubscriptionsAssembler
+ */
 export class SubscriptionsApiEndpoint extends BaseApiEndpoint<
   Subscription,
   SubscriptionResource,
