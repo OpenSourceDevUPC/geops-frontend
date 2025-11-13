@@ -7,7 +7,7 @@
     <div class="map-top-bar">
       <div class="map-top-bar-left">
         <label>{{'home.map.places' | translate}}</label>
-        <button class="map-top-bar-left-btn-main">{{'home.map.use-my-location' | translate}}</button>
+        <button class="map-top-bar-left-btn-main" (click)="getLocation()">{{'home.map.use-my-location' | translate}}</button>
       </div>
 
       <div class="map-top-bar-right">
@@ -50,7 +50,7 @@
                 <strong>Activa tu ubicación</strong><br>
                 Para mostrar lugares cercanos y cupones en tiempo real.
               </p>
-              <button class="btn-use">Usar mi ubicación</button>
+              <button class="btn-use" (click)="getLocation()">Usar mi ubicación</button>
             </div>
           </div>
         </div>
