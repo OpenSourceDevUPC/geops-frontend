@@ -52,12 +52,12 @@ export class Home implements OnInit {
   makisOffers:Offer[] = [];
   beautyOffers:Offer[] = [];
 
-
   latitude = signal<number>(0);
   longitude = signal<number>(0);
   locationAllowed: boolean = false;
   center = signal<google.maps.LatLngLiteral>({lat: this.latitude(), lng: this.longitude()});
   zoomSignal = signal(11);
+  locationOffers = signal<{title: string, partner: string, lat: number, lng: number}[]>([]);
 
 
   constructor(
@@ -306,6 +306,33 @@ export class Home implements OnInit {
         if(isLocationAllowed) {
           localStorage.setItem('locationAllowed','true');
         }
+
+        this.offersApi.getAll().subscribe({
+          next: (offers) => {
+            const baseLat = this.latitude();
+            const baseLng = this.longitude();
+
+            this.locationOffers.update(() => {
+
+              return offers.map(o => {
+                const coords = this.generateNearbyLocation(baseLat, baseLng, 10);
+                return {
+                  title: o.title ?? "No title",
+                  partner: o.partner ?? "No Partner",
+                  lat: coords.lat,
+                  lng: coords.lng
+                };
+              });
+            });
+
+            console.log("Offers with random locations:", this.locationOffers());
+          },
+
+          error: (err) => {
+            console.error(err);
+          }
+        });
+
       },
       (error) => {
         console.log('Error getting location:', error.message);
@@ -313,6 +340,9 @@ export class Home implements OnInit {
     )
   }
 
+  /**
+   * @summary Checks if geolocation was previously accepted
+   */
   async checkPermissionsOnLoad() {
     const wasAllowed = localStorage.getItem('locationAllowed') === 'true';
 
@@ -322,5 +352,35 @@ export class Home implements OnInit {
       console.log('Geolocation permission previously allowed');
       this.getLocation();
     }
+  }
+
+  generateNearbyLocation(baseLat: number, baseLng: number, maxDistanceKm: number) {
+    // Bounding box de Lima Metropolitana
+    const minLat = -12.35;
+    const maxLat = -11.75;
+    const minLng = -77.20;
+    const maxLng = -76.80;
+
+    // 1 grado ≈ 111 km
+    const kmToDeg = 1 / 111;
+
+    // radio aleatorio (entre 0 km y max km)
+    const randomDistKm = Math.random() * maxDistanceKm;
+    const randomDistDeg = randomDistKm * kmToDeg;
+
+    // dirección aleatoria
+    const angle = Math.random() * 2 * Math.PI;
+
+    // Nueva lat/lng generada alrededor de la base
+    let newLat = baseLat + randomDistDeg * Math.cos(angle);
+    let newLng = baseLng + randomDistDeg * Math.sin(angle);
+
+    // Si se sale de Lima, lo reencerramos dentro del bounding box
+    if (newLat < minLat) newLat = minLat;
+    if (newLat > maxLat) newLat = maxLat;
+    if (newLng < minLng) newLng = minLng;
+    if (newLng > maxLng) newLng = maxLng;
+
+    return { lat: newLat, lng: newLng };
   }
 }
