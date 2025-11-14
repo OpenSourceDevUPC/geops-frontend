@@ -41,11 +41,22 @@
         <div class="map-image">
           @if(locationAllowed){
             <google-map
+              mapId="53c43d6499ceb7c05e795dff"
               height="500px"
               width="100%"
               [center]="center()"
               [zoom]="+zoomSignal()"
-            />
+            >
+              @for(location of locationOffers(); track location)
+              {
+                <map-advanced-marker
+                  #marker="mapAdvancedMarker"
+                  [position]="{lat: location.lat, lng: location.lng}"
+                  (mapClick)="openInfoWindow(location, marker)"
+                />
+              }
+              <map-info-window/>
+            </google-map>
           }
           @else{
             <div class="map-overlay">

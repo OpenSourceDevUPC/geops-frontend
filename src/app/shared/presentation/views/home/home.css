@@ -317,6 +317,10 @@
   pointer-events:none;
 }
 
+.view-offer {
+  cursor: pointer;
+}
+
 .offer-card .img-box .view-offer {
   position: absolute;
   left: 50%;
