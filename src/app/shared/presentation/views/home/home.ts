@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 import {Offer} from '../../../../loyalty/domain/model/offer.entity';
@@ -9,6 +9,8 @@ import {CartApi} from '../../../../cart/infrastructure/cart-api';
 import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {RouterLink} from '@angular/router';
+import {GoogleMap} from '@angular/google-maps';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +20,9 @@ import {RouterLink} from '@angular/router';
     DecimalPipe,
     NgForOf,
     RouterLink,
-    NgIf
+    NgIf,
+    GoogleMap,
+    FormsModule
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
@@ -49,9 +53,12 @@ export class Home implements OnInit {
   beautyOffers:Offer[] = [];
 
 
-  latitude: number | null = null;
-  longitude: number | null = null;
+  latitude = signal<number>(0);
+  longitude = signal<number>(0);
   locationAllowed: boolean = false;
+  center = signal<google.maps.LatLngLiteral>({lat: this.latitude(), lng: this.longitude()});
+  zoomSignal = signal(11);
+
 
   constructor(
     private offersApi: OffersApiEndpoint,
@@ -288,10 +295,12 @@ export class Home implements OnInit {
   getLocation(isLocationAllowed: boolean = false) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
-        console.log('Latitude:', this.latitude);
-        console.log('Longitude:', this.longitude);
+        this.latitude.set(position.coords.latitude);
+        this.longitude.set(position.coords.longitude);
+        this.center.set({lat: this.latitude(), lng: this.longitude()});
+        console.log('Latitude:', this.latitude());
+        console.log('Longitude:', this.longitude());
+        console.log('center:', this.center().lat, " ",this.center().lng);
         this.locationAllowed = true;
 
         if(isLocationAllowed) {
