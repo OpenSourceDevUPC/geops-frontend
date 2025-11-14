@@ -107,7 +107,6 @@
       "example": "e.g.: cine, buffet",
       "search": "Search",
       "radius": "Radius",
-      "settings": "Settings",
       "all": "All",
       "cinemas": "Cinemas",
       "buffets": "Buffets",
@@ -115,7 +114,12 @@
       "for-children": "For children",
       "makis": "Makis",
       "beauty": "Beauty",
-      "near-you": "Near you"
+      "near-you": "Near you",
+      "real-time": "Realtime Map",
+      "places-near-you": "Places near you",
+      "activate-location": "Activate your location",
+      "desc": "To show places near you and coupons in real time",
+      "right-map": "Share your location to see places near you"
     },
     "cinemas": "Cinemas",
     "lunch-buffets": "Lunch buffets",
