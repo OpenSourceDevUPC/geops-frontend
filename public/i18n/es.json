@@ -107,7 +107,7 @@
       "example": "ej.: cine, buffet",
       "search": "Buscar",
       "radius": "Radio",
-      "settings": "Configuración",
+      "apply": "Aplicar",
       "all": "Todos",
       "cinemas": "Cines",
       "buffets": "Buffets",
@@ -115,7 +115,12 @@
       "for-children": "Para niños",
       "makis": "Makis",
       "beauty": "Belleza",
-      "near-you": "Cerca de ti"
+      "near-you": "Cerca de ti",
+      "real-time": "Mapa en tiempo real",
+      "places-near-you": "Lugares cerca de ti",
+      "activate-location": "Activa tu ubicación\n",
+      "desc": "Para mostrar lugares cercanos y cupones en tiempo real.",
+      "right-map": "Compártenos tu ubicación\npara ver más lugares cerca de ti"
     },
     "cinemas": "Cines",
     "lunch-buffets": "Buffets de almuerzo",
