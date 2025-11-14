@@ -3,6 +3,14 @@ import { CartItem } from '../domain/model/cart-item.entity';
 import { Cart } from '../domain/model/cart.entity';
 import { CartItemResource, CartResource, CartResponse } from './cart-response';
 
+/**
+ * Assembler class to convert between Cart entities, resources, and API responses.
+ * Implements the BaseAssembler interface.
+ * @see BaseAssembler
+ * @see Cart
+ * @see CartResource
+ * @see CartResponse
+ */
 export class CartAssembler
   implements BaseAssembler<Cart, CartResource, CartResponse>
 {
