@@ -24,7 +24,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    * @param http Angular HttpClient for HTTP requests
    */
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}/users`, new UsersAssembler());
+    super(http, `${environment.platformProviderApiBaseUrlOld}/users`, new UsersAssembler());
   }
 
   /**
@@ -44,7 +44,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    * @returns Observable with the created UserResource
    */
   register(user: User): Observable<UserResource> {
-    return this.http.post<UserResource>(`${environment.platformProviderApiBaseUrl}/users`, user);
+    return this.http.post<UserResource>(`${environment.platformProviderApiBaseUrlOld}/users`, user);
   }
 
   /**
@@ -55,7 +55,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    */
   login(email: string, password: string): Observable<UserResource | undefined> {
     return this.http
-      .get<UserResource[]>(`${environment.platformProviderApiBaseUrl}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+      .get<UserResource[]>(`${environment.platformProviderApiBaseUrlOld}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
       .pipe(
         map(users => users.length ? users[0] : undefined)
       );

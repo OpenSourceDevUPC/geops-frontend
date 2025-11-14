@@ -4,6 +4,11 @@ import { SubscriptionResource, SubscriptionsResponse } from './subscriptions-res
 
 /**
  * Assembler to transform between Subscription entities and resources
+ * implements BaseAssembler interface
+ * @see BaseAssembler
+ * @see Subscription
+ * @see SubscriptionResource
+ * @see SubscriptionsResponse
  */
 export class SubscriptionsAssembler implements BaseAssembler<
   Subscription,
