@@ -47,8 +47,11 @@ export class Home implements OnInit {
   mechGamesOffers:Offer[] = [];
   makisOffers:Offer[] = [];
   beautyOffers:Offer[] = [];
-  latitude: number | undefined;
-  longitude: number | undefined;
+
+
+  latitude: number | null = null;
+  longitude: number | null = null;
+  locationAllowed: boolean = false;
 
   constructor(
     private offersApi: OffersApiEndpoint,
@@ -58,6 +61,9 @@ export class Home implements OnInit {
   {}
 
   ngOnInit(): void {
+
+    this.checkPermissionsOnLoad().then();
+
     const cinemaNumbers = [18, 8, 16];
     const buffetNumbers = [7, 5, 9];
     const parkNumbers = [13, 11, 17];
@@ -191,7 +197,7 @@ export class Home implements OnInit {
 
   toggleFav(o: Offer) {
     if (!this.currentUserId) {
-      console.warn('[Ofertas] Debes iniciar sesión para agregar favoritos');
+      console.warn('[Ofertas] You have to log-in to add favorites');
       alert('Debes iniciar sesión para agregar favoritos');
       return;
     }
@@ -275,19 +281,37 @@ export class Home implements OnInit {
   }
 
   /**
-   *
+   * @summary
+   * Asks the user to get their location
+   * Stores the latitude and longitude
    */
-  getLocation() {
+  getLocation(isLocationAllowed: boolean = false) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
-        console.log('Latitud:', this.latitude);
-        console.log('Longitud:', this.longitude);
+        console.log('Latitude:', this.latitude);
+        console.log('Longitude:', this.longitude);
+        this.locationAllowed = true;
+
+        if(isLocationAllowed) {
+          localStorage.setItem('locationAllowed','true');
+        }
       },
       (error) => {
         console.log('Error getting location:', error.message);
       }
     )
+  }
+
+  async checkPermissionsOnLoad() {
+    const wasAllowed = localStorage.getItem('locationAllowed') === 'true';
+
+    const permission = await navigator.permissions.query({name: 'geolocation'});
+
+    if(permission.state === 'granted' && wasAllowed) {
+      console.log('Geolocation permission previously allowed');
+      this.getLocation();
+    }
   }
 }
