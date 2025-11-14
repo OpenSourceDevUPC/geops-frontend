@@ -7,7 +7,9 @@
     <div class="map-top-bar">
       <div class="map-top-bar-left">
         <label>{{'home.map.places' | translate}}</label>
-        <button class="map-top-bar-left-btn-main" (click)="getLocation()">{{'home.map.use-my-location' | translate}}</button>
+        <button *ngIf="!locationAllowed" class="map-top-bar-left-btn-main" (click)="getLocation(true)">
+          {{'home.map.use-my-location' | translate}}
+        </button>
       </div>
 
       <div class="map-top-bar-right">
@@ -21,7 +23,7 @@
           <option>10 km</option>
         </select>
 
-        <button class="map-top-bar-btn-secondary">Configurar</button>
+        <button class="map-top-bar-btn-secondary">{{ 'home.map.apply' | translate }}</button>
       </div>
     </div>
 
@@ -39,27 +41,31 @@
     <div class="map">
       <div class="map-card">
         <div class="map-image">
-          <img src="" alt="Mapa" />
-          <div class="map-overlay">
+
+          <div *ngIf="!locationAllowed" class="map-overlay">
             <div>
-              <p class="map-title">MAPA EN TIEMPO REAL</p>
-              <h2 class="map-subtitle">Lugares cerca de ti</h2>
+              <p class="map-title">{{'home.map.real-time' | translate}}</p>
+              <h2 class="map-subtitle">{{'home.map.places-near-you' | translate}}</h2>
             </div>
             <div class="location-box">
               <p>
-                <strong>Activa tu ubicación</strong><br>
-                Para mostrar lugares cercanos y cupones en tiempo real.
+                <strong>{{'home.map.activate-location' | translate}}</strong><br>
+                {{ 'home.map.desc' | translate }}
               </p>
-              <button class="btn-use" (click)="getLocation()">Usar mi ubicación</button>
+              <button class="btn-use" (click)="getLocation(true)">
+                {{ 'home.map.use-my-location' | translate }}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="info-card">
-        <div class="info-card-pin">📍</div>
-        <p>Compártenos tu ubicación<br>para ver más lugares cerca de ti</p>
-      </div>
+        <div *ngIf="!locationAllowed">
+          <div class="info-card-pin">📍</div>
+          <p>{{'home.map.right-map' | translate}}</p>
+          </div>
+        </div>
     </div>
 
   </section>
