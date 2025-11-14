@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 import {Offer} from '../../../../loyalty/domain/model/offer.entity';
@@ -9,7 +9,7 @@ import {CartApi} from '../../../../cart/infrastructure/cart-api';
 import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {RouterLink} from '@angular/router';
-import {GoogleMap} from '@angular/google-maps';
+import {GoogleMap, MapAdvancedMarker, MapInfoWindow} from '@angular/google-maps';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -22,7 +22,9 @@ import {FormsModule} from '@angular/forms';
     RouterLink,
     NgIf,
     GoogleMap,
-    FormsModule
+    FormsModule,
+    MapAdvancedMarker,
+    MapInfoWindow
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
@@ -58,7 +60,7 @@ export class Home implements OnInit {
   center = signal<google.maps.LatLngLiteral>({lat: this.latitude(), lng: this.longitude()});
   zoomSignal = signal(11);
   locationOffers = signal<{title: string, partner: string, lat: number, lng: number}[]>([]);
-
+  infoWindowRef = viewChild.required(MapInfoWindow);
 
   constructor(
     private offersApi: OffersApiEndpoint,
@@ -315,7 +317,7 @@ export class Home implements OnInit {
             this.locationOffers.update(() => {
 
               return offers.map(o => {
-                const coords = this.generateNearbyLocation(baseLat, baseLng, 10);
+                const coords = this.generateNearbyLocation(baseLat, baseLng, 3.5);
                 return {
                   title: o.title ?? "No title",
                   partner: o.partner ?? "No Partner",
@@ -354,6 +356,12 @@ export class Home implements OnInit {
     }
   }
 
+  /**
+   * @summary Generates a location using Harvesine Formula
+   * @param baseLat The user's latitude
+   * @param baseLng The user's longitude
+   * @param maxDistanceKm The maximum radius distance in kilometers
+   */
   generateNearbyLocation(baseLat: number, baseLng: number, maxDistanceKm: number) {
     // Bounding box de Lima Metropolitana
     const minLat = -12.35;
@@ -382,5 +390,14 @@ export class Home implements OnInit {
     if (newLng > maxLng) newLng = maxLng;
 
     return { lat: newLat, lng: newLng };
+  }
+
+  openInfoWindow(location:{title: string, partner: string, lat: number, lng: number}, marker: MapAdvancedMarker) {
+    console.log("Offer title:", location.title, "Offer partner:",location.partner);
+    const content = `
+      <h2>${location.title}</h2>
+      <p>${location.partner}</p>
+    `
+    this.infoWindowRef().open(marker,true, content);
   }
 }
