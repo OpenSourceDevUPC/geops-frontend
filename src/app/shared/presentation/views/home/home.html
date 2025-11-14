@@ -17,13 +17,11 @@
         <input type="text" placeholder = "{{'home.map.example' |translate}}" />
 
         <label>{{'home.map.radius' | translate}}</label>
-        <select>
-          <option>3 km</option>
-          <option>5 km</option>
-          <option>10 km</option>
+        <select [(ngModel)]="zoomSignal">
+          <option [value]="11">11</option>
+          <option [value]="13">13</option>
+          <option [value]="15">15</option>
         </select>
-
-        <button class="map-top-bar-btn-secondary">{{ 'home.map.apply' | translate }}</button>
       </div>
     </div>
 
@@ -41,7 +39,14 @@
     <div class="map">
       <div class="map-card">
         <div class="map-image">
-
+          <div *ngIf="locationAllowed">
+            <google-map
+              height="500px"
+              width="100%"
+              [center]="center()"
+              [zoom]="+zoomSignal()"
+            />
+          </div>
           <div *ngIf="!locationAllowed" class="map-overlay">
             <div>
               <p class="map-title">{{'home.map.real-time' | translate}}</p>
