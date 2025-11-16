@@ -24,7 +24,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
    * @param http Angular HttpClient for HTTP requests
    */
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}/users`, new UsersAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserEndpointPath}`, new UsersAssembler());
   }
 
   /**
@@ -39,25 +39,26 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Registers a new user (only saves to db.json).
+   * Registers a new user using the authentication endpoint.
    * @param user User entity to register
    * @returns Observable with the created UserResource
    */
   register(user: User): Observable<UserResource> {
-    return this.http.post<UserResource>(`${environment.platformProviderApiBaseUrl}/users`, user);
+    return this.http.post<UserResource>(`${environment.platformProviderApiBaseUrl}/authentication/sign-up`, user);
   }
 
   /**
-   * Simulated login (searches for user by email and password).
+   * Login user with email and password using POST request.
    * @param email User's email
    * @param password User's password
    * @returns Observable with the found UserResource or undefined if not found
    */
   login(email: string, password: string): Observable<UserResource | undefined> {
+    const loginBody = { email, password };
     return this.http
-      .get<UserResource[]>(`${environment.platformProviderApiBaseUrl}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+      .post<UserResource>(`${environment.platformProviderApiBaseUrl}/authentication/sign-in`, loginBody)
       .pipe(
-        map(users => users.length ? users[0] : undefined)
+        map(user => user || undefined)
       );
   }
 

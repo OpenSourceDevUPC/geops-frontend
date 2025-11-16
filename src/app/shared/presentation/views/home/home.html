@@ -7,7 +7,9 @@
     <div class="map-top-bar">
       <div class="map-top-bar-left">
         <label>{{'home.map.places' | translate}}</label>
-        <button class="map-top-bar-left-btn-main">{{'home.map.use-my-location' | translate}}</button>
+        <button *ngIf="!locationAllowed" class="map-top-bar-left-btn-main" (click)="getLocation(true)">
+          {{'home.map.use-my-location' | translate}}
+        </button>
       </div>
 
       <div class="map-top-bar-right">
@@ -15,13 +17,11 @@
         <input type="text" placeholder = "{{'home.map.example' |translate}}" />
 
         <label>{{'home.map.radius' | translate}}</label>
-        <select>
-          <option>3 km</option>
-          <option>5 km</option>
-          <option>10 km</option>
+        <select [(ngModel)]="zoomSignal">
+          <option [value]="13">13</option>
+          <option [value]="14">14</option>
+          <option [value]="15">15</option>
         </select>
-
-        <button class="map-top-bar-btn-secondary">Configurar</button>
       </div>
     </div>
 
@@ -39,27 +39,61 @@
     <div class="map">
       <div class="map-card">
         <div class="map-image">
-          <img src="" alt="Mapa" />
-          <div class="map-overlay">
-            <div>
-              <p class="map-title">MAPA EN TIEMPO REAL</p>
-              <h2 class="map-subtitle">Lugares cerca de ti</h2>
+          @if(locationAllowed){
+            <google-map
+              mapId="53c43d6499ceb7c05e795dff"
+              height="500px"
+              width="100%"
+              [center]="center()"
+              [zoom]="+zoomSignal()"
+            >
+              @for(location of locationOffers(); track location)
+              {
+                <map-advanced-marker
+                  #marker="mapAdvancedMarker"
+                  [position]="{lat: location.lat, lng: location.lng}"
+                  (mapClick)="openInfoWindow(location, marker)"
+                />
+              }
+              <map-info-window/>
+            </google-map>
+          }
+          @else{
+            <div class="map-overlay">
+              <div>
+                <p class="map-title">{{'home.map.real-time' | translate}}</p>
+                <h2 class="map-subtitle">{{'home.map.places-near-you' | translate}}</h2>
+              </div>
+              <div class="location-box">
+                <p>
+                  <strong>{{'home.map.activate-location' | translate}}</strong><br>
+                  {{ 'home.map.desc' | translate }}
+                </p>
+                <button class="btn-use" (click)="getLocation(true)">
+                  {{ 'home.map.use-my-location' | translate }}
+                </button>
+              </div>
             </div>
-            <div class="location-box">
-              <p>
-                <strong>Activa tu ubicación</strong><br>
-                Para mostrar lugares cercanos y cupones en tiempo real.
-              </p>
-              <button class="btn-use">Usar mi ubicación</button>
-            </div>
-          </div>
+          }
         </div>
       </div>
 
       <div class="info-card">
-        <div class="info-card-pin">📍</div>
-        <p>Compártenos tu ubicación<br>para ver más lugares cerca de ti</p>
-      </div>
+        <div class="offer-map-list">
+          @for(locationOffer of locationOffers(); track locationOffer) {
+            <div class="offer-loc-item">
+              <h4>Title: {{locationOffer.title}}</h4>
+              <p>Partner: {{locationOffer.partner}}</p>
+            </div>
+          }
+        </div>
+        @if(!locationAllowed) {
+          <div>
+            <div class="info-card-pin">📍</div>
+            <p>{{'home.map.right-map' | translate}}</p>
+          </div>
+        }
+        </div>
     </div>
 
   </section>

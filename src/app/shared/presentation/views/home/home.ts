@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 import {Offer} from '../../../../loyalty/domain/model/offer.entity';
@@ -9,6 +9,8 @@ import {CartApi} from '../../../../cart/infrastructure/cart-api';
 import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {RouterLink} from '@angular/router';
+import {GoogleMap, MapAdvancedMarker, MapInfoWindow} from '@angular/google-maps';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -18,14 +20,18 @@ import {RouterLink} from '@angular/router';
     DecimalPipe,
     NgForOf,
     RouterLink,
-    NgIf
+    NgIf,
+    GoogleMap,
+    FormsModule,
+    MapAdvancedMarker,
+    MapInfoWindow
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
 export class Home implements OnInit {
 
-  private favSet = new Set<number>();
+  private favSet = new Set<string>();
   private currentUserId: number | null = null;
   private userId:string = 'a512';
   private readonly cartApi = inject(CartApi);
@@ -48,6 +54,14 @@ export class Home implements OnInit {
   makisOffers:Offer[] = [];
   beautyOffers:Offer[] = [];
 
+  latitude = signal<number>(0);
+  longitude = signal<number>(0);
+  locationAllowed: boolean = false;
+  center = signal<google.maps.LatLngLiteral>({lat: this.latitude(), lng: this.longitude()});
+  zoomSignal = signal(11);
+  locationOffers = signal<{title: string, partner: string, lat: number, lng: number}[]>([]);
+  infoWindowRef = viewChild.required(MapInfoWindow);
+
   constructor(
     private offersApi: OffersApiEndpoint,
     private favoritesApi: FavoritesApiEndpoint,
@@ -56,6 +70,9 @@ export class Home implements OnInit {
   {}
 
   ngOnInit(): void {
+
+    this.checkPermissionsOnLoad().then();
+
     const cinemaNumbers = [18, 8, 16];
     const buffetNumbers = [7, 5, 9];
     const parkNumbers = [13, 11, 17];
@@ -185,26 +202,29 @@ export class Home implements OnInit {
     return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
   }
 
-  isFav(id: number) { return this.favSet.has(id); }
+  isFav(id: number) { return this.favSet.has(String(id)); }
 
   toggleFav(o: Offer) {
     if (!this.currentUserId) {
-      console.warn('[Ofertas] Debes iniciar sesión para agregar favoritos');
+      console.warn('[Ofertas] You have to log-in to add favorites');
       alert('Debes iniciar sesión para agregar favoritos');
       return;
     }
 
-    if (this.favSet.has(o.id)) {
-      this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
-        if (!rows.length) return;
-        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
-          this.favSet.delete(o.id);
+    if (this.favSet.has(String(o.id))) {
+      // Eliminar favorito usando el endpoint directo
+      this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
+        next: () => {
+          this.favSet.delete(String(o.id));
           console.log('[Ofertas] Favorito eliminado:', o.id);
-        });
+        },
+        error: (err) => {
+          console.error('[Ofertas] Error al eliminar favorito:', err);
+        }
       });
     } else {
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(o.id);
+        this.favSet.add(String(o.id));
         console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
@@ -272,5 +292,115 @@ export class Home implements OnInit {
     });
   }
 
+  /**
+   * @summary
+   * Asks the user to get their location
+   * Stores the latitude and longitude
+   */
+  getLocation(isLocationAllowed: boolean = false) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.latitude.set(position.coords.latitude);
+        this.longitude.set(position.coords.longitude);
+        this.center.set({lat: this.latitude(), lng: this.longitude()});
+        console.log('Latitude:', this.latitude());
+        console.log('Longitude:', this.longitude());
+        console.log('center:', this.center().lat, " ",this.center().lng);
+        this.locationAllowed = true;
 
+        if(isLocationAllowed) {
+          localStorage.setItem('locationAllowed','true');
+        }
+
+        this.offersApi.getAll().subscribe({
+          next: (offers) => {
+            const baseLat = this.latitude();
+            const baseLng = this.longitude();
+
+            this.locationOffers.update(() => {
+
+              return offers.map(o => {
+                const coords = this.generateNearbyLocation(baseLat, baseLng, 3.5);
+                return {
+                  title: o.title ?? "No title",
+                  partner: o.partner ?? "No Partner",
+                  lat: coords.lat,
+                  lng: coords.lng
+                };
+              });
+            });
+
+            console.log("Offers with random locations:", this.locationOffers());
+          },
+
+          error: (err) => {
+            console.error(err);
+          }
+        });
+
+      },
+      (error) => {
+        console.log('Error getting location:', error.message);
+      }
+    )
+  }
+
+  /**
+   * @summary Checks if geolocation was previously accepted
+   */
+  async checkPermissionsOnLoad() {
+    const wasAllowed = localStorage.getItem('locationAllowed') === 'true';
+
+    const permission = await navigator.permissions.query({name: 'geolocation'});
+
+    if(permission.state === 'granted' && wasAllowed) {
+      console.log('Geolocation permission previously allowed');
+      this.getLocation();
+    }
+  }
+
+  /**
+   * @summary Generates a location using Harvesine Formula
+   * @param baseLat The user's latitude
+   * @param baseLng The user's longitude
+   * @param maxDistanceKm The maximum radius distance in kilometers
+   */
+  generateNearbyLocation(baseLat: number, baseLng: number, maxDistanceKm: number) {
+    // Bounding box de Lima Metropolitana
+    const minLat = -12.35;
+    const maxLat = -11.75;
+    const minLng = -77.20;
+    const maxLng = -76.80;
+
+    // 1 grado ≈ 111 km
+    const kmToDeg = 1 / 111;
+
+    // radio aleatorio (entre 0 km y max km)
+    const randomDistKm = Math.random() * maxDistanceKm;
+    const randomDistDeg = randomDistKm * kmToDeg;
+
+    // dirección aleatoria
+    const angle = Math.random() * 2 * Math.PI;
+
+    // Nueva lat/lng generada alrededor de la base
+    let newLat = baseLat + randomDistDeg * Math.cos(angle);
+    let newLng = baseLng + randomDistDeg * Math.sin(angle);
+
+    // Si se sale de Lima, lo reencerramos dentro del bounding box
+    if (newLat < minLat) newLat = minLat;
+    if (newLat > maxLat) newLat = maxLat;
+    if (newLng < minLng) newLng = minLng;
+    if (newLng > maxLng) newLng = maxLng;
+
+    return { lat: newLat, lng: newLng };
+  }
+
+  openInfoWindow(location:{title: string, partner: string, lat: number, lng: number}, marker: MapAdvancedMarker) {
+    console.log("Offer title:", location.title, "Offer partner:",location.partner);
+    const content = `
+      <h2>${location.title}</h2>
+      <p>${location.partner}</p>
+    `
+    this.infoWindowRef().open(marker,true, content);
+  }
 }
