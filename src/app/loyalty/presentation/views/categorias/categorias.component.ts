@@ -57,7 +57,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     sort: 'relevance' as 'relevance' | 'priceAsc' | 'priceDesc' | 'ratingDesc',
   };
 
-  private favSet = new Set<number>();
+  private favSet = new Set<string>();
   private dataLoaded = false;
   private currentUserId: number | null = null;
 
@@ -234,7 +234,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
    * verifica si una oferta esta marcada como favorita
    * @param id
    */
-  isFav(id: number) { return this.favSet.has(id); }
+  isFav(id: number) { return this.favSet.has(String(id)); }
 
   /**
    * aqui basicamente se actualiza el estado de favorito de una oferta
@@ -248,19 +248,21 @@ export class CategoriasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.favSet.has(o.id)) {
-      // REMOVER favorito
-      this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
-        if (!rows.length) return;
-        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
-          this.favSet.delete(o.id);
+    if (this.favSet.has(String(o.id))) {
+      // REMOVER favorito usando el endpoint directo
+      this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
+        next: () => {
+          this.favSet.delete(String(o.id));
           console.log('[Ofertas] Favorito eliminado:', o.id);
-        });
+        },
+        error: (err) => {
+          console.error('[Ofertas] Error al eliminar favorito:', err);
+        }
       });
     } else {
       // AGREGAR favorito
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(o.id);
+        this.favSet.add(String(o.id));
         console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
