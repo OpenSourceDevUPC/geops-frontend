@@ -100,7 +100,8 @@ export class FavoritosComponent implements OnInit {
 
     this.favsApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
-        const ids = rows.map((r) => r.offerId);
+        // Convertir offerId de string a number
+        const ids = rows.map((r) => Number(r.offerId));
 
         if (!ids.length) {
           this.offers = [];
@@ -134,12 +135,15 @@ export class FavoritosComponent implements OnInit {
   remove(o: Offer) {
     if (!this.currentUserId) return;
 
-    this.favsApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
-      if (!rows.length) return;
-
-      this.favsApi.removeRow(rows[0].id!).subscribe(() => {
+    // Usar el endpoint directo que elimina por userId y offerId
+    this.favsApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
+      next: () => {
         this.offers = this.offers.filter((x) => x.id !== o.id);
-      });
+        console.log('[Favoritos] Favorito eliminado:', o.id);
+      },
+      error: (err) => {
+        console.error('[Favoritos] Error al eliminar favorito:', err);
+      }
     });
   }
 

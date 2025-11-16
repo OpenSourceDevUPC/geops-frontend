@@ -31,7 +31,7 @@ import {FormsModule} from '@angular/forms';
 })
 export class Home implements OnInit {
 
-  private favSet = new Set<number>();
+  private favSet = new Set<string>();
   private currentUserId: number | null = null;
   private userId:string = 'a512';
   private readonly cartApi = inject(CartApi);
@@ -202,7 +202,7 @@ export class Home implements OnInit {
     return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
   }
 
-  isFav(id: number) { return this.favSet.has(id); }
+  isFav(id: number) { return this.favSet.has(String(id)); }
 
   toggleFav(o: Offer) {
     if (!this.currentUserId) {
@@ -211,17 +211,20 @@ export class Home implements OnInit {
       return;
     }
 
-    if (this.favSet.has(o.id)) {
-      this.favoritesApi.findRow(this.currentUserId, o.id).subscribe((rows) => {
-        if (!rows.length) return;
-        this.favoritesApi.removeRow(rows[0].id!).subscribe(() => {
-          this.favSet.delete(o.id);
+    if (this.favSet.has(String(o.id))) {
+      // Eliminar favorito usando el endpoint directo
+      this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
+        next: () => {
+          this.favSet.delete(String(o.id));
           console.log('[Ofertas] Favorito eliminado:', o.id);
-        });
+        },
+        error: (err) => {
+          console.error('[Ofertas] Error al eliminar favorito:', err);
+        }
       });
     } else {
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(o.id);
+        this.favSet.add(String(o.id));
         console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
