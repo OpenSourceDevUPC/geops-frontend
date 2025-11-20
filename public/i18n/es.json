@@ -2,7 +2,7 @@
   "header": {
     "logo": "GeoPs",
     "search": {
-      "placeholder": "Buscar y encuentra las mejores ofertas"
+      "placeholder": "Busca y encuentra las mejores ofertas"
     },
     "help": "Ayuda",
     "notifications": "Notificaciones",
@@ -332,7 +332,7 @@
     "locationStep3": "Ajusta el radio (ej. 1–10 km) con el selector para ver más/menos resultados."
   },
   "common": {
-    "currency": "s/"
+    "currency": "S/"
   },
   "offerDetail": {
     "back": "Volver",
@@ -360,7 +360,7 @@
     },
     "metrics": {
       "impressions": "Imp",
-      "clicks": "Clicks"
+      "clicks": "Clics"
     },
     "actions": {
       "pause": "Pausar",
@@ -381,6 +381,6 @@
     "Gastronomía": "Gastronomía",
     "Belleza": "Belleza",
     "Gift Card": "Gift Card",
-    "title": "Categorias"
+    "title": "Categorías"
   }
 }
