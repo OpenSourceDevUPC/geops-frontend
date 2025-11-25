@@ -278,3 +278,247 @@ input[disabled], select[disabled] {
   color: #8636be;
   opacity: 1;
 }
+
+/* Responsive Design - 1024px */
+@media (max-width: 1024px) {
+  .settings-card {
+    max-width: 700px;
+  }
+
+  .settings-profile {
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .settings-form {
+    gap: 16px;
+  }
+}
+
+/* Responsive Design - 768px */
+@media (max-width: 768px) {
+  .settings-wrapper {
+    padding-top: 40px;
+    min-height: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .settings-card {
+    max-width: 100%;
+    padding: 24px 20px 20px;
+    border-radius: 12px;
+  }
+
+  .settings-profile {
+    gap: 14px;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .settings-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .settings-name {
+    font-size: 20px;
+  }
+
+  .settings-plan {
+    font-size: 14px;
+  }
+
+  .settings-profile-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .settings-btn {
+    padding: 6px 16px;
+    font-size: 14px;
+  }
+
+  .settings-form {
+    gap: 14px;
+  }
+
+  .settings-input,
+  .settings-row input,
+  .settings-row select {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .settings-row label {
+    font-size: 14px;
+  }
+
+  .category-checkbox {
+    font-size: 12px;
+    padding: 3px 14px 3px 8px;
+  }
+
+  .settings-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .settings-actions .settings-btn {
+    width: 100%;
+  }
+}
+
+/* Responsive Design - 640px */
+@media (max-width: 640px) {
+  .settings-wrapper {
+    padding-top: 32px;
+  }
+
+  .settings-card {
+    padding: 20px 16px 18px;
+  }
+
+  .settings-profile {
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+  }
+
+  .settings-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+
+  .settings-name {
+    font-size: 18px;
+  }
+
+  .settings-plan {
+    font-size: 13px;
+  }
+
+  .settings-profile-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .settings-profile-actions .settings-btn {
+    width: 100%;
+  }
+
+  .settings-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .settings-form {
+    gap: 12px;
+  }
+
+  .settings-input,
+  .settings-row input,
+  .settings-row select {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .settings-row label {
+    font-size: 13px;
+  }
+
+  .category-checkbox {
+    font-size: 11px;
+    padding: 3px 12px 3px 8px;
+    min-width: 65px;
+  }
+
+  .category-checkbox input[type="checkbox"] {
+    transform: scale(1.08);
+  }
+
+  .edit-icon-btn mat-icon {
+    font-size: 18px;
+  }
+}
+
+/* Responsive Design - 375px */
+@media (max-width: 375px) {
+  .settings-wrapper {
+    padding-top: 24px;
+  }
+
+  .settings-card {
+    padding: 16px 12px;
+    border-radius: 10px;
+  }
+
+  .settings-profile {
+    gap: 10px;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+  }
+
+  .settings-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .settings-name {
+    font-size: 17px;
+  }
+
+  .settings-plan {
+    font-size: 12px;
+  }
+
+  .settings-btn {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .settings-form {
+    gap: 11px;
+  }
+
+  .settings-input,
+  .settings-row input,
+  .settings-row select {
+    padding: 8px 11px;
+    font-size: 13px;
+  }
+
+  .settings-row label {
+    font-size: 12px;
+  }
+
+  .category-checkbox {
+    font-size: 11px;
+    padding: 2px 10px 2px 7px;
+    min-width: 60px;
+  }
+
+  .category-checkbox input[type="checkbox"] {
+    transform: scale(1.0);
+  }
+
+  .edit-icon-btn {
+    padding: 2px 4px 2px 2px;
+    margin-left: 6px;
+  }
+
+  .edit-icon-btn mat-icon {
+    font-size: 17px;
+  }
+
+  .settings-actions {
+    margin-top: 12px;
+  }
+}
+

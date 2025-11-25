@@ -252,7 +252,6 @@ export class VerOfertaComponent implements OnInit {
         // Reset payment flow when items are added
         this.cartUiService.resetPaymentFlow();
         console.log('Item added to cart successfully');
-        alert(`"${offerTitle}" se agregó al carrito correctamente`);
       },
       error: (error) => {
         console.error('Error adding item to cart:', error);
