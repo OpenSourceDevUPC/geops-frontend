@@ -51,10 +51,13 @@ export class Layout implements OnInit {
 
   q = '';
   userName = 'Usuario';
+  userEmail = 'usuario@geops.com';
   cartCount = signal(0);
+  isMobileMenuOpen = signal(false);
+  isSearchFocused = signal(false);
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {}
 
@@ -62,6 +65,7 @@ export class Layout implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.userName = user.name;
+      this.userEmail = user.email || 'usuario@geops.com';
       console.log('[Layout] Usuario actual:', this.userName, 'ID:', user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
@@ -94,7 +98,30 @@ export class Layout implements OnInit {
     if (term) {
       console.log('[Layout] Buscar:', term);
       this.router.navigate(['/ofertas'], { queryParams: { q: term } });
+      this.isSearchFocused.set(false);
+      this.closeMobileMenu();
     }
+  }
+
+  clearSearch() {
+    this.q = '';
+    this.router.navigate(['/ofertas']);
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update(value => !value);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+  }
+
+  onSearchFocus() {
+    this.isSearchFocused.set(true);
+  }
+
+  onSearchBlur() {
+    setTimeout(() => this.isSearchFocused.set(false), 200);
   }
 
   onLogout() {
@@ -110,7 +137,4 @@ export class Layout implements OnInit {
     { link: '/favoritos',   label: 'option.favorites' },
     { link: '/mis-cupones', label: 'option.mycoupons' },
   ];
-  goToHelpCenter(): void {
-    this.router.navigate(['/help/help-center']);
-  }
 }

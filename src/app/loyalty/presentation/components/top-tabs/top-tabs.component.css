@@ -1,0 +1,193 @@
+:root {
+  --purple: #A751D4;
+  --cta: #AB58E3;
+  --dark: #111827;
+  --border: #E5E7EB;
+}
+
+/* Desktop Design - Mantener diseño original */
+.tabs-wrap {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  align-items: center;
+  max-width: 880px;
+  margin: 12px auto 20px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.tabs-wrap:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tab {
+  justify-self: center;
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  text-align: center;
+  position: relative;
+}
+
+.tab::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--purple);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.tab:hover {
+  background: #000;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  background: #000;
+  color: #fff;
+}
+
+.tab.active::before {
+  width: 80%;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - MEDIA QUERIES
+   ============================================ */
+
+/* Tablet Landscape (1024px - 1280px) */
+@media (max-width: 1280px) {
+  .tabs-wrap {
+    max-width: 820px;
+    gap: 20px;
+    padding: 10px 12px;
+  }
+
+  .tab {
+    font-size: 0.875rem;
+    padding: 7px 14px;
+  }
+}
+
+/* Tablet Portrait (768px - 1024px) */
+@media (max-width: 1024px) {
+  .tabs-wrap {
+    max-width: 95%;
+    gap: 16px;
+    padding: 8px 10px;
+    grid-template-columns: repeat(5, minmax(100px, 1fr));
+  }
+
+  .tab {
+    font-size: 0.8125rem;
+    padding: 6px 12px;
+  }
+}
+
+/* Mobile Landscape (640px - 768px) */
+@media (max-width: 768px) {
+  .tabs-wrap {
+    max-width: 100%;
+    margin: 12px 1rem 20px;
+    padding: 6px 8px;
+    gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--purple) #f1f1f1;
+  }
+
+  .tabs-wrap::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .tabs-wrap::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  .tabs-wrap::-webkit-scrollbar-thumb {
+    background: var(--purple);
+    border-radius: 2px;
+  }
+
+  .tabs-wrap::-webkit-scrollbar-thumb:hover {
+    background: var(--cta);
+  }
+
+  .tab {
+    font-size: 0.8125rem;
+    padding: 6px 10px;
+    scroll-snap-align: start;
+    min-width: max-content;
+  }
+}
+
+/* Mobile Portrait (375px - 640px) */
+@media (max-width: 640px) {
+  .tabs-wrap {
+    margin: 8px 0.75rem 16px;
+    padding: 6px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .tab {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 10px;
+  }
+
+  .tab:hover {
+    transform: translateY(0);
+  }
+
+  .tab::before {
+    display: none;
+  }
+}
+
+/* Extra Small Mobile (0px - 375px) */
+@media (max-width: 375px) {
+  .tabs-wrap {
+    margin: 8px 0.5rem 16px;
+    padding: 5px;
+    gap: 6px;
+  }
+
+  .tab {
+    font-size: 0.6875rem;
+    padding: 5px 10px;
+  }
+}
+
+/* Orientation: Landscape on small devices */
+@media (max-height: 500px) and (orientation: landscape) {
+  .tabs-wrap {
+    margin: 6px 1rem 12px;
+    padding: 4px 8px;
+  }
+
+  .tab {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+}

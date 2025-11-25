@@ -104,9 +104,11 @@
     "map": {
       "places": "Places",
       "use-my-location": "Use my location",
+      "location-active": "Location active",
       "example": "e.g.: cine, buffet",
       "search": "Search",
       "radius": "Radius",
+      "zoom": "Zoom",
       "all": "All",
       "cinemas": "Cinemas",
       "buffets": "Buffets",
@@ -119,14 +121,17 @@
       "places-near-you": "Places near you",
       "activate-location": "Activate your location",
       "desc": "To show places near you and coupons in real time",
-      "right-map": "Share your location to see places near you"
+      "right-map": "Share your location to see places near you",
+      "nearby-offers": "Nearby Offers",
+      "results": "results"
     },
     "cinemas": "Cinemas",
     "lunch-buffets": "Lunch buffets",
     "inflatable-parks": "Inflatable parks",
     "mechanical-games": "Mechanical games",
     "maki-open-bar": "Maki open bar",
-    "beauty": "Beauty"
+    "beauty": "Beauty",
+    "offers": "offers"
   },
   "welcomeBanner": {
     "welcome": "Welcome",
@@ -382,7 +387,22 @@
     "title": "My Coupons"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "tagline": "Offers and coupons near you",
+    "description": "Discover the best deals and discounts on restaurants, entertainment, beauty and more in your area.",
+    "navigation": "Navigation",
+    "offers": "Offers",
+    "subscriptions": "Subscriptions",
+    "coupons": "Coupons",
+    "help": "Help",
+    "support": "Support",
+    "faq": "Frequent Questions",
+    "contact": "Contact",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "contact-us": "Contact Us",
+    "rights": "All rights reserved.",
+    "made-with": "Made with",
+    "in-peru": "in Peru"
   },
   "categorias": {
     "Entretenimiento": "Entertainment",
