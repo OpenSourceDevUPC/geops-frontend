@@ -379,7 +379,22 @@
     "title": "Mis Cupones"
   },
   "footer": {
-    "rights": "Todos los derechos reservados."
+    "tagline": "Ofertas y cupones cerca de ti",
+    "description": "Descubre las mejores ofertas y descuentos en restaurantes, entretenimiento, belleza y más en tu zona.",
+    "navigation": "Navegación",
+    "offers": "Ofertas",
+    "subscriptions": "Suscripciones",
+    "coupons": "Cupones",
+    "help": "Ayuda",
+    "support": "Soporte",
+    "faq": "Preguntas Frecuentes",
+    "contact": "Contacto",
+    "terms": "Términos y Condiciones",
+    "privacy": "Política de Privacidad",
+    "contact-us": "Contáctanos",
+    "rights": "Todos los derechos reservados.",
+    "made-with": "Hecho con",
+    "in-peru": "en Perú"
   },
   "categorias": {
     "Entretenimiento": "Entretenimiento",

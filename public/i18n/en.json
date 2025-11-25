@@ -387,7 +387,22 @@
     "title": "My Coupons"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "tagline": "Offers and coupons near you",
+    "description": "Discover the best deals and discounts on restaurants, entertainment, beauty and more in your area.",
+    "navigation": "Navigation",
+    "offers": "Offers",
+    "subscriptions": "Subscriptions",
+    "coupons": "Coupons",
+    "help": "Help",
+    "support": "Support",
+    "faq": "Frequent Questions",
+    "contact": "Contact",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "contact-us": "Contact Us",
+    "rights": "All rights reserved.",
+    "made-with": "Made with",
+    "in-peru": "in Peru"
   },
   "categorias": {
     "Entretenimiento": "Entertainment",
