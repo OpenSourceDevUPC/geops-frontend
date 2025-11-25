@@ -152,9 +152,6 @@ export class SubscriptionPlansModalComponent implements OnInit {
             console.log('User data refreshed successfully:', refreshedUser);
             this.updating.set(false);
 
-            // Show success message or notification here
-            alert(`¡Plan ${plan.name} seleccionado exitosamente!`);
-
             // Emit the plan selection event
             this.planSelected.emit(plan);
 
@@ -164,9 +161,6 @@ export class SubscriptionPlansModalComponent implements OnInit {
           error: (refreshError) => {
             console.error('Error refreshing user data:', refreshError);
             this.updating.set(false);
-
-            // Still show success for the plan update, but warn about refresh
-            alert(`¡Plan ${plan.name} seleccionado exitosamente! (Actualice la página si no ve los cambios)`);
 
             // Emit the plan selection event
             this.planSelected.emit(plan);
