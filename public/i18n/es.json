@@ -104,9 +104,11 @@
     "map": {
       "places": "Lugares",
       "use-my-location": "Usar mi ubicación",
+      "location-active": "Ubicación activa",
       "example": "ej.: cine, buffet",
       "search": "Buscar",
       "radius": "Radio",
+      "zoom": "Zoom",
       "all": "Todos",
       "cinemas": "Cines",
       "buffets": "Buffets",
@@ -119,14 +121,17 @@
       "places-near-you": "Lugares cerca de ti",
       "activate-location": "Activa tu ubicación\n",
       "desc": "Para mostrar lugares cercanos y cupones en tiempo real.",
-      "right-map": "Compártenos tu ubicación\npara ver más lugares cerca de ti"
+      "right-map": "Compártenos tu ubicación\npara ver más lugares cerca de ti",
+      "nearby-offers": "Ofertas Cercanas",
+      "results": "resultados"
     },
     "cinemas": "Cines",
     "lunch-buffets": "Buffets de almuerzo",
     "inflatable-parks": "Parques de inflables",
     "mechanical-games": "Juegos mecánicos",
     "maki-open-bar": "Barra libre de makis",
-    "beauty": "Belleza"
+    "beauty": "Belleza",
+    "offers": "ofertas"
   },
   "welcomeBanner": {
     "welcome": "Bienvenido",
