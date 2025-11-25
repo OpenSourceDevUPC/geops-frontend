@@ -100,6 +100,19 @@ export class OfertasComponent implements OnInit, OnDestroy {
       console.warn('[Ofertas] No hay usuario autenticado');
     }
 
+    // Subscribe to query params changes to sync filters
+    this.route.queryParams.subscribe(params => {
+      this.filters.q = params['q'] || '';
+      this.filters.category = params['category'] || 'all';
+      this.filters.location = params['location'] || 'all';
+      this.filters.sort = params['sort'] || 'relevance';
+
+      // Only apply filters if data is already loaded
+      if (this.dataLoaded) {
+        this.applyFiltersWithoutUpdatingUrl();
+      }
+    });
+
     this.loading = true;
 
     this.offersApi.getAll().subscribe({
@@ -114,7 +127,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
         this.locations = Array.from(new Set(this.all.map((o) => o.location))).sort();
 
         this.dataLoaded = true;
-        this.applyFilters();
+        this.applyFiltersWithoutUpdatingUrl();
         this.loading = false;
         this.startAuto();
       },
@@ -189,9 +202,28 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * filters are applied
+   * filters are applied and URL is updated
    */
   applyFilters() {
+    this.applyFiltersWithoutUpdatingUrl();
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        q: this.filters.q || null,
+        category: this.filters.category !== 'all' ? this.filters.category : null,
+        location: this.filters.location !== 'all' ? this.filters.location : null,
+        sort: this.filters.sort !== 'relevance' ? this.filters.sort : null,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  /**
+   * applies filters without updating the URL (used when syncing from URL)
+   */
+  private applyFiltersWithoutUpdatingUrl() {
     const q = this.filters.q.trim().toLowerCase();
 
     let list = this.all.filter((o) => {
@@ -212,18 +244,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
     }
 
     this.filtered = list;
-
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        q: this.filters.q || null,
-        category: this.filters.category !== 'all' ? this.filters.category : null,
-        location: this.filters.location !== 'all' ? this.filters.location : null,
-        sort: this.filters.sort !== 'relevance' ? this.filters.sort : null,
-      },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
   }
 
   /**
