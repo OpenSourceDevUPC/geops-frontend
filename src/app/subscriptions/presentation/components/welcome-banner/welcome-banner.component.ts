@@ -40,9 +40,7 @@ export class WelcomeBannerComponent implements OnInit {
    * Get current user plan type
    */
   getCurrentPlan(): 'BASIC' | 'PREMIUM' {
-    const plan = this.currentUser()?.plan || 'BASIC';
-    // Treat FREEMIUM as PREMIUM
-    return plan === 'FREEMIUM' ? 'PREMIUM' : plan as 'BASIC' | 'PREMIUM';
+    return this.currentUser()?.plan || 'BASIC';
   }
 
   /**

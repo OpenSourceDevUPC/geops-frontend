@@ -86,7 +86,11 @@ export class SubscriptionPlansModalComponent implements OnInit {
         this.loadSubscriptionPlans();
       }
     });
-    this.loadSubscriptionPlans();
+
+    // Use stream to ensure translations are loaded
+    this.translateService.stream('subscriptions.currency').subscribe(() => {
+      this.loadSubscriptionPlans();
+    });
   }
 
   /**
@@ -115,23 +119,51 @@ export class SubscriptionPlansModalComponent implements OnInit {
   private enrichPlanWithTranslations(plan: Subscription): SubscriptionWithTranslations {
     // Determine the correct translation path based on user role
     const roleKey = this.userRole() === 'OWNER' ? 'provider' : 'consumer';
-    const planKey = `subscriptions.${roleKey}.plans.${plan.type.toLowerCase()}`;
+    const planType = plan.type.toLowerCase();
+    const planKey = `subscriptions.${roleKey}.plans.${planType}`;
+
+    console.log('[SubscriptionPlansModal] ==================');
+    console.log('[SubscriptionPlansModal] User Role:', this.userRole());
+    console.log('[SubscriptionPlansModal] Plan Type:', plan.type);
+    console.log('[SubscriptionPlansModal] Plan Type (lowercase):', planType);
+    console.log('[SubscriptionPlansModal] Role Key:', roleKey);
+    console.log('[SubscriptionPlansModal] Full Translation Key:', planKey);
+    console.log('[SubscriptionPlansModal] ==================');
 
     // Get translations
-    const name = this.translateService.instant(`${planKey}.name`);
-    const description = this.translateService.instant(`${planKey}.description`);
-    const features = this.translateService.instant(`${planKey}.features`);
-    const buttonText = this.translateService.instant(`${planKey}.buttonText`);
+    const nameKey = `${planKey}.name`;
+    const descriptionKey = `${planKey}.description`;
+    const featuresKey = `${planKey}.features`;
+    const buttonTextKey = `${planKey}.buttonText`;
+
+    const name = this.translateService.instant(nameKey);
+    const description = this.translateService.instant(descriptionKey);
+    const features = this.translateService.instant(featuresKey);
+    const buttonText = this.translateService.instant(buttonTextKey);
     const currency = this.translateService.instant('subscriptions.currency');
     const interval = this.translateService.instant('subscriptions.interval');
 
+    console.log('[SubscriptionPlansModal] Name Key:', nameKey, '→', name);
+    console.log('[SubscriptionPlansModal] Features Key:', featuresKey, '→', features);
+    console.log('[SubscriptionPlansModal] Button Key:', buttonTextKey, '→', buttonText);
+    console.log('[SubscriptionPlansModal] Currency:', currency);
+    console.log('[SubscriptionPlansModal] Is Features Array?', Array.isArray(features));
+
+    // Check if translation failed (returns the key itself)
+    const translationFailed = name === nameKey;
+    if (translationFailed) {
+      console.error('[SubscriptionPlansModal] ❌ Translation FAILED for key:', nameKey);
+      console.error('[SubscriptionPlansModal] Current language:', this.translateService.currentLang);
+      console.error('[SubscriptionPlansModal] Default language:', this.translateService.defaultLang);
+    }
+
     return {
       ...plan,
-      name: name || plan.type.toLowerCase(), // Fallback to type if translation fails
-      description: description || '',
+      name: name !== nameKey ? name : plan.type.toLowerCase(), // Fallback to type if translation fails
+      description: description !== descriptionKey ? description : '',
       features: Array.isArray(features) ? features : [],
-      buttonText: buttonText || 'Select',
-      currency: currency || 'S/',
+      buttonText: buttonText !== buttonTextKey ? buttonText : 'Select',
+      currency: currency || 's/',
       interval: interval || 'month',
     };
   }
