@@ -56,6 +56,11 @@ export class SubscriptionPlansModalComponent implements OnInit {
    */
   updating = signal(false);
 
+  /**
+   * Signal that contains the current user role
+   */
+  userRole = signal<'CONSUMER' | 'OWNER'>('CONSUMER');
+
 
   userId = '';
 
@@ -70,6 +75,7 @@ export class SubscriptionPlansModalComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.userId = String(user.id);
+      this.userRole.set((user.role as 'CONSUMER' | 'OWNER') || 'CONSUMER');
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
@@ -107,7 +113,9 @@ export class SubscriptionPlansModalComponent implements OnInit {
    * @returns The plan enriched with translations
    */
   private enrichPlanWithTranslations(plan: Subscription): SubscriptionWithTranslations {
-    const planKey = `subscriptions.plans.${plan.type.toLowerCase()}`;
+    // Determine the correct translation path based on user role
+    const roleKey = this.userRole() === 'OWNER' ? 'provider' : 'consumer';
+    const planKey = `subscriptions.${roleKey}.plans.${plan.type.toLowerCase()}`;
 
     // Get translations
     const name = this.translateService.instant(`${planKey}.name`);

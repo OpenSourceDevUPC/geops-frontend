@@ -8,7 +8,7 @@ export type UserRole = 'OWNER' | 'CONSUMER';
 /**
  * Defines available subscription plans for users.
  */
-export type PlanType = 'BASIC' | 'PREMIUM';
+export type PlanType = 'BASIC' | 'PREMIUM' | 'FREEMIUM';
 
 /**
  * Represents the business profile information for users with OWNER role.

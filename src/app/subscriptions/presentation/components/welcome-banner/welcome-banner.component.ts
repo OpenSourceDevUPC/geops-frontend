@@ -40,7 +40,23 @@ export class WelcomeBannerComponent implements OnInit {
    * Get current user plan type
    */
   getCurrentPlan(): 'BASIC' | 'PREMIUM' {
-    return this.currentUser()?.plan || 'BASIC';
+    const plan = this.currentUser()?.plan || 'BASIC';
+    // Treat FREEMIUM as PREMIUM
+    return plan === 'FREEMIUM' ? 'PREMIUM' : plan as 'BASIC' | 'PREMIUM';
+  }
+
+  /**
+   * Get current user role
+   */
+  getUserRole(): 'CONSUMER' | 'OWNER' {
+    return (this.currentUser()?.role as 'CONSUMER' | 'OWNER') || 'CONSUMER';
+  }
+
+  /**
+   * Check if user is a provider/owner
+   */
+  isProviderUser(): boolean {
+    return this.getUserRole() === 'OWNER';
   }
 
   /**
