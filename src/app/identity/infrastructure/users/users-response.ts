@@ -6,7 +6,7 @@
 export interface BusinessResource {
   businessName: string;
   businessType: string;
-  taxId: string;
+  taxId: number;
 }
 
 export type UserRole = 'OWNER' | 'CONSUMER';

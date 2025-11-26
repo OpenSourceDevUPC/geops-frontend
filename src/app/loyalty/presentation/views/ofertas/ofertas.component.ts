@@ -48,7 +48,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
   idx = 0;
   timer?: any;
-  userId = 'a512';
+  userId = 0;
 
   /**
    * search filters
@@ -60,7 +60,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
     sort: 'relevance' as 'relevance' | 'priceAsc' | 'priceDesc' | 'ratingDesc',
   };
 
-  private favSet = new Set<string>();
+  private favSet = new Set<number>();
   private dataLoaded = false;
   private currentUserId: number | null = null;
 
@@ -87,9 +87,9 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
     const user = this.authService.getCurrentUser();
     this.currentUserId = this.authService.getCurrentUserId();
-    this.userId = user ? String(user.id) : 'guest';
+    this.userId = user ? (user.id) : 0;
     if (user) {
-      this.userId = String(user.id);
+      this.userId = (user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
@@ -275,7 +275,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
    * check if an offer is marked as a favorite
    * @param id
    */
-  isFav(id: number) { return this.favSet.has(String(id)); }
+  isFav(id: number) { return this.favSet.has((id)); }
 
   /**
    * this basically updates the favorite status of an offer.
@@ -288,11 +288,11 @@ export class OfertasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.favSet.has(String(o.id))) {
+    if (this.favSet.has((o.id))) {
       // Eliminar favorito usando el endpoint directo
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
-          this.favSet.delete(String(o.id));
+          this.favSet.delete((o.id));
           console.log('[Ofertas] Favorito eliminado:', o.id);
         },
         error: (err) => {
@@ -301,7 +301,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
       });
     } else {
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(String(o.id));
+        this.favSet.add((o.id));
       });
     }
   }
@@ -316,7 +316,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
     this.cartApi.addItemToCart(
       this.userId,
-      o.id.toString(),
+      o.id,
       offerTitle,
       o.price,
       offerImageUrl,
@@ -346,7 +346,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
 
     // Add to cart first, then open cart sidebar
     this.cartApi
-      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
       .subscribe({
         next: () => {
           console.log('Item added to cart successfully');

@@ -43,12 +43,7 @@
         {{ 'header.help' | translate }}
       </a>
 
-      <button
-        mat-icon-button
-        class="action-btn notification"
-        [attr.aria-label]="'header.notifications' | translate">
-        <mat-icon>notifications</mat-icon>
-      </button>
+      <app-notifications-dropdown class="action-btn notification"></app-notifications-dropdown>
 
       <button
         mat-button
@@ -111,12 +106,7 @@
 
     <!-- Mobile Actions (Icons Only) -->
     <div class="mobile-actions">
-      <button
-        mat-icon-button
-        class="action-btn notification mobile-only"
-        [attr.aria-label]="'header.notifications' | translate">
-        <mat-icon>notifications</mat-icon>
-      </button>
+      <app-notifications-dropdown class="action-btn notification mobile-only"></app-notifications-dropdown>
 
       <button
         mat-icon-button

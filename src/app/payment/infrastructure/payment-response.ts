@@ -17,8 +17,8 @@ import { PaymentMethod, PaymentStatus } from '../domain/model/payment-method.enu
  * @property completedAt - (optional) Completion timestamp of the payment
  */
 export interface PaymentResource extends BaseResource {
-  userId: string;
-  cartId: string;
+  userId: number;
+  cartId: number;
   amount: number;
   paymentMethod: PaymentMethod;
   status: PaymentStatus;

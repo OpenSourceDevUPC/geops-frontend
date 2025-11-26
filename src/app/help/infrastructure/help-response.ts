@@ -1,5 +1,5 @@
 export interface HelpResponse {
-  id: string;
+  Id: number;
   question: string;
   answer: string; // Puede contener HTML o texto enriquecido
   category?: string;

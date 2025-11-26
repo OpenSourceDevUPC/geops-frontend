@@ -31,8 +31,8 @@ export class CheckoutFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly paymentApi = inject(PaymentApi);
 
-  @Input() cartId = '';
-  @Input() userId = '';
+  @Input() cartId = 0;
+  @Input() userId = 0;
   @Input() totalAmount = 0;
   @Output() paymentCompleted = new EventEmitter<Payment>();
   @Output() backToCart = new EventEmitter<void>();

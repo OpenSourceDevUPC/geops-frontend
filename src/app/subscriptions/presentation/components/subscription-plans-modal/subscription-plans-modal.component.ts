@@ -62,7 +62,7 @@ export class SubscriptionPlansModalComponent implements OnInit {
   userRole = signal<'CONSUMER' | 'OWNER'>('CONSUMER');
 
 
-  userId = '';
+  userId = 0;
 
   constructor(
     private SubscriptionsApi: SubscriptionsApi,
@@ -74,7 +74,7 @@ export class SubscriptionPlansModalComponent implements OnInit {
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = String(user.id);
+      this.userId = (user.id);
       this.userRole.set((user.role as 'CONSUMER' | 'OWNER') || 'CONSUMER');
     } else {
       console.warn('[Layout] No hay usuario autenticado');

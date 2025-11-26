@@ -18,17 +18,17 @@ import { Coupon } from '../../coupons/domain/model/coupon.entity';
  * one or more coupon/payment codes per purchased unit.
  */
 export interface PurchaseItem {
-  offerId: string;
+  offerId: number;
   price: number;
   quantity?: number;
 }
 
 export interface CreatePaymentRequest {
-  userId: string;
-  cartId: string;
+  userId: number;
+  cartId: number;
   amount: number;
   productType?: string;
-  productId?: string;
+  productId?: number;
   // items indicates what was purchased; we'll generate a coupon per item.offerId
   items?: Array<PurchaseItem>;
   paymentMethod: PaymentMethod;
@@ -89,7 +89,7 @@ export class PaymentApi extends BaseApi {
         const paymentCode = this.generatePaymentCode(request.paymentMethod);
 
         // Generate per-item payment codes (one coupon per purchased unit)
-        const paymentCodes: { offerId: string; code: string }[] = [];
+        const paymentCodes: { offerId: number; code: string }[] = [];
         if (items && items.length > 0) {
           for (const it of items) {
             const qty = (it.quantity && it.quantity > 0) ? it.quantity : 1;
@@ -122,26 +122,31 @@ export class PaymentApi extends BaseApi {
             const currentPayments = this.paymentsSubject.value;
             this.paymentsSubject.next([...currentPayments, payment]);
 
-            // After payment persisted, create coupons for each generated payment code
-            if (paymentCodes.length > 0) {
-              const couponsPayload = paymentCodes.map(pc => ({
-                userId: request.userId,
-                paymentId: String(payment.id),
-                paymentCode: pc.code,
-                productType: request.productType,
-                offerId: Number(pc.offerId),
-                code: pc.code,
-                createdAt: new Date().toISOString()
-              } as Omit<Coupon, 'id'>));
+            // Call completePayment endpoint to trigger notification creation
+            return this.paymentEndpoint.completePayment(payment.id).pipe(
+              switchMap(completedPayment => {
+                // After payment completed, create coupons for each generated payment code
+                if (paymentCodes.length > 0) {
+                  const couponsPayload = paymentCodes.map(pc => ({
+                    userId: request.userId,
+                    paymentId: completedPayment.id,
+                    paymentCode: pc.code,
+                    productType: request.productType,
+                    offerId: pc.offerId,
+                    code: pc.code,
+                    createdAt: new Date().toISOString()
+                  } as Omit<Coupon, 'id'>));
 
-              // Use bulk create to avoid flooding the server with many requests. CouponsApi.createMany will
-              // attempt the bulk endpoint and fall back to a throttled per-item creation if unavailable.
-              return this.couponsApi.createMany(couponsPayload).pipe(
-                map(() => payment)
-              );
-            }
+                  // Use bulk create to avoid flooding the server with many requests. CouponsApi.createMany will
+                  // attempt the bulk endpoint and fall back to a throttled per-item creation if unavailable.
+                  return this.couponsApi.createMany(couponsPayload).pipe(
+                    map(() => completedPayment)
+                  );
+                }
 
-            return of(payment);
+                return of(completedPayment);
+              })
+            );
           })
         );
       })
@@ -181,7 +186,7 @@ export class PaymentApi extends BaseApi {
    * Gets payments by user ID
    * @param userId - User ID
    */
-  getPaymentsByUser(userId: string): Observable<Payment[]> {
+  getPaymentsByUser(userId: number): Observable<Payment[]> {
     return this.paymentEndpoint.getAll().pipe(
       map((payments: Payment[]) => payments.filter(payment => payment.userId === userId)),
       tap(userPayments => this.paymentsSubject.next(userPayments))
