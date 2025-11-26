@@ -122,26 +122,31 @@ export class PaymentApi extends BaseApi {
             const currentPayments = this.paymentsSubject.value;
             this.paymentsSubject.next([...currentPayments, payment]);
 
-            // After payment persisted, create coupons for each generated payment code
-            if (paymentCodes.length > 0) {
-              const couponsPayload = paymentCodes.map(pc => ({
-                userId: request.userId,
-                paymentId: payment.id,
-                paymentCode: pc.code,
-                productType: request.productType,
-                offerId: pc.offerId,
-                code: pc.code,
-                createdAt: new Date().toISOString()
-              } as Omit<Coupon, 'id'>));
+            // Call completePayment endpoint to trigger notification creation
+            return this.paymentEndpoint.completePayment(payment.id).pipe(
+              switchMap(completedPayment => {
+                // After payment completed, create coupons for each generated payment code
+                if (paymentCodes.length > 0) {
+                  const couponsPayload = paymentCodes.map(pc => ({
+                    userId: request.userId,
+                    paymentId: completedPayment.id,
+                    paymentCode: pc.code,
+                    productType: request.productType,
+                    offerId: pc.offerId,
+                    code: pc.code,
+                    createdAt: new Date().toISOString()
+                  } as Omit<Coupon, 'id'>));
 
-              // Use bulk create to avoid flooding the server with many requests. CouponsApi.createMany will
-              // attempt the bulk endpoint and fall back to a throttled per-item creation if unavailable.
-              return this.couponsApi.createMany(couponsPayload).pipe(
-                map(() => payment)
-              );
-            }
+                  // Use bulk create to avoid flooding the server with many requests. CouponsApi.createMany will
+                  // attempt the bulk endpoint and fall back to a throttled per-item creation if unavailable.
+                  return this.couponsApi.createMany(couponsPayload).pipe(
+                    map(() => completedPayment)
+                  );
+                }
 
-            return of(payment);
+                return of(completedPayment);
+              })
+            );
           })
         );
       })

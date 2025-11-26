@@ -10,9 +10,9 @@ import { environment } from '../../../environments/environment';
 
 /**
  * Notifications API Endpoint Service
- * 
+ *
  * Handles HTTP operations for notifications following DDD infrastructure pattern
- * 
+ *
  * @summary Infrastructure service for notification HTTP operations
  */
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class NotificationsApiEndpoint extends BaseApiEndpoint<
    * @param http - Angular HTTP client
    */
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}/api/v1/notifications`, new NotificationsAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}/notifications`, new NotificationsAssembler());
   }
 
   /**
