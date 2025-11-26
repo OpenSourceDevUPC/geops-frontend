@@ -20,6 +20,7 @@ import {AuthService} from '../../../../identity/infrastructure/auth/auth.service
 import {CommonModule} from '@angular/common';
 import { NavigationLoadingService } from '../../services/navigation-loading.service';
 import { NavigationBackdropComponent } from '../navigation-backdrop/navigation-backdrop.component';
+import { NotificationsDropdownComponent } from '../../../../notifications/presentation/components/notifications-dropdown/notifications-dropdown.component';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -43,6 +44,7 @@ import { filter } from 'rxjs/operators';
     CartSidebarComponent,
     CommonModule,
     NavigationBackdropComponent,
+    NotificationsDropdownComponent,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
