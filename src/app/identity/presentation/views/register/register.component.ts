@@ -60,27 +60,51 @@ export class RegisterComponent {
     this.registering = true;
     this.errorMessage = '';
 
-    // Remove business data if not OWNER
-    if (this.model.role !== 'OWNER') {
-      delete this.model.business;
-    }
-
-    // Create payload without ID
-    const payload = { ...this.model };
-    delete payload.id;
-
-    // Use AuthService to register and save user automatically
-    this.authService.register(payload).subscribe({
+    // Use AuthService to register with individual parameters
+    this.authService.register(
+      this.model.name,
+      this.model.email,
+      this.model.phone || '',
+      this.model.password
+    ).subscribe({
       next: (user) => {
-        console.log('[Register] Registered user with ID:', user.id);
+        if (user) {
+          console.log('[Register] Registered user with ID:', user.id);
 
-        if (this.model.role === 'OWNER') {
-          localStorage.setItem('register-owner-email', this.model.email);
-          this.router.navigate(['/register-bussines']);
+          // If user selected OWNER role, update the user's role
+          if (this.model.role === 'OWNER' && user.role !== 'OWNER') {
+            console.log('[Register] Updating user role to OWNER');
+            user.role = 'OWNER';
+
+            this.authService.updateUser(user).subscribe({
+              next: (updatedUser) => {
+                console.log('[Register] User role updated to OWNER');
+                localStorage.setItem('register-owner-email', this.model.email);
+                this.registering = false;
+                this.router.navigate(['/register-bussines']);
+              },
+              error: (err) => {
+                console.error('[Register] Error updating role:', err);
+                // Navigate anyway, user can update later
+                localStorage.setItem('register-owner-email', this.model.email);
+                this.registering = false;
+                this.router.navigate(['/register-bussines']);
+              }
+            });
+          } else if (this.model.role === 'OWNER') {
+            // Already OWNER, navigate to business registration
+            localStorage.setItem('register-owner-email', this.model.email);
+            this.registering = false;
+            this.router.navigate(['/register-bussines']);
+          } else {
+            // CONSUMER user, navigate to home
+            this.registering = false;
+            this.router.navigate(['/home']);
+          }
         } else {
-          this.router.navigate(['/home']);
+          this.errorMessage = 'Registration failed. Please try again.';
+          this.registering = false;
         }
-        this.registering = false;
       },
       error: (err) => {
         console.error('[Register] Error:', err);

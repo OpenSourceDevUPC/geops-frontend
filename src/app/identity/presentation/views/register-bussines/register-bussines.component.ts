@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../infrastructure/auth/auth.service';
+import { UserDetailsService } from '../../../infrastructure/auth/user-details.service';
+import { DetailsSupplier } from '../../../domain/model/user.entity';
 
 /**
  * RegisterBussinesComponent handles business profile registration for OWNER users.
@@ -25,7 +26,11 @@ export class RegisterBussinesComponent {
   business: any = {
     businessName: '',
     businessType: '',
-    taxId: ''
+    taxId: '',
+    website: '',
+    description: '',
+    address: '',
+    horarioAtencion: ''
   };
   /** Indicates if submission is in progress */
   submitting = false;
@@ -33,43 +38,82 @@ export class RegisterBussinesComponent {
   errorMessage = '';
 
   /**
-   * Initializes RegisterBussinesComponent with Router and HttpClient.
+   * Initializes RegisterBussinesComponent with services
    * @param router Angular Router for navigation
-   * @param http Angular HttpClient for HTTP requests
+   * @param authService Service for authentication
+   * @param userDetailsService Service for managing user details
    */
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userDetailsService: UserDetailsService
+  ) {}
 
   /**
    * Handles business registration form submission.
-   * Finds the user by email, updates business data, and navigates on success.
+   * Creates supplier details for the current owner user.
    */
   onSubmit() {
+    if (!this.business.businessName || !this.business.businessType || !this.business.taxId) {
+      this.errorMessage = 'Please complete all required fields (Business Name, Type, and Tax ID)';
+      return;
+    }
+
     this.submitting = true;
-    const email = localStorage.getItem('register-owner-email');
-    this.http.get<any[]>(`${environment.platformProviderApiBaseUrl}/users?email=${email}`).subscribe({
-      next: (users) => {
-        if (!users.length) {
-          this.errorMessage = 'User not found';
-          this.submitting = false;
-          return;
-        }
-        const user = users[0];
-        const id = user.id;
-        this.http.patch(`${environment.platformProviderApiBaseUrl}/users/${id}`, {
-          business: this.business
-        }).subscribe({
+    this.errorMessage = '';
+
+    const currentUser = this.authService.getCurrentUser();
+
+    if (!currentUser) {
+      this.errorMessage = 'No authenticated user found. Please login first.';
+      this.submitting = false;
+      return;
+    }
+
+    if (currentUser.role !== 'OWNER') {
+      this.errorMessage = 'Only OWNER users can register business details.';
+      this.submitting = false;
+      return;
+    }
+
+    // Create supplier details
+    const supplierDetails: DetailsSupplier = {
+      businessName: this.business.businessName,
+      businessType: this.business.businessType,
+      taxId: this.business.taxId,
+      website: this.business.website || undefined,
+      description: this.business.description || undefined,
+      address: this.business.address || undefined,
+      horarioAtencion: this.business.horarioAtencion || undefined
+    };
+
+    console.log('[RegisterBusiness] Creating supplier details:', supplierDetails);
+
+    this.userDetailsService.createSupplierDetails(supplierDetails, currentUser.id).subscribe({
+      next: (created) => {
+        console.log('[RegisterBusiness] Supplier details created:', created);
+
+        // Update current user with new details
+        this.authService.refreshCurrentUser().subscribe({
           next: () => {
             this.submitting = false;
+            // Clean up temporary storage
+            localStorage.removeItem('register-owner-email');
+            // Navigate to dashboard/home
             this.router.navigate(['/home']);
           },
-          error: err => {
-            this.errorMessage = 'Error saving business';
+          error: (err) => {
+            console.error('[RegisterBusiness] Error refreshing user:', err);
+            // Navigate anyway since details were created
             this.submitting = false;
+            localStorage.removeItem('register-owner-email');
+            this.router.navigate(['/home']);
           }
         });
       },
-      error: err => {
-        this.errorMessage = 'Error searching for user';
+      error: (err) => {
+        console.error('[RegisterBusiness] Error creating supplier details:', err);
+        this.errorMessage = 'Error saving business details. Please try again.';
         this.submitting = false;
       }
     });

@@ -39,7 +39,7 @@ export class WelcomeBannerComponent implements OnInit {
   /**
    * Get current user plan type
    */
-  getCurrentPlan(): 'BASIC' | 'PREMIUM' {
+  getCurrentPlan(): 'BASIC' | 'PREMIUM' | 'FREEMIUM' {
     return this.currentUser()?.plan || 'BASIC';
   }
 

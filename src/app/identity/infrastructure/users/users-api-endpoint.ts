@@ -39,27 +39,13 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Registers a new user using the authentication endpoint.
-   * @param user User entity to register
-   * @returns Observable with the created UserResource
+   * Get current authenticated user
+   * GET /api/v1/users/me?email={email}
    */
-  register(user: User): Observable<UserResource> {
-    return this.http.post<UserResource>(`${environment.platformProviderApiBaseUrl}/authentication/sign-up`, user);
-  }
-
-  /**
-   * Login user with email and password using POST request.
-   * @param email User's email
-   * @param password User's password
-   * @returns Observable with the found UserResource or undefined if not found
-   */
-  login(email: string, password: string): Observable<UserResource | undefined> {
-    const loginBody = { email, password };
+  getMe(email: string): Observable<User> {
     return this.http
-      .post<UserResource>(`${environment.platformProviderApiBaseUrl}/authentication/sign-in`, loginBody)
-      .pipe(
-        map(user => user || undefined)
-      );
+      .get<UserResource>(`${this.endpointUrl}/me?email=${encodeURIComponent(email)}`)
+      .pipe(map(resource => this.assembler.toEntityFromResource(resource)));
   }
 
   /**
@@ -71,10 +57,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
   override update(entity: User, id: number): Observable<User> {
     const resource = this.assembler.toResourceFromEntity(entity);
     return this.http.put<UserResource>(`${this.endpointUrl}/${id}`, resource).pipe(
-      map(updated => this.assembler.toEntityFromResource(updated)),
-      // catchError is available from rxjs/operators, useful for error handling
-      // If you have handleError in the parent, you can call it like this:
-      // catchError(this.handleError('Failed to update user'))
+      map(updated => this.assembler.toEntityFromResource(updated))
     );
   }
 

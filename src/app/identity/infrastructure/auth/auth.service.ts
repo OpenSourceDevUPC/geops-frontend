@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { User } from '../../domain/model/user.entity';
 import { UsersApiEndpoint } from '../users/users-api-endpoint';
-import { UserResource } from '../users/users-response';
+import { AuthenticationApiEndpoint } from './authentication-api-endpoint';
+import { DetailsConsumerApiEndpoint } from '../users/details-consumer-api-endpoint';
+import { DetailsSupplierApiEndpoint } from '../users/details-supplier-api-endpoint';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,12 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private usersApi: UsersApiEndpoint) {
+  constructor(
+    private usersApi: UsersApiEndpoint,
+    private authApi: AuthenticationApiEndpoint,
+    private consumerDetailsApi: DetailsConsumerApiEndpoint,
+    private supplierDetailsApi: DetailsSupplierApiEndpoint
+  ) {
     this.loadUserFromStorage();
   }
 
@@ -49,6 +56,14 @@ export class AuthService {
   }
 
   /**
+   * Gets the current user's role
+   */
+  getCurrentUserRole(): string | null {
+    const user = this.currentUserSubject.value;
+    return user?.role ?? null;
+  }
+
+  /**
    * Checks if there is an authenticated user
    */
   isAuthenticated(): boolean {
@@ -56,33 +71,101 @@ export class AuthService {
   }
 
   /**
-   * Logs in with email and password
+   * Checks if current user is a CONSUMER
+   */
+  isConsumer(): boolean {
+    return this.getCurrentUserRole() === 'CONSUMER';
+  }
+
+  /**
+   * Checks if current user is an OWNER
+   */
+  isOwner(): boolean {
+    return this.getCurrentUserRole() === 'OWNER';
+  }
+
+  /**
+   * Logs in with email and password using new authentication endpoint
    */
   login(email: string, password: string): Observable<User | null> {
-    return this.usersApi.login(email, password).pipe(
-      map(userResource => {
-        if (!userResource) return null;
-
-        const user: User = this.mapResourceToUser(userResource);
-        this.setCurrentUser(user);
-        console.log('[AuthService] Successful login. User ID:', user.id);
-        return user;
+    return this.authApi.signIn({ email, password }).pipe(
+      switchMap(authResponse => {
+        // Get full user details
+        return this.usersApi.getById(authResponse.id).pipe(
+          switchMap(user => this.loadUserDetails(user)),
+          map(user => {
+            this.setCurrentUser(user);
+            console.log('[AuthService] Successful login. User ID:', user.id, 'Role:', user.role);
+            return user;
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('[AuthService] Login error:', error);
+        return of(null);
       })
     );
   }
 
   /**
-   * Registers a new user
+   * Registers a new user using new authentication endpoint
    */
-  register(userData: Omit<User, 'id'>): Observable<User> {
-    return this.usersApi.register(userData as User).pipe(
-      map(userResource => {
-        const user: User = this.mapResourceToUser(userResource);
-        this.setCurrentUser(user);
-        console.log('[AuthService] Successful registration. User ID:', user.id);
-        return user;
+  register(name: string, email: string, phone: string, password: string): Observable<User | null> {
+    return this.authApi.signUp({ name, email, phone, password }).pipe(
+      switchMap(authResponse => {
+        // Get full user details
+        return this.usersApi.getById(authResponse.id).pipe(
+          switchMap(user => this.loadUserDetails(user)),
+          map(user => {
+            this.setCurrentUser(user);
+            console.log('[AuthService] Successful registration. User ID:', user.id, 'Role:', user.role);
+            return user;
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('[AuthService] Registration error:', error);
+        return of(null);
       })
     );
+  }
+
+  /**
+   * Loads user-specific details based on role (Consumer or Supplier)
+   */
+  private loadUserDetails(user: User): Observable<User> {
+    if (user.role === 'CONSUMER') {
+      return this.consumerDetailsApi.getByUserId(user.id).pipe(
+        map(details => {
+          user.detailsConsumer = this.consumerDetailsApi.toEntity(details);
+          user.detailsSupplier = null;
+          return user;
+        }),
+        catchError(() => {
+          // If no details exist yet, return user without details
+          user.detailsConsumer = null;
+          user.detailsSupplier = null;
+          return of(user);
+        })
+      );
+    } else if (user.role === 'OWNER') {
+      return this.supplierDetailsApi.getByUserId(user.id).pipe(
+        map(details => {
+          user.detailsSupplier = this.supplierDetailsApi.toEntity(details);
+          user.detailsConsumer = null;
+          return user;
+        }),
+        catchError(() => {
+          // If no details exist yet, return user without details
+          user.detailsSupplier = null;
+          user.detailsConsumer = null;
+          return of(user);
+        })
+      );
+    }
+
+    // For other roles (ADMIN, etc.), return user as-is
+    return of(user);
   }
 
   /**
@@ -103,33 +186,14 @@ export class AuthService {
   }
 
   /**
-   * Converts UserResource to User
+   * Update current user
    */
-  private mapResourceToUser(resource: UserResource): User {
-    return {
-      id: resource.id,
-      name: resource.name,
-      email: resource.email,
-      password: resource.password,
-      role: resource.role,
-      plan: resource.plan,
-      phone: resource.phone,
-      business: resource.business,
-      favorites: resource.favorites ?? [],
-      home: resource.home ?? '',
-      work: resource.work ?? '',
-      university: resource.university ?? '',
-      locationPermission: resource.locationPermission ?? 'ASK'
-    };
-  }
-
-  // --- CORRECTED CODE BELOW ---
   updateUser(user: User): Observable<User> {
     return this.usersApi.update(user, user.id).pipe(
-      map((userResource: any) => {
-        const updated = this.mapResourceToUser(userResource);
-        this.setCurrentUser(updated);
-        return updated;
+      switchMap(updatedUser => this.loadUserDetails(updatedUser)),
+      map(updatedUser => {
+        this.setCurrentUser(updatedUser);
+        return updatedUser;
       })
     );
   }
@@ -142,18 +206,18 @@ export class AuthService {
     const userId = this.getCurrentUserId();
     if (!userId) {
       console.warn('[AuthService] No authenticated user to refresh');
-      return new Observable(subscriber => {
-        subscriber.next(null);
-        subscriber.complete();
-      });
+      return of(null);
     }
+
     return this.usersApi.getById(userId).pipe(
-      map(userResource => {
-        if (!userResource) return null;
-        const user = this.mapResourceToUser(userResource);
+      switchMap(user => this.loadUserDetails(user)),
+      map(user => {
         this.setCurrentUser(user);
-        console.log('[AuthService] User refreshed. ID:', user.id);
         return user;
+      }),
+      catchError(error => {
+        console.error('[AuthService] Error refreshing user:', error);
+        return of(null);
       })
     );
   }
