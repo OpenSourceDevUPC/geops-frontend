@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +18,9 @@ import { CartApi } from '../../../../cart/infrastructure/cart-api';
 import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {CommonModule} from '@angular/common';
+import { NavigationLoadingService } from '../../services/navigation-loading.service';
+import { NavigationBackdropComponent } from '../navigation-backdrop/navigation-backdrop.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout',
@@ -39,6 +42,7 @@ import {CommonModule} from '@angular/common';
     LanguageSwitcher,
     CartSidebarComponent,
     CommonModule,
+    NavigationBackdropComponent,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css'
@@ -46,6 +50,7 @@ import {CommonModule} from '@angular/common';
 export class Layout implements OnInit {
   private readonly cartApi = inject(CartApi);
   private readonly cartUiService = inject(CartUiService);
+  private readonly navigationLoadingService = inject(NavigationLoadingService);
 
   @ViewChild(CartSidebarComponent) cartSidebar!: CartSidebarComponent;
 
@@ -59,7 +64,27 @@ export class Layout implements OnInit {
   constructor(
     public authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    // Listen to navigation events to show/hide backdrop
+    this.router.events.pipe(
+      filter(event =>
+        event instanceof NavigationStart ||
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      )
+    ).subscribe(event => {
+      if (event instanceof NavigationStart) {
+        // Show backdrop when navigation starts
+        this.navigationLoadingService.showBackdrop();
+      } else {
+        // Hide backdrop when navigation ends, is cancelled, or errors
+        setTimeout(() => {
+          this.navigationLoadingService.hideBackdrop();
+        }, 300); // Small delay to ensure smooth transition
+      }
+    });
+  }
 
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();

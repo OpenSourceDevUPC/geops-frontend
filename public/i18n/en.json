@@ -145,33 +145,60 @@
   "subscriptions": {
     "title": "Plans",
     "subtitle": "Choose the plan that suits you. You can change whenever you want.",
-    "currency": "S/",
+    "currency": "s/",
     "interval": "month",
     "recommended": "Recommended",
     "close": "Close",
-    "plans": {
-      "basic": {
-        "name": "Basic",
-        "description": "Free plan with basic functionalities",
-        "features": [
-          "Access to public coupons",
-          "Filter by category and radius",
-          "3 active coupons at the same time",
-          "Email support"
-        ],
-        "buttonText": "Get Started"
-      },
-      "premium": {
-        "name": "Premium",
-        "description": "Premium plan with access to exclusive functionalities",
-        "features": [
-          "Everything from Basic",
-          "Exclusive coupons by location",
-          "Live map with offers/schedules",
-          "Smart history and alerts",
-          "Priority support"
-        ],
-        "buttonText": "Try Premium"
+    "consumer": {
+      "plans": {
+        "basic": {
+          "name": "Basic",
+          "description": "Free plan with basic functionalities",
+          "features": [
+            "Access to public coupons",
+            "Filter by category and radius",
+            "3 active coupons at the same time",
+            "Email support"
+          ],
+          "buttonText": "Get Started"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Premium plan with access to exclusive functionalities",
+          "features": [
+            "Everything from Basic",
+            "Exclusive coupons by location",
+            "Live map with offers/schedules",
+            "Smart history and alerts",
+            "Priority support"
+          ],
+          "buttonText": "Try Premium"
+        }
+      }
+    },
+    "provider": {
+      "plans": {
+        "basic": {
+          "name": "Basic",
+          "description": "Free plan to start",
+          "features": [
+            "Create basic campaigns",
+            "Segmentation by radius/city",
+            "CSV Report"
+          ],
+          "buttonText": "Start"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Premium plan with advanced features",
+          "features": [
+            "Advanced metrics (CTR, conversions)",
+            "Export PDF/Excel",
+            "Detailed segmentation",
+            "Priority support"
+          ],
+          "buttonText": "Try Premium"
+        }
       }
     }
   },

@@ -144,34 +144,61 @@
   },
   "subscriptions": {
     "title": "Planes",
-    "subtitle": "Elige el plan que más te convenga. Puedes cambiar cuando quieras.",
-    "currency": "S/",
+    "subtitle": "Elige el plan que se ajusta a ti. Puedes cambiar cuando quieras.",
+    "currency": "s/",
     "interval": "mes",
     "recommended": "Recomendado",
     "close": "Cerrar",
-    "plans": {
-      "basic": {
-        "name": "Básico",
-        "description": "Plan gratuito con funcionalidades básicas",
-        "features": [
-          "Acceso a cupones públicos",
-          "Filtrar por categoría y radio",
-          "3 cupones activos al mismo tiempo",
-          "Soporte por correo"
-        ],
-        "buttonText": "Comenzar"
-      },
-      "premium": {
-        "name": "Premium",
-        "description": "Plan premium con acceso a funcionalidades exclusivas",
-        "features": [
-          "Todo lo del Básico",
-          "Cupones exclusivos por ubicación",
-          "Mapa en vivo con ofertas/horarios",
-          "Historial inteligente y alertas",
-          "Soporte prioritario"
-        ],
-        "buttonText": "Probar Premium"
+    "consumer": {
+      "plans": {
+        "basic": {
+          "name": "Básico",
+          "description": "Plan gratuito con funcionalidades básicas",
+          "features": [
+            "Acceso a cupones públicos",
+            "Filtrar por categoría y radio",
+            "3 cupones activos al mismo tiempo",
+            "Soporte por correo"
+          ],
+          "buttonText": "Empezar"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Plan premium con acceso a funcionalidades exclusivas",
+          "features": [
+            "Todo lo del Básico",
+            "Cupones exclusivos por ubicación",
+            "Mapa en vivo con ofertas/horarios",
+            "Historial inteligente y alertas",
+            "Soporte prioritario"
+          ],
+          "buttonText": "Probar Premium"
+        }
+      }
+    },
+    "provider": {
+      "plans": {
+        "basic": {
+          "name": "Básico",
+          "description": "Plan gratuito para empezar",
+          "features": [
+            "Crear campañas básicas",
+            "Segmentación por radio/ciudad",
+            "Reporte CSV"
+          ],
+          "buttonText": "Empezar"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Plan premium con características avanzadas",
+          "features": [
+            "Métricas avanzadas (CTR, conversiones)",
+            "Exportar PDF/Excel",
+            "Segmentación detallada",
+            "Soporte prioritario"
+          ],
+          "buttonText": "Probar Premium"
+        }
       }
     }
   },
