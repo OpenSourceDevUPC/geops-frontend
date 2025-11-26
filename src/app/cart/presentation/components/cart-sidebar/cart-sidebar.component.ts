@@ -63,14 +63,14 @@ export class CartSidebarComponent implements OnInit {
     cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
   });
 
-  userId = 'a512'; // In real app would come from auth service
+  userId = 0; // In real app would come from auth service
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = String(user.id);
+      this.userId = (user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
@@ -254,7 +254,7 @@ export class CartSidebarComponent implements OnInit {
     const formValue = this.cardForm.value;
     const request: CreatePaymentRequest = {
       userId: this.userId,
-      cartId: this.cart()?.id?.toString() || '',
+      cartId: this.cart()?.id || 0,
       amount: this.totalAmount,
       paymentMethod: PaymentMethod.CARD,
       customerEmail: formValue.email,
@@ -283,7 +283,7 @@ export class CartSidebarComponent implements OnInit {
 
     const request: CreatePaymentRequest = {
       userId: this.userId,
-      cartId: this.cart()?.id?.toString() || '',
+      cartId: this.cart()?.id || 0,
       amount: this.totalAmount,
       paymentMethod: method,
       customerEmail: `user-${this.userId}@temp.com`,

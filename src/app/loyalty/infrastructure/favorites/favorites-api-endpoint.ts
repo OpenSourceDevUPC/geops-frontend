@@ -28,7 +28,7 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
    */
   getByUser(userId: number): Observable<FavoriteRow[]> {
     // El backend espera userId como string
-    const url = `${this.endpointUrl}?userId=${String(userId)}`;
+    const url = `${this.endpointUrl}?userId=${(userId)}`;
 
     return this.http
       .get<any>(url)
@@ -51,7 +51,7 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
    */
   findRow(userId: number, offerId: number): Observable<FavoriteRow[]> {
     // El backend espera userId y offerId como strings
-    const url = `${this.endpointUrl}?userId=${String(userId)}&offerId=${String(offerId)}`;
+    const url = `${this.endpointUrl}?userId=${(userId)}&offerId=${(offerId)}`;
 
     return this.http
       .get<any>(url)
@@ -75,8 +75,8 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
   add(userId: number, offerId: number): Observable<FavoriteRow> {
     // El backend espera userId y offerId como strings
     const body = {
-      userId: String(userId),
-      offerId: String(offerId)
+      userId: (userId),
+      offerId: (offerId)
     };
 
     return this.http
@@ -120,8 +120,8 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
    */
   removeByUserAndOffer(userId: number, offerId: number): Observable<void> {
     const body = {
-      userId: String(userId),
-      offerId: String(offerId)
+      userId: (userId),
+      offerId: (offerId)
     };
 
     return this.http.request<void>('DELETE', this.endpointUrl, { body });

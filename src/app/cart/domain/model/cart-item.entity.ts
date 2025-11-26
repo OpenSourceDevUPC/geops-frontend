@@ -12,8 +12,8 @@ import { BaseEntity } from '../../../shared/infrastructure/base-entity';
  * @property total - Total price for the quantity of the offer
  */
 export interface CartItem extends BaseEntity {
-  userId: string;
-  offerId: string;
+  userId: number;
+  offerId: number;
   offerTitle: string;
   offerPrice: number;
   offerImageUrl: string;

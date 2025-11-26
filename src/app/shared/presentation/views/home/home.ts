@@ -45,9 +45,9 @@ interface CategoryMapping {
 })
 export class Home implements OnInit {
 
-  private favSet = new Set<string>();
+  private favSet = new Set<number>();
   private currentUserId: number | null = null;
-  private userId:string = 'a512';
+  private userId: number = 1;
   private readonly cartApi = inject(CartApi);
   private readonly cartUiService = inject(CartUiService);
 
@@ -221,7 +221,7 @@ export class Home implements OnInit {
 
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = String(user.id);
+      this.userId = user.id;
     } else {
       console.warn('[Home] No hay usuario autenticado');
     }
@@ -344,7 +344,7 @@ export class Home implements OnInit {
     return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
   }
 
-  isFav(id: number) { return this.favSet.has(String(id)); }
+  isFav(id: number) { return this.favSet.has(id); }
 
   toggleFav(o: Offer) {
     if (!this.currentUserId) {
@@ -353,11 +353,11 @@ export class Home implements OnInit {
       return;
     }
 
-    if (this.favSet.has(String(o.id))) {
+    if (this.favSet.has(o.id)) {
       // Eliminar favorito usando el endpoint directo
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
-          this.favSet.delete(String(o.id));
+          this.favSet.delete(o.id);
           console.log('[Ofertas] Favorito eliminado:', o.id);
         },
         error: (err) => {
@@ -366,7 +366,7 @@ export class Home implements OnInit {
       });
     } else {
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(String(o.id));
+        this.favSet.add(o.id);
         console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
@@ -379,7 +379,7 @@ export class Home implements OnInit {
     }
     this.favoritesApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
-        this.favSet = new Set(rows.map((r) => r.offerId));
+        this.favSet = new Set<number>(rows.map((r) => r.offerId));
         console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
       },
       error: () => this.favSet.clear(),
@@ -393,7 +393,7 @@ export class Home implements OnInit {
 
     // Add to cart first, then open cart sidebar
     this.cartApi
-      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
       .subscribe({
         next: () => {
           console.log('Item added to cart successfully');
@@ -415,7 +415,7 @@ export class Home implements OnInit {
 
     this.cartApi.addItemToCart(
       this.userId,
-      o.id.toString(),
+      o.id,
       offerTitle,
       o.price,
       offerImageUrl,

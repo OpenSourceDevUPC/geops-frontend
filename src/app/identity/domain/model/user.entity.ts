@@ -16,7 +16,7 @@ export type PlanType = 'BASIC' | 'PREMIUM';
 export interface BusinessProfile {
   businessName: string;
   businessType: string;
-  taxId: string;
+  taxId: number;
 }
 
 /**
