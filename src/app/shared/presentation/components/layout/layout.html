@@ -167,7 +167,8 @@
   </div>
 </div>
 
-<app-top-tabs></app-top-tabs>
+<app-consumer-toolbar *ngIf="!isOwner()"></app-consumer-toolbar>
+<app-owner-toolbar *ngIf="isOwner()"></app-owner-toolbar>
 
 <main class="layout-content">
   <router-outlet></router-outlet>

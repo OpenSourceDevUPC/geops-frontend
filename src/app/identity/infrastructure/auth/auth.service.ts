@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { User } from '../../domain/model/user.entity';
 import { UsersApiEndpoint } from '../users/users-api-endpoint';
-import { UserResource } from '../users/users-response';
 
 @Injectable({
   providedIn: 'root'
@@ -60,13 +59,25 @@ export class AuthService {
    */
   login(email: string, password: string): Observable<User | null> {
     return this.usersApi.login(email, password).pipe(
-      map(userResource => {
-        if (!userResource) return null;
+      map(authResource => {
+        if (!authResource) return null;
 
-        const user: User = this.mapResourceToUser(userResource);
+        const user: User = {
+          id: authResource.id,
+          name: authResource.name,
+          email: authResource.email,
+          phone: authResource.phone,
+          role: authResource.role,
+          plan: authResource.plan
+        };
+
         this.setCurrentUser(user);
         console.log('[AuthService] Successful login. User ID:', user.id);
         return user;
+      }),
+      catchError(error => {
+        console.error('[AuthService] Login failed:', error);
+        return throwError(() => error);
       })
     );
   }
@@ -74,13 +85,25 @@ export class AuthService {
   /**
    * Registers a new user
    */
-  register(userData: Omit<User, 'id'>): Observable<User> {
-    return this.usersApi.register(userData as User).pipe(
-      map(userResource => {
-        const user: User = this.mapResourceToUser(userResource);
+  register(userData: { name: string; email: string; phone: string; password: string; role?: string; plan?: string }): Observable<User> {
+    return this.usersApi.register(userData).pipe(
+      map(authResource => {
+        const user: User = {
+          id: authResource.id,
+          name: authResource.name,
+          email: authResource.email,
+          phone: authResource.phone,
+          role: authResource.role,
+          plan: authResource.plan
+        };
+
         this.setCurrentUser(user);
-        console.log('[AuthService] Successful registration. User ID:', user.id);
+        console.log('[AuthService] Successful registration. User ID:', user.id, 'Role:', user.role);
         return user;
+      }),
+      catchError(error => {
+        console.error('[AuthService] Registration failed:', error);
+        return throwError(() => error);
       })
     );
   }
@@ -97,39 +120,23 @@ export class AuthService {
   /**
    * Sets the current user and saves it in localStorage
    */
-  private setCurrentUser(user: User): void {
+  public setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
   /**
-   * Converts UserResource to User
+   * Updates the current user
    */
-  private mapResourceToUser(resource: UserResource): User {
-    return {
-      id: resource.id,
-      name: resource.name,
-      email: resource.email,
-      password: resource.password,
-      role: resource.role,
-      plan: resource.plan,
-      phone: resource.phone,
-      business: resource.business,
-      favorites: resource.favorites ?? [],
-      home: resource.home ?? '',
-      work: resource.work ?? '',
-      university: resource.university ?? '',
-      locationPermission: resource.locationPermission ?? 'ASK'
-    };
-  }
-
-  // --- CORRECTED CODE BELOW ---
   updateUser(user: User): Observable<User> {
     return this.usersApi.update(user, user.id).pipe(
-      map((userResource: any) => {
-        const updated = this.mapResourceToUser(userResource);
-        this.setCurrentUser(updated);
-        return updated;
+      map((updatedUser: User) => {
+        this.setCurrentUser(updatedUser);
+        return updatedUser;
+      }),
+      catchError(error => {
+        console.error('[AuthService] Update failed:', error);
+        return throwError(() => error);
       })
     );
   }
@@ -139,22 +146,26 @@ export class AuthService {
    * Useful if user data might have changed
    */
   refreshCurrentUser(): Observable<User | null> {
-    const userId = this.getCurrentUserId();
-    if (!userId) {
+    const user = this.getCurrentUser();
+    if (!user?.email) {
       console.warn('[AuthService] No authenticated user to refresh');
       return new Observable(subscriber => {
         subscriber.next(null);
         subscriber.complete();
       });
     }
-    return this.usersApi.getById(userId).pipe(
-      map(userResource => {
-        if (!userResource) return null;
-        const user = this.mapResourceToUser(userResource);
-        this.setCurrentUser(user);
-        console.log('[AuthService] User refreshed. ID:', user.id);
-        return user;
+
+    return this.usersApi.getMe(user.email).pipe(
+      map(refreshedUser => {
+        this.setCurrentUser(refreshedUser);
+        console.log('[AuthService] User refreshed:', refreshedUser.id);
+        return refreshedUser;
+      }),
+      catchError(error => {
+        console.error('[AuthService] Refresh failed:', error);
+        return throwError(() => error);
       })
     );
   }
 }
+

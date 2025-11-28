@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../infrastructure/auth/auth.service';
 import { User } from '../../../domain/model/user.entity';
+import { DetailsConsumer } from '../../../domain/model/details-consumer.entity';
+import { DetailsOwner } from '../../../domain/model/details-owner.entity';
+import { DetailsConsumerService } from '../../../infrastructure/users/details-consumer.service';
+import { DetailsOwnerService } from '../../../infrastructure/users/details-owner.service';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-
-type Plan = 'PREMIUM' | 'BASIC';
-type LocationPermission = 'ASK' | 'ALWAYS';
+import { forkJoin } from 'rxjs';
 
 /**
  * SettingsComponent allows users to view and update their profile settings,
- * including personal information, password, and favorite categories.
+ * including personal information, password, and role-specific details.
  */
 @Component({
   selector: 'app-settings',
@@ -22,6 +24,8 @@ type LocationPermission = 'ASK' | 'ALWAYS';
 })
 export class SettingsComponent implements OnInit {
   user: User | null = null;
+  consumerDetails: DetailsConsumer | null = null;
+  ownerDetails: DetailsOwner | null = null;
 
   mensaje = '';
   cargando = false;
@@ -40,44 +44,136 @@ export class SettingsComponent implements OnInit {
     name: false,
     email: false,
     phone: false,
-    home: false,
-    work: false,
-    university: false,
+    businessName: false,
+    businessType: false,
+    taxId: false,
+    website: false,
+    description: false,
+    address: false,
+    horarioAtencion: false,
+    direccionCasa: false,
+    direccionTrabajo: false,
+    direccionUniversidad: false,
     passwordActual: false,
     newPassword: false,
     confirmPassword: false
   };
 
   /**
-   * Initializes SettingsComponent with AuthService.
-   * @param authService Service for user authentication and updates
+   * Initializes SettingsComponent with required services.
    */
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private detailsConsumerService: DetailsConsumerService,
+    private detailsOwnerService: DetailsOwnerService
+  ) {}
 
   /**
-   * Loads and normalizes the current user on component initialization.
+   * Loads user and role-specific details on component initialization.
    */
   ngOnInit(): void {
-    // Rehydrate from AuthService (which reads from localStorage)
-    const u = this.authService.getCurrentUser();
-    this.user = u ? this.normalizeUser(u) : null;
+    this.user = this.authService.getCurrentUser();
+    if (this.user?.id) {
+      // Migración automática: Corregir planes inválidos (FREEMIUM)
+      if (this.user.plan !== 'BASIC' && this.user.plan !== 'PREMIUM') {
+        console.warn('[SettingsComponent] Invalid plan detected:', this.user.plan, '- Migrating to BASIC');
+        this.user.plan = 'BASIC';
+        // Actualizar el usuario en el servicio
+        this.authService.setCurrentUser(this.user);
+      }
+
+      this.loadRoleSpecificDetails();
+    }
   }
 
   /**
-   * Normalizes user data for UI consistency.
-   * @param u User object to normalize
-   * @returns Normalized User object
+   * Loads details based on user role (CONSUMER or OWNER)
    */
-  private normalizeUser(u: User): User {
+  private loadRoleSpecificDetails(): void {
+    if (!this.user) return;
+
+    this.cargando = true;
+
+    if (this.user.role === 'CONSUMER') {
+      this.detailsConsumerService.getByUserId(this.user.id).subscribe({
+        next: (details) => {
+          this.consumerDetails = details;
+          this.cargando = false;
+          console.log('[SettingsComponent] Consumer details loaded:', details);
+        },
+        error: (error) => {
+          console.error('[SettingsComponent] Error loading consumer details:', error);
+          this.cargando = false;
+          // Initialize empty details if none exist
+          if (error.status === 404) {
+            this.consumerDetails = this.createEmptyConsumerDetails();
+          }
+        }
+      });
+    } else if (this.user.role === 'OWNER') {
+      this.detailsOwnerService.getByUserId(this.user.id).subscribe({
+        next: (details) => {
+          this.ownerDetails = details;
+          this.cargando = false;
+          console.log('[SettingsComponent] Owner details loaded:', details);
+        },
+        error: (error) => {
+          console.error('[SettingsComponent] Error loading owner details:', error);
+          this.cargando = false;
+          // Initialize empty details if none exist
+          if (error.status === 404) {
+            this.ownerDetails = this.createEmptyOwnerDetails();
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Creates empty consumer details structure
+   */
+  private createEmptyConsumerDetails(): DetailsConsumer {
     return {
-      ...u,
-      favorites: Array.isArray(u.favorites) ? [...u.favorites] : [],
-      plan: (u.plan as Plan) ?? 'BASIC',
-      locationPermission: (u.locationPermission as LocationPermission) ?? 'ASK',
-      home: u.home ?? '',
-      work: u.work ?? '',
-      university: u.university ?? ''
-    } as User;
+      id: this.user!.id,
+      userId: this.user!.id,
+      categoriasFavoritas: '',
+      recibirNotificaciones: false,
+      permisoUbicacion: false,
+      direccionCasa: '',
+      direccionTrabajo: '',
+      direccionUniversidad: ''
+    };
+  }
+
+  /**
+   * Creates empty owner details structure
+   */
+  private createEmptyOwnerDetails(): DetailsOwner {
+    return {
+      id: this.user!.id,
+      userId: this.user!.id,
+      businessName: '',
+      businessType: '',
+      taxId: '',
+      website: '',
+      description: '',
+      address: '',
+      horarioAtencion: ''
+    };
+  }
+
+  /**
+   * Checks if current user is a consumer
+   */
+  get isConsumer(): boolean {
+    return this.user?.role === 'CONSUMER';
+  }
+
+  /**
+   * Checks if current user is an owner
+   */
+  get isOwner(): boolean {
+    return this.user?.role === 'OWNER';
   }
 
   /**
@@ -101,40 +197,103 @@ export class SettingsComponent implements OnInit {
    * @param cat Category name
    */
   onCategoryChange(evt: Event, cat: string): void {
-    if (!this.user) return;
+    if (!this.consumerDetails) return;
     const checked = (evt.target as HTMLInputElement).checked;
-    const favs = new Set<string>(this.user.favorites ?? []);
+
+    // Parse current favorites
+    const currentFavorites = this.consumerDetails.categoriasFavoritas
+      ? this.consumerDetails.categoriasFavoritas.split(',').map(s => s.trim()).filter(s => s)
+      : [];
+
+    const favs = new Set<string>(currentFavorites);
     checked ? favs.add(cat) : favs.delete(cat);
-    this.user.favorites = Array.from(favs);
+
+    // Update as comma-separated string
+    this.consumerDetails.categoriasFavoritas = Array.from(favs).join(', ');
   }
 
   /**
-   * Saves the updated user profile.
-   * Performs optimistic update and handles rollback on error.
+   * Checks if a category is in favorites
+   */
+  isCategoryFavorite(cat: string): boolean {
+    if (!this.consumerDetails?.categoriasFavoritas) return false;
+    const favorites = this.consumerDetails.categoriasFavoritas
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s);
+    return favorites.includes(cat);
+  }
+
+  /**
+   * Saves the updated user profile and role-specific details.
+   * Handles both user base information and consumer/owner details.
    */
   guardar(): void {
     if (!this.user) return;
     this.cargando = true;
     this.mensaje = '';
 
-    const snapshot = { ...this.user }; // for optimistic rollback
+    // Create observables array for parallel requests
+    const saveOperations: any[] = [];
 
-    this.authService.updateUser(this.user).subscribe({
-      next: (updated) => {
-        // Merge response and snapshot in case API returns partial or 204
-        const merged = updated && Object.keys(updated).length
-          ? { ...snapshot, ...updated }
-          : snapshot;
+    // Always update user base information
+    saveOperations.push(this.authService.updateUser(this.user));
 
-        this.user = this.normalizeUser(merged);
+    // Add role-specific details save operation
+    if (this.user.role === 'CONSUMER' && this.consumerDetails) {
+      const consumerResource = {
+        categoriasFavoritas: this.consumerDetails.categoriasFavoritas || '',
+        recibirNotificaciones: this.consumerDetails.recibirNotificaciones,
+        permisoUbicacion: this.consumerDetails.permisoUbicacion,
+        direccionCasa: this.consumerDetails.direccionCasa || '',
+        direccionTrabajo: this.consumerDetails.direccionTrabajo || '',
+        direccionUniversidad: this.consumerDetails.direccionUniversidad || ''
+      };
+      saveOperations.push(
+        this.detailsConsumerService.createOrUpdate(this.user.id, consumerResource)
+      );
+    } else if (this.user.role === 'OWNER' && this.ownerDetails) {
+      const ownerResource = {
+        businessName: this.ownerDetails.businessName,
+        businessType: this.ownerDetails.businessType || '',
+        taxId: this.ownerDetails.taxId || '',
+        website: this.ownerDetails.website || '',
+        description: this.ownerDetails.description || '',
+        address: this.ownerDetails.address || '',
+        horarioAtencion: this.ownerDetails.horarioAtencion || ''
+      };
+      saveOperations.push(
+        this.detailsOwnerService.createOrUpdate(this.user.id, ownerResource)
+      );
+    }
+
+    // Execute all save operations in parallel
+    forkJoin(saveOperations).subscribe({
+      next: (results: any[]) => {
+        console.log('[SettingsComponent] All updates successful:', results);
         this.cargando = false;
-        this.mensaje = 'User updated successfully!';
+        this.mensaje = 'Perfil actualizado correctamente';
+
+        // Update local data with server response
+        if (results.length > 0) {
+          this.user = results[0]; // First result is always user
+        }
+        if (results.length > 1 && results[1]) {
+          // Second result is role-specific details
+          if (this.user?.role === 'CONSUMER') {
+            this.consumerDetails = results[1] as DetailsConsumer;
+          } else if (this.user?.role === 'OWNER') {
+            this.ownerDetails = results[1] as DetailsOwner;
+          }
+        }
+
         setTimeout(() => (this.mensaje = ''), 3000);
       },
-      error: () => {
-        this.user = snapshot; // rollback
+      error: (error) => {
+        console.error('[SettingsComponent] Error updating profile:', error);
         this.cargando = false;
-        this.mensaje = 'Error updating user';
+        this.mensaje = 'Error al actualizar el perfil';
+        setTimeout(() => (this.mensaje = ''), 3000);
       }
     });
   }
@@ -143,10 +302,14 @@ export class SettingsComponent implements OnInit {
    * Cancels editing and reloads the last persisted user state.
    */
   cancelar(): void {
-    const u = this.authService.getCurrentUser();
-    this.user = u ? this.normalizeUser(u) : null;
+    this.user = this.authService.getCurrentUser();
     this.mensaje = '';
     Object.keys(this.editState).forEach(k => (this.editState[k] = false));
+
+    // Reload role-specific details
+    if (this.user?.id) {
+      this.loadRoleSpecificDetails();
+    }
   }
 
   /**

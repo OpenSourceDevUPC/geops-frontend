@@ -10,7 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { FooterContent } from '../footer-content/footer-content';
-import { TopTabsComponent } from '../../../../loyalty/presentation/components/top-tabs/top-tabs.component';
+import { ConsumerToolbar } from '../../../../loyalty/presentation/components/consumer-toolbar/consumer-toolbar';
+import { OwnerToolbarComponent } from '../../../../loyalty/presentation/components/owner-toolbar/owner-toolbar.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
 import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
@@ -38,7 +39,8 @@ import { filter } from 'rxjs/operators';
     MatMenuModule,
     MatDividerModule,
     FooterContent,
-    TopTabsComponent,
+    ConsumerToolbar,
+    OwnerToolbarComponent,
     TranslateModule,
     LanguageSwitcher,
     CartSidebarComponent,
@@ -62,6 +64,7 @@ export class Layout implements OnInit {
   cartCount = signal(0);
   isMobileMenuOpen = signal(false);
   isSearchFocused = signal(false);
+  isOwner = signal(false);
 
   constructor(
     public authService: AuthService,
@@ -93,11 +96,12 @@ export class Layout implements OnInit {
     if (user) {
       this.userName = user.name;
       this.userEmail = user.email || 'usuario@geops.com';
-      console.log('[Layout] Usuario actual:', this.userName, 'ID:', user.id);
+      this.isOwner.set(user.role === 'OWNER');
+      console.log('[Layout] Usuario actual:', this.userName, 'Rol:', user.role, 'IsOwner:', this.isOwner());
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
-        // Subscribe to cart count changes
+    // Subscribe to cart count changes
     this.cartApi.getCartCount().subscribe(count => {
       this.cartCount.set(count);
     });
@@ -156,12 +160,6 @@ export class Layout implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
-  options = [
-    { link: '/home',        label: 'option.home' },
-    { link: '/ofertas',     label: 'option.offers' },
-    { link: '/categories',  label: 'option.categories' },
-    { link: '/favoritos',   label: 'option.favorites' },
-    { link: '/mis-cupones', label: 'option.mycoupons' },
-  ];
 }
+
+
