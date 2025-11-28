@@ -76,9 +76,145 @@ details[open] summary::after { transform: rotate(-135deg); }
 /* Animación sutil */
 @keyframes fade { from {opacity:.6; transform: translateY(-2px);} to {opacity:1; transform:none;} }
 
-/* Responsive */
+/* Responsive Design - 1024px */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 640px;
+    margin: 64px auto 0;
+  }
+
+  h1 {
+    font-size: 1.85rem;
+    margin-bottom: 2.25rem;
+  }
+
+  summary {
+    font-size: 0.98rem;
+  }
+}
+
+/* Responsive Design - 768px */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    margin: 56px auto 0;
+    padding: 0 20px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  summary {
+    font-size: 0.95rem;
+    padding: 0.9rem 0;
+  }
+
+  .answer {
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  .answer .note {
+    font-size: 0.88rem;
+  }
+}
+
+/* Responsive Design - 640px */
+@media (max-width: 640px) {
+  .container {
+    margin: 48px auto 0;
+    padding: 0 18px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 1.75rem;
+  }
+
+  summary {
+    font-size: 0.92rem;
+    padding: 0.85rem 0;
+  }
+
+  summary::after {
+    width: 7px;
+    height: 7px;
+    margin-left: 10px;
+  }
+
+  .answer {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    padding: 0 0 0.9rem;
+  }
+
+  .answer .note {
+    font-size: 0.86rem;
+  }
+
+  .answer ol,
+  .answer ul {
+    padding-left: 20px;
+  }
+
+  .answer li {
+    margin-bottom: 6px;
+  }
+}
+
+/* Responsive Design - 375px */
+@media (max-width: 375px) {
+  .container {
+    margin: 40px auto 0;
+    padding: 0 16px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  summary {
+    font-size: 0.88rem;
+    padding: 0.8rem 0;
+  }
+
+  summary::after {
+    width: 6px;
+    height: 6px;
+    margin-left: 8px;
+  }
+
+  details {
+    padding: 0.15rem 0;
+  }
+
+  .answer {
+    font-size: 0.88rem;
+    line-height: 1.48;
+    padding: 0 0 0.8rem;
+  }
+
+  .answer .note {
+    font-size: 0.82rem;
+  }
+
+  .answer ol,
+  .answer ul {
+    padding-left: 18px;
+  }
+
+  .answer li {
+    margin-bottom: 5px;
+  }
+}
+
+/* Responsive - Mobile Portrait (Original) */
 @media (max-width: 600px) {
   .container { max-width: 100%; margin: 40px 0 0 0; padding: 0 16px; }
   h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
   summary { font-size: 1rem; }
 }
+

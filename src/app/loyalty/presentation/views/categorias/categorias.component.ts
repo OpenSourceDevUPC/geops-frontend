@@ -45,7 +45,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
 
   idx = 0;
   timer?: any;
-  userId = 'a512';
+  userId = 0;
 
   /**
    * filttros de búsqueda
@@ -57,7 +57,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     sort: 'relevance' as 'relevance' | 'priceAsc' | 'priceDesc' | 'ratingDesc',
   };
 
-  private favSet = new Set<string>();
+  private favSet = new Set<number>();
   private dataLoaded = false;
   private currentUserId: number | null = null;
 
@@ -82,7 +82,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
 
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = String(user.id);
+      this.userId = (user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
@@ -234,7 +234,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
    * verifica si una oferta esta marcada como favorita
    * @param id
    */
-  isFav(id: number) { return this.favSet.has(String(id)); }
+  isFav(id: number) { return this.favSet.has((id)); }
 
   /**
    * aqui basicamente se actualiza el estado de favorito de una oferta
@@ -248,11 +248,11 @@ export class CategoriasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.favSet.has(String(o.id))) {
+    if (this.favSet.has((o.id))) {
       // REMOVER favorito usando el endpoint directo
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
-          this.favSet.delete(String(o.id));
+          this.favSet.delete((o.id));
           console.log('[Ofertas] Favorito eliminado:', o.id);
         },
         error: (err) => {
@@ -262,7 +262,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     } else {
       // AGREGAR favorito
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(String(o.id));
+        this.favSet.add((o.id));
         console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
@@ -278,7 +278,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
 
     this.cartApi.addItemToCart(
       this.userId,
-      o.id.toString(),
+      o.id,
       offerTitle,
       o.price,
       offerImageUrl,
@@ -308,7 +308,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
 
     // Add to cart first, then open cart sidebar
     this.cartApi
-      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
       .subscribe({
         next: () => {
           console.log('Item added to cart successfully');

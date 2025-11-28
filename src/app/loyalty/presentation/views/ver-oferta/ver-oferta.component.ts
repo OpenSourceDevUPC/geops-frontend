@@ -46,7 +46,6 @@ export class VerOfertaComponent implements OnInit {
   myText = '';
 
   private userId: number | null = null;
-  private userIdString = '';
 
   get canPublish(): boolean {
     return !!this.userId && !!this.myText.trim();
@@ -82,7 +81,7 @@ export class VerOfertaComponent implements OnInit {
     this.userId = this.auth.getCurrentUserId();
 
     const user = this.auth.getCurrentUser();
-    this.userIdString = user ? String(user.id) : 'guest';
+    this.userId = user ? (user.id) : 0;
 
     this.from =
       (this.route.snapshot.queryParamMap.get('from') as any) ??
@@ -241,8 +240,8 @@ export class VerOfertaComponent implements OnInit {
     const offerImageUrl = this.imgFor();
 
     this.cartApi.addItemToCart(
-      this.userIdString,
-      this.offer.id.toString(),
+      this.userId,
+      this.offer.id,
       offerTitle,
       this.offer.price,
       offerImageUrl,
@@ -252,7 +251,6 @@ export class VerOfertaComponent implements OnInit {
         // Reset payment flow when items are added
         this.cartUiService.resetPaymentFlow();
         console.log('Item added to cart successfully');
-        alert(`"${offerTitle}" se agregó al carrito correctamente`);
       },
       error: (error) => {
         console.error('Error adding item to cart:', error);
@@ -278,8 +276,8 @@ export class VerOfertaComponent implements OnInit {
     // Add to cart first, then open cart sidebar
     this.cartApi
       .addItemToCart(
-        this.userIdString,
-        this.offer.id.toString(),
+        this.userId,
+        this.offer.id,
         offerTitle,
         this.offer.price,
         offerImageUrl,

@@ -104,9 +104,11 @@
     "map": {
       "places": "Lugares",
       "use-my-location": "Usar mi ubicación",
+      "location-active": "Ubicación activa",
       "example": "ej.: cine, buffet",
       "search": "Buscar",
       "radius": "Radio",
+      "zoom": "Zoom",
       "all": "Todos",
       "cinemas": "Cines",
       "buffets": "Buffets",
@@ -119,14 +121,17 @@
       "places-near-you": "Lugares cerca de ti",
       "activate-location": "Activa tu ubicación\n",
       "desc": "Para mostrar lugares cercanos y cupones en tiempo real.",
-      "right-map": "Compártenos tu ubicación\npara ver más lugares cerca de ti"
+      "right-map": "Compártenos tu ubicación\npara ver más lugares cerca de ti",
+      "nearby-offers": "Ofertas Cercanas",
+      "results": "resultados"
     },
     "cinemas": "Cines",
     "lunch-buffets": "Buffets de almuerzo",
     "inflatable-parks": "Parques de inflables",
     "mechanical-games": "Juegos mecánicos",
     "maki-open-bar": "Barra libre de makis",
-    "beauty": "Belleza"
+    "beauty": "Belleza",
+    "offers": "ofertas"
   },
   "welcomeBanner": {
     "welcome": "Bienvenido",
@@ -139,34 +144,61 @@
   },
   "subscriptions": {
     "title": "Planes",
-    "subtitle": "Elige el plan que más te convenga. Puedes cambiar cuando quieras.",
-    "currency": "S/",
+    "subtitle": "Elige el plan que se ajusta a ti. Puedes cambiar cuando quieras.",
+    "currency": "s/",
     "interval": "mes",
     "recommended": "Recomendado",
     "close": "Cerrar",
-    "plans": {
-      "basic": {
-        "name": "Básico",
-        "description": "Plan gratuito con funcionalidades básicas",
-        "features": [
-          "Acceso a cupones públicos",
-          "Filtrar por categoría y radio",
-          "3 cupones activos al mismo tiempo",
-          "Soporte por correo"
-        ],
-        "buttonText": "Comenzar"
-      },
-      "premium": {
-        "name": "Premium",
-        "description": "Plan premium con acceso a funcionalidades exclusivas",
-        "features": [
-          "Todo lo del Básico",
-          "Cupones exclusivos por ubicación",
-          "Mapa en vivo con ofertas/horarios",
-          "Historial inteligente y alertas",
-          "Soporte prioritario"
-        ],
-        "buttonText": "Probar Premium"
+    "consumer": {
+      "plans": {
+        "basic": {
+          "name": "Básico",
+          "description": "Plan gratuito con funcionalidades básicas",
+          "features": [
+            "Acceso a cupones públicos",
+            "Filtrar por categoría y radio",
+            "3 cupones activos al mismo tiempo",
+            "Soporte por correo"
+          ],
+          "buttonText": "Empezar"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Plan premium con acceso a funcionalidades exclusivas",
+          "features": [
+            "Todo lo del Básico",
+            "Cupones exclusivos por ubicación",
+            "Mapa en vivo con ofertas/horarios",
+            "Historial inteligente y alertas",
+            "Soporte prioritario"
+          ],
+          "buttonText": "Probar Premium"
+        }
+      }
+    },
+    "provider": {
+      "plans": {
+        "basic": {
+          "name": "Básico",
+          "description": "Plan gratuito para empezar",
+          "features": [
+            "Crear campañas básicas",
+            "Segmentación por radio/ciudad",
+            "Reporte CSV"
+          ],
+          "buttonText": "Empezar"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Plan premium con características avanzadas",
+          "features": [
+            "Métricas avanzadas (CTR, conversiones)",
+            "Exportar PDF/Excel",
+            "Segmentación detallada",
+            "Soporte prioritario"
+          ],
+          "buttonText": "Probar Premium"
+        }
       }
     }
   },
@@ -398,7 +430,22 @@
     "title": "Mis Cupones"
   },
   "footer": {
-    "rights": "Todos los derechos reservados."
+    "tagline": "Ofertas y cupones cerca de ti",
+    "description": "Descubre las mejores ofertas y descuentos en restaurantes, entretenimiento, belleza y más en tu zona.",
+    "navigation": "Navegación",
+    "offers": "Ofertas",
+    "subscriptions": "Suscripciones",
+    "coupons": "Cupones",
+    "help": "Ayuda",
+    "support": "Soporte",
+    "faq": "Preguntas Frecuentes",
+    "contact": "Contacto",
+    "terms": "Términos y Condiciones",
+    "privacy": "Política de Privacidad",
+    "contact-us": "Contáctanos",
+    "rights": "Todos los derechos reservados.",
+    "made-with": "Hecho con",
+    "in-peru": "en Perú"
   },
   "categorias": {
     "Entretenimiento": "Entretenimiento",

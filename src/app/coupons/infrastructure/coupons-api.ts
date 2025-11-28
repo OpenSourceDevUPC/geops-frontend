@@ -36,9 +36,11 @@ export class CouponsApi extends BaseApi {
       // 1) Try the simple bulk endpoint that accepts an array
       try {
         const bulkUrl = `${environment.platformProviderApiBaseUrl}/coupons/bulk`;
-        const response = await lastValueFrom(this.http.post<CouponResource[] | CouponsResponse>(bulkUrl, coupons));
+        const response = await lastValueFrom(
+          this.http.post<CouponResource[] | CouponsResponse>(bulkUrl, coupons)
+        );
         const created = Array.isArray(response)
-          ? response.map(r => assembler.toEntityFromResource(r as CouponResource))
+          ? response.map((r) => assembler.toEntityFromResource(r as CouponResource))
           : assembler.toEntitiesFromResponse(response as CouponsResponse);
 
         this.couponsSubject.next([...this.couponsSubject.value, ...created]);
@@ -48,10 +50,14 @@ export class CouponsApi extends BaseApi {
         try {
           const wrappedUrl = `${environment.platformProviderApiBaseUrl}/coupons/bulk-wrapped`;
           const wrappedBody = { coupons };
-          const resp = await lastValueFrom(this.http.post<CouponsResponse | { coupons: CouponResource[] }>(wrappedUrl, wrappedBody));
+          const resp = await lastValueFrom(
+            this.http.post<CouponsResponse | { coupons: CouponResource[] }>(wrappedUrl, wrappedBody)
+          );
           let created: Coupon[] = [];
           if (Array.isArray((resp as any).coupons)) {
-            created = (resp as any).coupons.map((r: CouponResource) => assembler.toEntityFromResource(r));
+            created = (resp as any).coupons.map((r: CouponResource) =>
+              assembler.toEntityFromResource(r)
+            );
           } else {
             created = assembler.toEntitiesFromResponse(resp as CouponsResponse);
           }
@@ -82,22 +88,22 @@ export class CouponsApi extends BaseApi {
   }
 
   getAllCoupons(): Observable<Coupon[]> {
-    return this.endpoint.getAll().pipe(
-      tap((coupons: Coupon[]) => this.couponsSubject.next(coupons))
-    );
+    return this.endpoint
+      .getAll()
+      .pipe(tap((coupons: Coupon[]) => this.couponsSubject.next(coupons)));
   }
 
-  getCouponsByUser(userId: string): Observable<Coupon[]> {
+  getCouponsByUser(userId: number): Observable<Coupon[]> {
     return this.endpoint.getAll().pipe(
-      map((coupons: Coupon[]) => coupons.filter(c => c.userId === userId)),
-      tap(filtered => this.couponsSubject.next(filtered))
+      map((coupons: Coupon[]) => coupons.filter((c) => c.userId === userId)),
+      tap((filtered) => this.couponsSubject.next(filtered))
     );
   }
 
   createCoupon(coupon: Omit<Coupon, 'id'>): Observable<Coupon> {
-    return this.endpoint.create(coupon as Coupon).pipe(
-      tap(c => this.couponsSubject.next([...this.couponsSubject.value, c]))
-    );
+    return this.endpoint
+      .create(coupon as Coupon)
+      .pipe(tap((c) => this.couponsSubject.next([...this.couponsSubject.value, c])));
   }
 
   /**
@@ -112,9 +118,9 @@ export class CouponsApi extends BaseApi {
     const assembler = new CouponsAssembler();
 
     return this.http.get<CouponResource[] | CouponsResponse>(url).pipe(
-      map(response => {
+      map((response) => {
         if (Array.isArray(response)) {
-          return response.map(r => assembler.toEntityFromResource(r as CouponResource));
+          return response.map((r) => assembler.toEntityFromResource(r as CouponResource));
         }
         return assembler.toEntitiesFromResponse(response as CouponsResponse);
       }),
@@ -127,15 +133,17 @@ export class CouponsApi extends BaseApi {
    * GET /coupons/user/{userId} which returns coupons (optionally with relations).
    * @param userId user id to filter coupons
    */
-  getAllWithRelationsByUser(userId: string): Observable<Coupon[]> {
+  getAllWithRelationsByUser(userId: number): Observable<Coupon[]> {
     // Use the dedicated user coupons endpoint provided by the API: GET /coupons/user/{userId}
-    const url = `${environment.platformProviderApiBaseUrl}/coupons/user/${encodeURIComponent(userId)}`;
+    const url = `${environment.platformProviderApiBaseUrl}/coupons/user/${encodeURIComponent(
+      userId
+    )}`;
     const assembler = new CouponsAssembler();
 
     return this.http.get<CouponResource[] | CouponsResponse>(url).pipe(
-      map(response => {
+      map((response) => {
         if (Array.isArray(response)) {
-          return response.map(r => assembler.toEntityFromResource(r as CouponResource));
+          return response.map((r) => assembler.toEntityFromResource(r as CouponResource));
         }
         return assembler.toEntitiesFromResponse(response as CouponsResponse);
       }),

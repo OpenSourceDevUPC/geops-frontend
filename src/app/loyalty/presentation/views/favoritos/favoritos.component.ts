@@ -42,7 +42,7 @@ export class FavoritosComponent implements OnInit {
 
   private currentUserId: number | null = null;
 
-  userId = 'a512';
+  userId = 0;
 
   /**
    * creates an instance of the 'favoritesComponent' component
@@ -157,7 +157,7 @@ export class FavoritosComponent implements OnInit {
 
     this.cartApi.addItemToCart(
       this.userId,
-      o.id.toString(),
+      o.id,
       offerTitle,
       o.price,
       offerImageUrl,
@@ -187,7 +187,7 @@ export class FavoritosComponent implements OnInit {
 
     // Add to cart first, then open cart sidebar
     this.cartApi
-      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
+      .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
       .subscribe({
         next: () => {
           console.log('Item added to cart successfully');
