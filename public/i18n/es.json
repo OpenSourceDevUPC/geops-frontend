@@ -287,17 +287,22 @@
     "button": "Guardar"
   },
   "settings": {
-    "plan.label": "Plan",
-    "plan.BASIC": "Básico",
-    "plan.PREMIUM": "Premium",
+    "basicInfo": "Información básica",
+    "plan": {
+      "label": "Plan",
+      "BASIC": "Básico",
+      "PREMIUM": "Premium"
+    },
     "save": "Guardar",
     "cancel": "Cancelar",
     "name": "Nombre",
     "email": "Correo electrónico",
     "phone": "Teléfono",
-    "locationPermission.label": "Permiso de ubicación",
-    "locationPermission.ASK": "Preguntar",
-    "locationPermission.ALWAYS": "Siempre",
+    "locationPermission": {
+      "label": "Permiso de ubicación",
+      "ASK": "Preguntar",
+      "ALWAYS": "Siempre"
+    },
     "home": "Casa",
     "work": "Trabajo",
     "favorites": "Categoría favorita",
@@ -308,7 +313,26 @@
     "clear": "Limpiar",
     "changePassword": "Cambiar contraseña",
     "updating": "Actualizando...",
-    "rights": "© 2025 Todos los derechos reservados"
+    "rights": "© 2025 Todos los derechos reservados",
+    "consumer": {
+      "title": "Detalles de Consumidor",
+      "notifications": "Recibir notificaciones",
+      "locationPermission": "Permitir acceso a ubicación",
+      "homeAddress": "Dirección de casa",
+      "workAddress": "Dirección de trabajo",
+      "universityAddress": "Dirección de universidad",
+      "favorites": "Categorías favoritas"
+    },
+    "owner": {
+      "title": "Detalles de Negocio",
+      "businessName": "Nombre del negocio",
+      "businessType": "Tipo de negocio",
+      "taxId": "RUC / Tax ID",
+      "website": "Sitio web",
+      "description": "Descripción del negocio",
+      "address": "Dirección del negocio",
+      "hours": "Horario de atención"
+    }
   },
   "helpCenter": {
     "title": "Centro de ayuda",

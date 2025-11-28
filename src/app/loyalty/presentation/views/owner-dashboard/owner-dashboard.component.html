@@ -1,0 +1,80 @@
+<div class="owner-dashboard-wrapper">
+  <div class="dashboard-container" *ngIf="user">
+    <!-- Header Section con nombre del negocio -->
+    <div class="dashboard-header">
+      <div class="header-left">
+        <h2 class="panel-title">Panel de Proveedor</h2>
+        <div class="greeting">
+          <span class="greeting-text">Hola, </span>
+          <span class="greeting-name">{{ displayName }}</span>
+          <span class="greeting-emoji">👋</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn-premium" *ngIf="user.plan === 'PREMIUM'">Plan Premium</button>
+        <button class="btn-basic" *ngIf="user.plan === 'BASIC'">Plan Básico</button>
+        <button class="btn-more">Ver Más</button>
+      </div>
+    </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-label">{{ 'proveedor.stats.activeCampaigns' | translate }}</div>
+      <div class="stat-value">{{ activeCampaigns }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">{{ 'proveedor.stats.impressions' | translate }}</div>
+      <div class="stat-value">{{ totalImpressions | number }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">{{ 'proveedor.stats.ctr' | translate }}</div>
+      <div class="stat-value">{{ avgCTR }}%</div>
+    </div>
+  </div>
+
+  <!-- Latest Campaigns Section -->
+  <div class="campaigns-section">
+    <h3 class="section-title">{{ 'proveedor.latestCampaigns' | translate }}</h3>
+
+    <div class="campaign-card" *ngFor="let campaign of campaigns">
+      <div class="campaign-header">
+        <div class="campaign-title-row">
+          <h4 class="campaign-title">{{ campaign.title }}</h4>
+          <span class="campaign-status" [ngClass]="getStatusClass(campaign.status)">
+            {{ getStatusText(campaign.status) }}
+          </span>
+        </div>
+        <p class="campaign-audience">{{ campaign.audience }}</p>
+      </div>
+
+      <div class="campaign-metrics">
+        <div class="metric">
+          <span class="metric-label">{{ 'proveedor.metrics.impressions' | translate }}</span>
+          <span class="metric-value">{{ campaign.impressions | number }}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">{{ 'proveedor.metrics.clicks' | translate }}</span>
+          <span class="metric-value">{{ campaign.clicks | number }}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">CTR</span>
+          <span class="metric-value">{{ campaign.ctr }}%</span>
+        </div>
+      </div>
+
+      <div class="campaign-actions">
+        <button class="btn-action btn-pause" (click)="pauseCampaign(campaign)" *ngIf="campaign.status === 'active'">
+          {{ 'proveedor.actions.pause' | translate }}
+        </button>
+        <button class="btn-action btn-edit" (click)="editCampaign(campaign)">
+          {{ 'proveedor.actions.edit' | translate }}
+        </button>
+        <button class="btn-action btn-delete" (click)="deleteCampaign(campaign)">
+          {{ 'proveedor.actions.remove' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

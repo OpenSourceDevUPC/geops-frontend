@@ -92,7 +92,7 @@
     </div>
 
     <article class="review-item" *ngFor="let r of reviews">
-      <div class="avatar">{{ initialOf(r.userName, String(r.userId)[0] ?? '?') }}</div>
+      <div class="avatar">{{ initialOf(r.userName, String(r.userId)[0] || '?') }}</div>
       <div class="body">
         <div class="row">
           <div class="inline-stars">

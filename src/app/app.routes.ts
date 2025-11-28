@@ -76,6 +76,41 @@ export const routes: Routes = [
           import('./identity/presentation/views/settings/settings.component')
             .then(m => m.SettingsComponent),
         title: 'GeoPs - Settings'
+      },
+      {
+        path: 'resumen',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/resumen/resumen.component')
+            .then(m => m.ResumenComponent),
+        title: 'GeoPs - Resumen'
+      },
+      {
+        path: 'campañas',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/campañas/campañas.component')
+            .then(m => m.CampañasComponent),
+        title: 'GeoPs - Campañas'
+      },
+      {
+        path: 'crear-campañas',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/crear-campañas/crear-campañas.component')
+            .then(m => m.CrearCampañasComponent),
+        title: 'GeoPs - Crear Campaña'
+      },
+      {
+        path: 'reportes',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/reportes/reportes.component')
+            .then(m => m.ReportesComponent),
+        title: 'GeoPs - Reportes'
+      },
+      {
+        path: 'comentarios',
+        loadComponent: () =>
+          import('./loyalty/presentation/views/comentarios/comentarios.component')
+            .then(m => m.ComentariosComponent),
+        title: 'GeoPs - Comentarios'
       }
     ]
   },

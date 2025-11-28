@@ -1,0 +1,57 @@
+<div class="comentarios-container">
+  <!-- Comentarios -->
+  <div class="comentarios-list">
+    <div *ngFor="let comment of comments; let i = index" class="comentario-card">
+      <!-- Header -->
+      <div class="comentario-header">
+        <div class="comentario-info">
+          <h4 class="comentario-autor">{{ comment.author }}</h4>
+          <span class="comentario-fecha">{{ comment.date }}</span>
+        </div>
+      </div>
+
+      <!-- Texto del comentario -->
+      <p class="comentario-texto">{{ comment.text }}</p>
+
+      <!-- Input de respuesta (mostrar/ocultar) -->
+      <div *ngIf="comment.showReplyInput" class="reply-input-container">
+        <textarea
+          [(ngModel)]="comment.reply"
+          placeholder="Escribe tu respuesta..."
+          class="reply-input"
+          rows="3"></textarea>
+        <div class="reply-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="onSendReply(i)"
+            class="reply-btn">
+            Responder
+          </button>
+          <button
+            mat-raised-button
+            (click)="onCancelReply(i)"
+            class="cancel-btn">
+            Cancelar
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón responder -->
+      <div *ngIf="!comment.showReplyInput" class="reply-button-container">
+        <button
+          mat-raised-button
+          (click)="onOpenReply(i)"
+          class="reply-open-btn">
+          Responder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="comentarios-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </div>
+</div>
+

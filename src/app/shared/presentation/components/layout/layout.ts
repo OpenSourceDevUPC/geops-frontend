@@ -10,7 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { FooterContent } from '../footer-content/footer-content';
-import { TopTabsComponent } from '../../../../loyalty/presentation/components/top-tabs/top-tabs.component';
+import { ConsumerToolbar } from '../../../../loyalty/presentation/components/consumer-toolbar/consumer-toolbar';
+import { OwnerToolbarComponent } from '../../../../loyalty/presentation/components/owner-toolbar/owner-toolbar.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
 import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
@@ -34,7 +35,8 @@ import {CommonModule} from '@angular/common';
     MatMenuModule,
     MatDividerModule,
     FooterContent,
-    TopTabsComponent,
+    ConsumerToolbar,
+    OwnerToolbarComponent, // Used in template: *ngIf="isOwner"
     TranslateModule,
     LanguageSwitcher,
     CartSidebarComponent,
@@ -52,6 +54,7 @@ export class Layout implements OnInit {
   q = '';
   userName = 'Usuario';
   cartCount = signal(0);
+  isOwner = false;
 
   constructor(
     private authService: AuthService,
@@ -59,14 +62,20 @@ export class Layout implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.userName = user.name;
-      console.log('[Layout] Usuario actual:', this.userName, 'ID:', user.id);
-    } else {
-      console.warn('[Layout] No hay usuario autenticado');
-    }
-        // Subscribe to cart count changes
+    // Suscribirse al Observable del usuario actual para detectar cambios
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.userName = user.name;
+        this.isOwner = user.role === 'OWNER';
+        console.log('[Layout] Usuario actual:', this.userName, 'Rol:', user.role, 'IsOwner:', this.isOwner);
+      } else {
+        this.userName = 'Usuario';
+        this.isOwner = false;
+        console.warn('[Layout] No hay usuario autenticado');
+      }
+    });
+
+    // Subscribe to cart count changes
     this.cartApi.getCartCount().subscribe(count => {
       this.cartCount.set(count);
     });

@@ -1,0 +1,108 @@
+<div class="resumen-container">
+  <!-- Header con bienvenida -->
+  <div class="resumen-header">
+    <div class="resumen-welcome">
+      <h1>Panel de Proveedor</h1>
+      <p class="greeting">Hola, {{ ownerName }} 👋</p>
+    </div>
+    <div class="resumen-actions">
+      <button mat-raised-button color="accent" class="premium-badge">
+        Plan {{ plan }}
+      </button>
+      <a mat-raised-button color="primary" href="#" class="view-more">Ver Más</a>
+    </div>
+  </div>
+
+  <!-- Estadísticas principales -->
+  <div class="resumen-stats">
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.activeCampaigns }}</div>
+      <div class="stat-label">Campañas activas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.totalImpressions | number }}</div>
+      <div class="stat-label">Impresiones totales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.ctr }}%</div>
+      <div class="stat-label">CTR promedio</div>
+    </div>
+  </div>
+
+  <!-- Últimas campañas -->
+  <div class="resumen-campaigns">
+    <h2>Últimas campañas</h2>
+
+    <div class="campaigns-list">
+      <div *ngFor="let campaign of campaigns" class="campaign-card">
+        <!-- Encabezado de campaña -->
+        <div class="campaign-header">
+          <div class="campaign-title-section">
+            <h3 class="campaign-title">{{ campaign.title }}</h3>
+            <span class="campaign-status" [style.backgroundColor]="getStatusColor(campaign.status)">
+              {{ campaign.status }}
+            </span>
+          </div>
+          <div class="campaign-dates">
+            <small>{{ campaign.startDate }} - {{ campaign.endDate }}</small>
+          </div>
+        </div>
+
+        <!-- Datos de campaña -->
+        <div class="campaign-stats">
+          <div class="campaign-stat">
+            <span class="stat-label-small">Imp:</span>
+            <span class="stat-value-small">{{ campaign.impressions | number }}</span>
+          </div>
+          <div class="campaign-stat">
+            <span class="stat-label-small">Clicks:</span>
+            <span class="stat-value-small">{{ campaign.clicks }}</span>
+          </div>
+          <div class="campaign-stat">
+            <span class="stat-label-small">CTR:</span>
+            <span class="stat-value-small">{{ campaign.ctr }}%</span>
+          </div>
+        </div>
+
+        <!-- Audiencia -->
+        <div class="campaign-audience">
+          <small>{{ campaign.audience }}</small>
+        </div>
+
+        <!-- Acciones -->
+        <div class="campaign-actions">
+          <button
+            mat-raised-button
+            (click)="onView(campaign.id)"
+            class="action-btn view-btn">
+            Visualizar
+          </button>
+          <button
+            mat-raised-button
+            (click)="onEdit(campaign.id)"
+            class="action-btn edit-btn">
+            Editar
+          </button>
+          <button
+            mat-raised-button
+            (click)="onPause(campaign.id)"
+            class="action-btn pause-btn">
+            Pausar
+          </button>
+          <button
+            mat-raised-button
+            (click)="onDelete(campaign.id)"
+            class="action-btn delete-btn">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="resumen-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </div>
+</div>
+
