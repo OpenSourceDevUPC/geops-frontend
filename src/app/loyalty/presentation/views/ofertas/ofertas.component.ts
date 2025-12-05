@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -50,6 +50,11 @@ export class OfertasComponent implements OnInit, OnDestroy {
   timer?: any;
   userId = 0;
 
+  // Dropdown states
+  categoryOpen = false;
+  sortOpen = false;
+  locationOpen = false;
+
   /**
    * search filters
    */
@@ -100,14 +105,12 @@ export class OfertasComponent implements OnInit, OnDestroy {
       console.warn('[Ofertas] No hay usuario autenticado');
     }
 
-    // Subscribe to query params changes to sync filters
     this.route.queryParams.subscribe(params => {
       this.filters.q = params['q'] || '';
       this.filters.category = params['category'] || 'all';
       this.filters.location = params['location'] || 'all';
       this.filters.sort = params['sort'] || 'relevance';
 
-      // Only apply filters if data is already loaded
       if (this.dataLoaded) {
         this.applyFiltersWithoutUpdatingUrl();
       }
@@ -138,8 +141,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * se ejecuta al destruir el componente
-   * y tambien detiene el temporizador del carrusel
+   * called when the component is destroyed
+   * also stops the carousel timer
    * @return { void}
    */
   ngOnDestroy(): void {
@@ -154,11 +157,9 @@ export class OfertasComponent implements OnInit, OnDestroy {
     const districts = [
       'Surco', 'San Miguel', 'San Borja', 'Chorrillos', 'Santa Marina', 'Trujillo',
       'Arequipa', 'Ica', 'Ate', 'Breña', 'Comas', 'Barranco', 'Los Olivos', 'Magdalena',
-      'Miraflores', 'Pueblo Libre', 'San Isidro', 'Tiendas seleccionadas'
+      'Miraflores', 'Pueblo Libre', 'San Isidro'
     ];
-    // Divide la ubicación por comas y elimina espacios
     const locationParts = location.split(',').map(part => part.trim());
-    // Verifica si alguna parte es un distrito
     return locationParts.some(part => districts.includes(part));
   }
 
@@ -232,7 +233,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
           s.toLowerCase().includes(q)
         );
       const byCat = this.filters.category === 'all' || o.category === this.filters.category;
-      const byLoc = this.filters.location === 'all' || o.location === this.filters.location;
+      const byLoc = this.filters.location === 'all' || o.location.toLowerCase().includes(this.filters.location.toLowerCase());
       return byText && byCat && byLoc;
     });
 
@@ -252,6 +253,75 @@ export class OfertasComponent implements OnInit, OnDestroy {
   clearFilters() {
     this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
     this.applyFilters();
+  }
+
+  /**
+   * toggle category dropdown
+   */
+  toggleCategory() {
+    this.categoryOpen = !this.categoryOpen;
+    this.sortOpen = false;
+    this.locationOpen = false;
+  }
+
+  /**
+   * toggle sort dropdown
+   */
+  toggleSort() {
+    this.sortOpen = !this.sortOpen;
+    this.categoryOpen = false;
+    this.locationOpen = false;
+  }
+
+  /**
+   * toggle location dropdown
+   */
+  toggleLocation() {
+    this.locationOpen = !this.locationOpen;
+    this.categoryOpen = false;
+    this.sortOpen = false;
+  }
+
+  /**
+   * select category
+   */
+  selectCategory(category: string) {
+    this.filters.category = category;
+    this.categoryOpen = false;
+    this.applyFilters();
+  }
+
+  /**
+   * select sort option
+   */
+  selectSort(sort: 'relevance' | 'priceAsc' | 'priceDesc' | 'ratingDesc') {
+    this.filters.sort = sort;
+    this.sortOpen = false;
+    this.applyFilters();
+  }
+
+  /**
+   * select location
+   */
+  selectLocation(location: string) {
+    this.filters.location = location;
+    this.locationOpen = false;
+    this.applyFilters();
+  }
+
+  /**
+   * close all dropdowns when clicking outside
+   */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const clickedInsideDropdown = target.closest('.custom-select-wrapper');
+    
+    if (!clickedInsideDropdown) {
+      this.categoryOpen = false;
+      this.sortOpen = false;
+      this.locationOpen = false;
+    }
   }
 
   /**
@@ -307,8 +377,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Añade una oferta al carrito
-   * @param o - Oferta a añadir
+   * add an offer to your cart
+   * @param o - offer to add
    */
   addToCart(o: Offer) {
     const offerTitle = o.title;
@@ -323,41 +393,33 @@ export class OfertasComponent implements OnInit, OnDestroy {
       1
     ).subscribe({
       next: () => {
-        // Reset payment flow when items are added
         this.cartUiService.resetPaymentFlow();
-        // Could show a success message here
         console.log('Item added to cart successfully');
       },
       error: (error) => {
         console.error('Error adding item to cart:', error);
-        // Could show an error message here
       }
     });
   }
 
   /**
-   * Procede a comprar directamente - añade al carrito y abre el sidebar
-   * @param o - Oferta a comprar
+   * proceed to buy directly - adds to cart and opens the sidebar
+   * @param o - offer to buy
    */
   buyNow(o: Offer) {
-    // Using hardcoded user ID for now - in real app would come from auth service
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    // Add to cart first, then open cart sidebar
     this.cartApi
       .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
       .subscribe({
         next: () => {
           console.log('Item added to cart successfully');
-          // Reset payment flow when items are added
           this.cartUiService.resetPaymentFlow();
-          // Open the cart sidebar after adding the item
           this.cartUiService.openCart();
         },
         error: (error) => {
           console.error('Error adding item to cart:', error);
-          // Could show an error message here
         },
       });
   }

@@ -20,7 +20,19 @@
   font-weight: 700;
   color: #000;
   margin: 32px 0 24px 0;
-  padding: 0;
+  padding: 0 0 0.75rem 0;
+  position: relative;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--purple) 0%, var(--cta) 100%);
+  border-radius: 2px;
 }
 
 .container{
@@ -196,17 +208,160 @@
   width:187px;
   height:31px;
   padding:0 10px;
-  border:1px solid #CBCBCB;
+  border:2px solid #CBCBCB;
   border-radius:8px;
   background:#fff;
   outline:none;
   font:400 14px/31px 'Poppins', sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.flt:focus,
+.flt:active,
+input.flt:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(167, 81, 212, 0.15);
+}
+
+/* Custom Select Dropdown */
+.custom-select-wrapper {
+  position: relative;
+  width: 187px;
+}
+
+.custom-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 30px;
+  position: relative;
+  user-select: none;
+}
+
+.custom-select.open {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(167, 81, 212, 0.15);
+}
+
+.custom-select .selected-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select .arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--purple);
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.custom-select.open .arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid var(--purple);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(167, 81, 212, 0.2);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.options::-webkit-scrollbar-thumb {
+  background: var(--purple);
+  border-radius: 4px;
+}
+
+.options::-webkit-scrollbar-thumb:hover {
+  background: var(--cta);
+}
+
+.option {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.option:last-child {
+  border-bottom: none;
+}
+
+.option:hover {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cta) 100%);
+  color: white;
+  font-weight: 500;
+}
+
+.option.selected {
+  background: var(--purple);
+  color: white;
+  font-weight: 600;
+}
+
+.option.selected:hover {
+  background: linear-gradient(135deg, var(--cta) 0%, var(--purple) 100%);
 }
 
 .flt.clear{
   width:108px;
   height:31px;
   cursor:pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.flt.clear:hover {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cta) 100%);
+  color: white;
+  border-color: var(--purple);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(167, 81, 212, 0.3);
+}
+
+.flt.clear:active {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cta) 100%);
+  color: white;
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(167, 81, 212, 0.4);
 }
 
 .offers-grid{
