@@ -292,6 +292,7 @@
     "location": "Location",
     "locationAlways": "Always",
     "locationAsk": "Ask",
+    "locationDenied": "Denied",
     "places": "Usual places",
     "rights": "© 2025 All rights reserved"
   },
@@ -354,6 +355,19 @@
       "workAddress": "Work address",
       "universityAddress": "University address",
       "favorites": "Favorite categories"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "notifications": "Receive notifications",
+      "notificationsHelp": "Enable to receive notifications about new offers and promotions",
+      "locationPermission": "Allow location access",
+      "locationPermissionHelp": "Allow sharing your location to see nearby offers"
+    },
+    "savedAddresses": {
+      "title": "Saved Addresses",
+      "homeAddress": "Home address",
+      "workAddress": "Work address",
+      "universityAddress": "University address / Other"
     },
     "owner": {
       "title": "Business Details",

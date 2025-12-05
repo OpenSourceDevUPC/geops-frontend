@@ -8,6 +8,7 @@ import { DetailsOwner } from '../../../domain/model/details-owner.entity';
 import { DetailsConsumerService } from '../../../infrastructure/users/details-consumer.service';
 import { DetailsOwnerService } from '../../../infrastructure/users/details-owner.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 
@@ -18,7 +19,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatSlideToggleModule, TranslateModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
@@ -36,7 +37,7 @@ export class SettingsComponent implements OnInit {
 
   /** List of all available categories for favorites */
   readonly ALL_CATEGORIES: string[] = [
-    'Infantil','Ofertas','Viajes','Sushi','Moda','Tecnología','Belleza','Salud','Deporte'
+    'Infantil','Entretenimiento','Viajes','Sushi','Moda','Tecnología','Belleza','Salud','Deporte'
   ];
 
   /** Tracks which fields are in edit mode */
@@ -83,7 +84,49 @@ export class SettingsComponent implements OnInit {
       }
 
       this.loadRoleSpecificDetails();
+
+      // Check browser permissions status and sync with UI
+      this.checkBrowserPermissions();
     }
+  }
+
+  /**
+   * Checks current browser permissions for notifications and location
+   * and syncs the toggle states accordingly
+   */
+  private async checkBrowserPermissions(): Promise<void> {
+    // Wait for consumer details to load first
+    setTimeout(async () => {
+      if (!this.consumerDetails) return;
+
+      // Check notification permission
+      if ('Notification' in window) {
+        const notificationPermission = Notification.permission;
+        console.log('[SettingsComponent] Current notification permission:', notificationPermission);
+
+        if (notificationPermission === 'granted') {
+          this.consumerDetails.recibirNotificaciones = true;
+        } else if (notificationPermission === 'denied') {
+          this.consumerDetails.recibirNotificaciones = false;
+        }
+      }
+
+      // Check geolocation permission (requires API check)
+      if ('permissions' in navigator) {
+        try {
+          const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
+          console.log('[SettingsComponent] Current location permission:', locationPermission.state);
+
+          if (locationPermission.state === 'granted') {
+            this.consumerDetails.permisoUbicacion = true;
+          } else if (locationPermission.state === 'denied') {
+            this.consumerDetails.permisoUbicacion = false;
+          }
+        } catch (error) {
+          console.warn('[SettingsComponent] Could not check geolocation permission:', error);
+        }
+      }
+    }, 500); // Wait 500ms for details to load
   }
 
   /**
@@ -97,33 +140,31 @@ export class SettingsComponent implements OnInit {
     if (this.user.role === 'CONSUMER') {
       this.detailsConsumerService.getByUserId(this.user.id).subscribe({
         next: (details) => {
-          this.consumerDetails = details;
+          // If details is null (404 from service), create empty details
+          this.consumerDetails = details || this.createEmptyConsumerDetails();
           this.cargando = false;
-          console.log('[SettingsComponent] Consumer details loaded:', details);
+          console.log('[SettingsComponent] Consumer details loaded:', this.consumerDetails);
         },
         error: (error) => {
           console.error('[SettingsComponent] Error loading consumer details:', error);
           this.cargando = false;
-          // Initialize empty details if none exist
-          if (error.status === 404) {
-            this.consumerDetails = this.createEmptyConsumerDetails();
-          }
+          // Initialize empty details if error occurs
+          this.consumerDetails = this.createEmptyConsumerDetails();
         }
       });
     } else if (this.user.role === 'OWNER') {
       this.detailsOwnerService.getByUserId(this.user.id).subscribe({
         next: (details) => {
-          this.ownerDetails = details;
+          // If details is null (404 from service), create empty details
+          this.ownerDetails = details || this.createEmptyOwnerDetails();
           this.cargando = false;
-          console.log('[SettingsComponent] Owner details loaded:', details);
+          console.log('[SettingsComponent] Owner details loaded:', this.ownerDetails);
         },
         error: (error) => {
           console.error('[SettingsComponent] Error loading owner details:', error);
           this.cargando = false;
-          // Initialize empty details if none exist
-          if (error.status === 404) {
-            this.ownerDetails = this.createEmptyOwnerDetails();
-          }
+          // Initialize empty details if error occurs
+          this.ownerDetails = this.createEmptyOwnerDetails();
         }
       });
     }
@@ -222,6 +263,171 @@ export class SettingsComponent implements OnInit {
       .map(s => s.trim())
       .filter(s => s);
     return favorites.includes(cat);
+  }
+
+  /**
+   * Returns the appropriate icon for each category
+   */
+  getCategoryIcon(category: string): string {
+    const iconMap: Record<string, string> = {
+      'Infantil': 'child_care',
+      'Entretenimiento': 'theaters',
+      'Viajes': 'flight',
+      'Sushi': 'restaurant',
+      'Moda': 'checkroom',
+      'Tecnología': 'devices',
+      'Belleza': 'spa',
+      'Salud': 'favorite',
+      'Deporte': 'fitness_center'
+    };
+    return iconMap[category] || 'category';
+  }
+
+  /**
+   * Handles notification permission toggle
+   * Requests browser notification permission when enabled
+   */
+  async onNotificationsToggle(event: any): Promise<void> {
+    if (!this.consumerDetails) return;
+
+    const isEnabled = event.checked;
+
+    if (isEnabled) {
+      // Request notification permission from browser
+      if ('Notification' in window) {
+        try {
+          // Check if already granted
+          if (Notification.permission === 'granted') {
+            this.consumerDetails.recibirNotificaciones = true;
+            console.log('[SettingsComponent] ✅ Notification permission already granted');
+
+            // Show a test notification
+            new Notification('GeOps', {
+              body: 'Las notificaciones están activas',
+              icon: '/favicon.ico'
+            });
+
+            this.mensaje = 'Notificaciones activadas correctamente';
+            setTimeout(() => (this.mensaje = ''), 3000);
+            return;
+          }
+
+          // Request permission
+          const permission = await Notification.requestPermission();
+
+          if (permission === 'granted') {
+            this.consumerDetails.recibirNotificaciones = true;
+            console.log('[SettingsComponent] ✅ Notification permission granted');
+
+            // Show a test notification
+            new Notification('GeOps', {
+              body: 'Las notificaciones han sido activadas correctamente',
+              icon: '/favicon.ico'
+            });
+
+            this.mensaje = 'Notificaciones activadas correctamente';
+            setTimeout(() => (this.mensaje = ''), 3000);
+          } else {
+            // Permission denied, revert toggle
+            this.consumerDetails.recibirNotificaciones = false;
+            this.mensaje = 'Permiso de notificaciones denegado. Por favor, activa los permisos en tu navegador.';
+            setTimeout(() => (this.mensaje = ''), 4000);
+            console.log('[SettingsComponent] ❌ Notification permission denied');
+          }
+        } catch (error) {
+          console.error('[SettingsComponent] Error requesting notification permission:', error);
+          this.consumerDetails.recibirNotificaciones = false;
+          this.mensaje = 'Error al solicitar permisos de notificaciones';
+          setTimeout(() => (this.mensaje = ''), 3000);
+        }
+      } else {
+        // Browser doesn't support notifications
+        this.consumerDetails.recibirNotificaciones = false;
+        this.mensaje = 'Tu navegador no soporta notificaciones';
+        setTimeout(() => (this.mensaje = ''), 3000);
+        console.warn('[SettingsComponent] Notifications not supported in this browser');
+      }
+    } else {
+      // User is disabling notifications
+      this.consumerDetails.recibirNotificaciones = false;
+      this.mensaje = 'Notificaciones desactivadas';
+      setTimeout(() => (this.mensaje = ''), 2000);
+      console.log('[SettingsComponent] Notifications disabled by user');
+    }
+  }
+
+  /**
+   * Handles location permission toggle
+   * Requests browser geolocation permission when enabled
+   */
+  async onLocationToggle(event: any): Promise<void> {
+    if (!this.consumerDetails) return;
+
+    const isEnabled = event.checked;
+
+    if (isEnabled) {
+      // Request geolocation permission from browser
+      if ('geolocation' in navigator) {
+        try {
+          // Request permission by attempting to get current position
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              // Permission granted
+              this.consumerDetails!.permisoUbicacion = true;
+              console.log('[SettingsComponent] ✅ Location permission granted', {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              });
+              this.mensaje = 'Ubicación activada correctamente';
+              setTimeout(() => (this.mensaje = ''), 3000);
+            },
+            (error) => {
+              // Permission denied or error
+              this.consumerDetails!.permisoUbicacion = false;
+              console.error('[SettingsComponent] ❌ Location permission denied:', error);
+
+              let errorMsg = 'Permiso de ubicación denegado';
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMsg = 'Permiso de ubicación denegado. Por favor, activa los permisos en tu navegador.';
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMsg = 'Ubicación no disponible en este momento';
+                  break;
+                case error.TIMEOUT:
+                  errorMsg = 'Tiempo de espera agotado al obtener ubicación';
+                  break;
+              }
+
+              this.mensaje = errorMsg;
+              setTimeout(() => (this.mensaje = ''), 4000);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0
+            }
+          );
+        } catch (error) {
+          console.error('[SettingsComponent] Error requesting location permission:', error);
+          this.consumerDetails.permisoUbicacion = false;
+          this.mensaje = 'Error al solicitar permisos de ubicación';
+          setTimeout(() => (this.mensaje = ''), 3000);
+        }
+      } else {
+        // Browser doesn't support geolocation
+        this.consumerDetails.permisoUbicacion = false;
+        this.mensaje = 'Tu navegador no soporta geolocalización';
+        setTimeout(() => (this.mensaje = ''), 3000);
+        console.warn('[SettingsComponent] Geolocation not supported in this browser');
+      }
+    } else {
+      // User is disabling location
+      this.consumerDetails.permisoUbicacion = false;
+      this.mensaje = 'Ubicación desactivada';
+      setTimeout(() => (this.mensaje = ''), 2000);
+      console.log('[SettingsComponent] Location disabled by user');
+    }
   }
 
   /**

@@ -292,6 +292,7 @@
     "location": "Ubicación",
     "locationAlways": "Siempre",
     "locationAsk": "Preguntar",
+    "locationDenied": "Denegado",
     "places": "Lugares habituales",
     "rights": "© 2025 Todos los derechos reservados"
   },
@@ -354,6 +355,19 @@
       "workAddress": "Dirección de trabajo",
       "universityAddress": "Dirección de universidad",
       "favorites": "Categorías favoritas"
+    },
+    "preferences": {
+      "title": "Preferencias",
+      "notifications": "Recibir notificaciones",
+      "notificationsHelp": "Activa para recibir notificaciones sobre nuevas ofertas y promociones",
+      "locationPermission": "Permitir acceso a ubicación",
+      "locationPermissionHelp": "Permite compartir tu ubicación para ver ofertas cercanas"
+    },
+    "savedAddresses": {
+      "title": "Direcciones Guardadas",
+      "homeAddress": "Dirección de casa",
+      "workAddress": "Dirección de trabajo",
+      "universityAddress": "Dirección de universidad / Otra"
     },
     "owner": {
       "title": "Detalles de Negocio",
