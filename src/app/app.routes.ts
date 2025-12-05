@@ -24,6 +24,13 @@ export const routes: Routes = [
         title: 'GeoPs - Help Center'
       },
       {
+        path: 'help/help-center-provider',
+        loadComponent: () =>
+          import('./help/presentation/views/help-center-provider/help-center-provider.component')
+            .then(m => m.HelpCenterProviderComponent),
+        title: 'GeoPs - Help Center Provider'
+      },
+      {
         path: 'home',
         loadComponent: () =>
           import('./shared/presentation/views/home/home')
