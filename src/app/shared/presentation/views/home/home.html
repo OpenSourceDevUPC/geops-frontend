@@ -99,7 +99,7 @@
               <div class="offer-loc-item" [routerLink]="['/ofertas', location.offer.id]">
                 <div class="offer-loc-info">
                   <h4 class="offer-loc-title">{{location.offer.title}}</h4>
-                  <p class="offer-loc-partner">{{'offersData.titles.' + location.offer.id | translate}}</p>
+                  <p class="offer-loc-partner">{{ location.offer.title }} | {{ ('offersData.titles.' + location.offer.id) | translate }}</p>
                   <p class="offer-loc-location">📍 {{location.offer.location}}</p>
                 </div>
                 <div class="offer-loc-price">
@@ -130,7 +130,7 @@
         @for(offer of cinemaOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
-              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <img [src]="imgFor(offer)" [alt]="offer.title || (('offersData.titles.' + offer.id) | translate)" />
               <button class="fav" type="button"
                       [class.active]="this.isFav(offer.id)"
                       (click)="this.toggleFav(offer)">
@@ -151,7 +151,7 @@
             </div>
 
             <div class="card-body">
-              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <h3 class="ttl">{{ offer.title || (('offersData.titles.' + offer.id) | translate) }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
               <div class="stars-row">
@@ -197,7 +197,7 @@
         @for(offer of buffetOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
-              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <img [src]="imgFor(offer)" [alt]="offer.title || (('offersData.titles.' + offer.id) | translate)" />
               <button class="fav" type="button"
                       [class.active]="this.isFav(offer.id)"
                       (click)="this.toggleFav(offer)">
@@ -219,7 +219,7 @@
 
             <div class="card-body">
               <!-- título traducido -->
-              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <h3 class="ttl">{{ offer.title || (('offersData.titles.' + offer.id) | translate) }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
               <div class="stars-row">
@@ -264,7 +264,7 @@
         @for(offer of parkOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
-              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <img [src]="imgFor(offer)" [alt]="offer.title || (('offersData.titles.' + offer.id) | translate)" />
               <button class="fav" type="button"
                       [class.active]="this.isFav(offer.id)"
                       (click)="this.toggleFav(offer)">
@@ -284,7 +284,7 @@
             </div>
 
             <div class="card-body">
-              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <h3 class="ttl">{{ offer.title || (('offersData.titles.' + offer.id) | translate) }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
               <div class="stars-row">
@@ -326,7 +326,7 @@
         @for(offer of mechGamesOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
-              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <img [src]="imgFor(offer)" [alt]="offer.title || (('offersData.titles.' + offer.id) | translate)" />
               <button class="fav" type="button"
                       [class.active]="this.isFav(offer.id)"
                       (click)="this.toggleFav(offer)">
@@ -346,7 +346,7 @@
             </div>
 
             <div class="card-body">
-              <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+              <h3 class="ttl">{{ offer.title || (('offersData.titles.' + offer.id) | translate) }}</h3>
               <div class="pname">{{ offer.partner }}</div>
 
               <div class="stars-row">
@@ -391,7 +391,7 @@
         @for(offer of makisOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
-              <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+              <img [src]="imgFor(offer)" [alt]="offer.title || (('offersData.titles.' + offer.id) | translate)" />
               <button class="fav" type="button"
                       [class.active]="this.isFav(offer.id)"
                       (click)="this.toggleFav(offer)">
@@ -457,7 +457,7 @@
         @for(offer of beautyOffers(); track offer.id) {
           <div class="offer-card">
           <div class="img-box" tabindex="0">
-            <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
+            <img [src]="imgFor(offer)" [alt]="offer.title || (('offersData.titles.' + offer.id) | translate)" />
             <button class="fav" type="button"
                     [class.active]="this.isFav(offer.id)"
                     (click)="this.toggleFav(offer)">
@@ -478,7 +478,7 @@
 
           <div class="card-body">
             <!-- título traducido -->
-            <h3 class="ttl">{{ ('offersData.titles.' + offer.id) | translate }}</h3>
+            <h3 class="ttl">{{ offer.title || (('offersData.titles.' + offer.id) | translate) }}</h3>
             <div class="pname">{{ offer.partner }}</div>
 
             <div class="stars-row">

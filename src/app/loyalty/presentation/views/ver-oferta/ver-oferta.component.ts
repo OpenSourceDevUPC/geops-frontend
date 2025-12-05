@@ -10,13 +10,12 @@ import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorite
 import { ReviewsApiEndpoint } from '../../../infrastructure/reviews-api-endpoint';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import { Review } from '../../../domain/model/review.entity';
-import { CartApi } from '../../../../cart/infrastructure/cart-api';
-import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
+import { CartStore } from '../../../../cart/application/cart.store';
 
 
 type Offer = {
   id: number; title: string; partner: string; price: number;
-  codePrefix: string; validTo: string; rating: number;
+  codePrefix: string; validUntil: string; rating: number;
   location: string; category: string; imageUrl?: string;
 };
 
@@ -25,15 +24,14 @@ type Offer = {
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './ver-oferta.component.html',
-  styleUrls: ['./ver-oferta.component.css']
+  styleUrls: ['./ver-oferta.component.css'],
 })
 
 /**
  * offer detail screen
  */
 export class VerOfertaComponent implements OnInit {
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  private readonly cartStore = inject(CartStore);
 
   offer?: Offer;
   loading = false;
@@ -81,11 +79,10 @@ export class VerOfertaComponent implements OnInit {
     this.userId = this.auth.getCurrentUserId();
 
     const user = this.auth.getCurrentUser();
-    this.userId = user ? (user.id) : 0;
+    this.userId = user ? user.id : 0;
 
     this.from =
-      (this.route.snapshot.queryParamMap.get('from') as any) ??
-      (history.state?.from ?? null);
+      (this.route.snapshot.queryParamMap.get('from') as any) ?? history.state?.from ?? null;
 
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loading = true;
@@ -99,7 +96,7 @@ export class VerOfertaComponent implements OnInit {
         if (this.userId) {
           this.favsApi
             .findRow(this.userId, this.offer.id)
-            .subscribe(rows => (this.isFav = rows.length > 0));
+            .subscribe((rows) => (this.isFav = rows.length > 0));
         }
 
         this.loadReviews(this.offer.id);
@@ -114,14 +111,29 @@ export class VerOfertaComponent implements OnInit {
    */
   isDistrict(location: string): boolean {
     const districts = [
-      'Surco', 'San Miguel', 'San Borja', 'Chorrillos', 'Santa Marina', 'Trujillo',
-      'Arequipa', 'Ica', 'Ate', 'Breña', 'Comas', 'Barranco', 'Los Olivos', 'Magdalena',
-      'Miraflores', 'Pueblo Libre', 'San Isidro', 'Tiendas seleccionadas'
+      'Surco',
+      'San Miguel',
+      'San Borja',
+      'Chorrillos',
+      'Santa Marina',
+      'Trujillo',
+      'Arequipa',
+      'Ica',
+      'Ate',
+      'Breña',
+      'Comas',
+      'Barranco',
+      'Los Olivos',
+      'Magdalena',
+      'Miraflores',
+      'Pueblo Libre',
+      'San Isidro',
+      'Tiendas seleccionadas',
     ];
     // Divide la ubicación por comas y elimina espacios
-    const locationParts = location.split(',').map(part => part.trim());
+    const locationParts = location.split(',').map((part) => part.trim());
     // Verifica si alguna parte es un distrito
-    return locationParts.some(part => districts.includes(part));
+    return locationParts.some((part) => districts.includes(part));
   }
 
   /**
@@ -153,7 +165,7 @@ export class VerOfertaComponent implements OnInit {
     if (!this.userId || !this.offer) return;
 
     if (this.isFav) {
-      this.favsApi.findRow(this.userId, this.offer.id).subscribe(rows => {
+      this.favsApi.findRow(this.userId, this.offer.id).subscribe((rows) => {
         if (!rows.length) return;
         this.favsApi.removeRow(rows[0].id!).subscribe(() => (this.isFav = false));
       });
@@ -168,7 +180,7 @@ export class VerOfertaComponent implements OnInit {
    * @private
    */
   private loadReviews(offerId: number) {
-    this.reviewsApi.listByOffer(offerId).subscribe(list => {
+    this.reviewsApi.listByOffer(offerId).subscribe((list) => {
       this.reviews = list;
       this.reviewsCount = list.length;
       this.avgRating = list.length
@@ -193,7 +205,7 @@ export class VerOfertaComponent implements OnInit {
         rating: this.myRating,
         text: this.myText.trim(),
       })
-      .subscribe(r => {
+      .subscribe((r) => {
         this.reviews = [r, ...this.reviews];
         this.reviewsCount++;
         this.avgRating = +(
@@ -209,8 +221,8 @@ export class VerOfertaComponent implements OnInit {
    * @param r - review that is liked
    */
   like(r: Review) {
-    this.reviewsApi.like(r.id, r.likes + 1).subscribe(updated => {
-      const i = this.reviews.findIndex(x => x.id === r.id);
+    this.reviewsApi.like(r.id, r.likes + 1).subscribe((updated) => {
+      const i = this.reviews.findIndex((x) => x.id === r.id);
       if (i >= 0) this.reviews[i] = updated;
     });
   }
@@ -239,24 +251,7 @@ export class VerOfertaComponent implements OnInit {
     const offerTitle = this.offer.title;
     const offerImageUrl = this.imgFor();
 
-    this.cartApi.addItemToCart(
-      this.userId,
-      this.offer.id,
-      offerTitle,
-      this.offer.price,
-      offerImageUrl,
-      1
-    ).subscribe({
-      next: () => {
-        // Reset payment flow when items are added
-        this.cartUiService.resetPaymentFlow();
-        console.log('Item added to cart successfully');
-      },
-      error: (error) => {
-        console.error('Error adding item to cart:', error);
-        alert('Error al agregar al carrito. Por favor, inténtalo de nuevo.');
-      }
-    });
+    this.cartStore.addItem(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1);
   }
 
   /**
@@ -273,29 +268,9 @@ export class VerOfertaComponent implements OnInit {
     const offerTitle = this.offer.title;
     const offerImageUrl = this.imgFor();
 
-    // Add to cart first, then open cart sidebar
-    this.cartApi
-      .addItemToCart(
-        this.userId,
-        this.offer.id,
-        offerTitle,
-        this.offer.price,
-        offerImageUrl,
-        1
-      )
-      .subscribe({
-        next: () => {
-          console.log('Item added to cart successfully');
-          // Reset payment flow when items are added
-          this.cartUiService.resetPaymentFlow();
-          // Open the cart sidebar after adding the item
-          this.cartUiService.openCart();
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-          alert('Error al procesar la compra. Por favor, inténtalo de nuevo.');
-        },
-      });
+    // Add to cart and open sidebar
+    this.cartStore.addItem(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1);
+    this.cartStore.openSidebar();
   }
 
   protected readonly String = String;

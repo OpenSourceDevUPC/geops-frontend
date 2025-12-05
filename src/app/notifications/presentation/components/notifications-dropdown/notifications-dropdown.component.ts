@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,8 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
-import { NotificationsService } from '../../services/notifications.service';
-import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
+import { NotificationsStore } from '../../../application/notifications.store';
 import { Notification } from '../../../domain/model/notification.entity';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -35,26 +34,14 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './notifications-dropdown.component.html',
   styleUrl: './notifications-dropdown.component.css'
 })
-export class NotificationsDropdownComponent implements OnInit {
-  public notificationsService = inject(NotificationsService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
-  public userId: number | null = null;
-
-  ngOnInit(): void {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.userId = user.id;
-      this.notificationsService.loadNotifications(user.id);
-      this.notificationsService.loadUnreadCount(user.id);
-    }
-  }
+export class NotificationsDropdownComponent {
+  public readonly store = inject(NotificationsStore);
+  private readonly router = inject(Router);
 
   onNotificationClick(notification: Notification): void {
     // Mark as read if not already
-    if (!notification.isRead && this.userId) {
-      this.notificationsService.markAsRead(notification.id, this.userId);
+    if (!notification.isRead) {
+      this.store.markAsRead(notification.id);
     }
 
     // Navigate to related page if actionUrl exists
@@ -64,22 +51,16 @@ export class NotificationsDropdownComponent implements OnInit {
   }
 
   onMarkAllAsRead(): void {
-    if (this.userId) {
-      this.notificationsService.markAllAsRead(this.userId);
-    }
+    this.store.markAllAsRead();
   }
 
   onDeleteNotification(event: Event, notificationId: number): void {
     event.stopPropagation();
-    if (this.userId) {
-      this.notificationsService.deleteNotification(notificationId, this.userId);
-    }
+    this.store.deleteNotification(notificationId);
   }
 
   onRefresh(): void {
-    if (this.userId) {
-      this.notificationsService.refresh(this.userId);
-    }
+    this.store.refresh();
   }
 
   getNotificationIcon(type: string): string {

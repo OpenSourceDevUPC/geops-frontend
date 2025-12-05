@@ -26,7 +26,7 @@ export class CouponsAssembler implements BaseAssembler<Coupon, CouponResource, C
         partner: r.partner,
         price: r.price,
         codePrefix: r.codePrefix,
-        validTo: r.validTo,
+        validUntil: r.validUntil,
         rating: r.rating,
         location: r.location,
         category: r.category,

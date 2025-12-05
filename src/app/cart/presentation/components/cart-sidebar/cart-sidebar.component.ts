@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, inject } from '@angular/core';
+import { Component, signal, OnInit, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,15 +7,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { CartApi } from '../../../infrastructure/cart-api';
+import { CartStore } from '../../../application/cart.store';
 import { Cart } from '../../../domain/model/cart.entity';
 import { CartItem } from '../../../domain/model/cart-item.entity';
 import { PaymentApi, CreatePaymentRequest } from '../../../../payment/infrastructure/payment-api';
 import { PaymentMethod } from '../../../../payment/domain/model/payment-method.enum';
 import { Payment } from '../../../../payment/domain/model/payment.entity';
-import { CartUiService } from '../../services/cart-ui.service';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
-import { NotificationsService } from '../../../../notifications/presentation/services/notifications.service';
+import { NotificationsStore } from '../../../../notifications/application/notifications.store';
 
 export type CartView = 'cart' | 'checkout' | 'confirmation';
 export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
@@ -37,16 +36,21 @@ export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
   styleUrl: './cart-sidebar.component.css',
 })
 export class CartSidebarComponent implements OnInit {
-  private readonly cartApi = inject(CartApi);
+  private readonly store = inject(CartStore);
   private readonly paymentApi = inject(PaymentApi);
   private readonly fb = inject(FormBuilder);
-  private readonly notificationsService = inject(NotificationsService);
+  private readonly notificationsStore = inject(NotificationsStore);
   private readonly translateService = inject(TranslateService);
-  private readonly cartUiService = inject(CartUiService);
+  private readonly authService = inject(AuthService);
 
-  // Signals
-  isOpen = signal(false);
-  cart = signal<Cart | null>(null);
+  // Signals from store
+  isOpen = this.store.sidebarOpen;
+  cart = this.store.cart;
+  items = this.store.items;
+  totalAmount = this.store.totalAmount;
+  totalItems = this.store.totalItems;
+
+  // Local signals
   isLoading = signal(false);
   currentView = signal<CartView>('cart');
   completedPayment = signal<Payment | null>(null);
@@ -65,55 +69,40 @@ export class CartSidebarComponent implements OnInit {
     cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
   });
 
-  userId = 0; // In real app would come from auth service
+  userId = 0;
 
-  constructor(private authService: AuthService) {}
+  constructor() {
+    // Effect to reset payment flow when cart changes
+    effect(() => {
+      const currentCart = this.cart();
+      if (currentCart && this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+        this.resetPaymentFlow();
+      }
+    });
+  }
 
   ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = (user.id);
+      this.userId = user.id;
+      this.store.loadCartByUserId(this.userId);
     } else {
-      console.warn('[Layout] No hay usuario autenticado');
+      console.warn('[CartSidebar] No hay usuario autenticado');
     }
-    // Subscribe to cart changes
-    this.cartApi.cart$.subscribe((cart) => {
-      const previousCart = this.cart();
-      this.cart.set(cart);
-
-      // Reset payment flow when cart contents change significantly
-      const cartContentsChanged = this.hasCartContentsChanged(previousCart, cart);
-
-      if (
-        cartContentsChanged &&
-        this.paymentStep !== 'methods' &&
-        this.paymentStep !== 'confirmation'
-      ) {
-        this.resetPaymentFlow();
-      }
-    });
-
-    // Subscribe to payment reset signals
-    this.cartUiService.resetPayment$.subscribe(() => {
-      this.resetPaymentState();
-    });
-
-    // Load cart for user (hardcoded for now)
-    this.loadCart();
   }
 
   /**
-   * Toggle sidebar visibility
+   * Toggle sidebar
    */
   toggle() {
-    this.isOpen.set(!this.isOpen());
+    this.store.toggleSidebar();
   }
 
   /**
    * Open sidebar
    */
   open() {
-    this.isOpen.set(true);
+    this.store.openSidebar();
     this.currentView.set('cart'); // Always start with cart view
   }
 
@@ -121,23 +110,7 @@ export class CartSidebarComponent implements OnInit {
    * Close sidebar
    */
   close() {
-    this.isOpen.set(false);
-  }
-
-  /**
-   * Load cart for current user
-   */
-  private loadCart() {
-    this.isLoading.set(true);
-    this.cartApi.getCartByUserId(this.userId).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading cart:', error);
-        this.isLoading.set(false);
-      },
-    });
+    this.store.closeSidebar();
   }
 
   /**
@@ -146,17 +119,11 @@ export class CartSidebarComponent implements OnInit {
    * @param quantity - New quantity
    */
   updateQuantity(item: CartItem, quantity: number) {
-    this.cartApi.updateItemQuantity(this.userId, item.offerId, quantity).subscribe({
-      next: () => {
-        // Reset payment flow when quantities are updated
-        if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
-          this.resetPaymentFlow();
-        }
-      },
-      error: (error) => {
-        console.error('Error updating quantity:', error);
-      },
-    });
+    this.store.updateItemQuantity(this.userId, item.offerId, quantity);
+    // Reset payment flow when quantities are updated
+    if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+      this.resetPaymentFlow();
+    }
   }
 
   /**
@@ -164,49 +131,25 @@ export class CartSidebarComponent implements OnInit {
    * @param item - Cart item to remove
    */
   removeItem(item: CartItem) {
-    this.cartApi.removeItemFromCart(this.userId, item.offerId).subscribe({
-      next: () => {
-        // Reset payment flow when items are removed
-        if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
-          this.resetPaymentFlow();
-        }
-      },
-      error: (error) => {
-        console.error('Error removing item:', error);
-      },
-    });
+    this.store.removeItem(this.userId, item.offerId);
+    // Reset payment flow when items are removed
+    if (this.paymentStep !== 'methods' && this.paymentStep !== 'confirmation') {
+      this.resetPaymentFlow();
+    }
   }
 
   /**
    * Clear entire cart
    */
   clearCart() {
-    this.cartApi.clearCart(this.userId).subscribe({
-      error: (error) => {
-        console.error('Error clearing cart:', error);
-      },
-    });
-  }
-
-  /**
-   * Get total items count
-   */
-  get totalItems(): number {
-    return this.cart()?.totalItems || 0;
-  }
-
-  /**
-   * Get total amount
-   */
-  get totalAmount(): number {
-    return this.cart()?.totalAmount || 0;
+    this.store.clearCart(this.userId);
   }
 
   /**
    * Check if cart is empty
    */
   get isEmpty(): boolean {
-    return this.totalItems === 0;
+    return this.store.isEmpty();
   }
 
   /**
@@ -257,7 +200,7 @@ export class CartSidebarComponent implements OnInit {
     const request: CreatePaymentRequest = {
       userId: this.userId,
       cartId: this.cart()?.id || 0,
-      amount: this.totalAmount,
+      amount: this.totalAmount(),
       paymentMethod: PaymentMethod.CARD,
       customerEmail: formValue.email,
       customerFirstName: formValue.firstName,
@@ -286,7 +229,7 @@ export class CartSidebarComponent implements OnInit {
     const request: CreatePaymentRequest = {
       userId: this.userId,
       cartId: this.cart()?.id || 0,
-      amount: this.totalAmount,
+      amount: this.totalAmount(),
       paymentMethod: method,
       customerEmail: `user-${this.userId}@temp.com`,
       customerFirstName: 'Usuario',
@@ -314,10 +257,7 @@ export class CartSidebarComponent implements OnInit {
     // Clear the cart after successful payment
     this.clearCart();
     // Refresh notifications to show the new payment notification
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.notificationsService.refresh(user.id);
-    }
+    this.notificationsStore.refresh();
   }
 
   /**

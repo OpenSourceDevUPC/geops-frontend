@@ -2,7 +2,7 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
 import { NotificationType } from '../domain/model/notification.entity';
 
 /**
- * Notification resource (API DTO)
+ * Notification resource
  */
 export interface NotificationResource extends BaseResource {
   userId: number;

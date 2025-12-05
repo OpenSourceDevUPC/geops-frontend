@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, map, tap, switchMap, of } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap, switchMap, of, catchError } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Cart } from '../domain/model/cart.entity';
 import { CartItem } from '../domain/model/cart-item.entity';
@@ -56,6 +56,19 @@ export class CartApi extends BaseApi {
           updatedAt: new Date().toISOString(),
         } as Cart;
       }),
+      catchError((error) => {
+        // If cart doesn't exist (404 or any error), return empty cart
+        console.log('Cart not found for user, returning empty cart', userId);
+        return of({
+          id: 0,
+          userId,
+          items: [],
+          totalItems: 0,
+          totalAmount: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as Cart);
+      }),
       tap((cart) => this.cartSubject.next(cart))
     );
 
@@ -93,6 +106,31 @@ export class CartApi extends BaseApi {
     // Use server-side add/update item endpoints when possible
     return this.getCartByUserId(userId).pipe(
       switchMap((cart) => {
+        // If cart doesn't exist (id === 0), create it first
+        if (cart.id === 0) {
+          const assembler = new CartAssembler();
+          const resource = assembler.toResourceFromEntity(cart);
+          return this.cartEndpoint.createCartForUser(userId, resource).pipe(
+            tap((createdCart) => this.cartSubject.next(createdCart)),
+            switchMap((createdCart) => {
+              // Now add the item to the newly created cart
+              const itemResource: CartItemResource = {
+                id: Date.now(),
+                userId,
+                offerId,
+                offerTitle,
+                offerPrice,
+                offerImageUrl,
+                quantity,
+                total: quantity * offerPrice,
+              };
+              return this.cartEndpoint
+                .addItemToUser(userId, itemResource)
+                .pipe(tap((c) => this.cartSubject.next(c)));
+            })
+          );
+        }
+
         const existingItem = cart.items.find((item) => item.offerId === offerId);
         if (existingItem) {
           const newQuantity = existingItem.quantity + quantity;

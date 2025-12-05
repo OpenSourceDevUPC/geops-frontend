@@ -5,8 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
-import { CartApi } from '../../../../cart/infrastructure/cart-api';
-import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
+import { CartStore } from '../../../../cart/application/cart.store';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 
 type Offer = {
@@ -15,7 +14,7 @@ type Offer = {
   partner: string;
   price: number;
   codePrefix: string;
-  validTo: string;
+  validUntil: string;
   rating: number;
   location: string;
   category: string;
@@ -32,8 +31,7 @@ type Offer = {
 
 export class CategoriasComponent implements OnInit, OnDestroy {
 
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  private readonly cartStore = inject(CartStore);
 
   loading = false;
   all: Offer[] = [];
@@ -288,25 +286,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    this.cartApi.addItemToCart(
-      this.userId,
-      o.id,
-      offerTitle,
-      o.price,
-      offerImageUrl,
-      1
-    ).subscribe({
-      next: () => {
-        // Reset payment flow when items are added
-        this.cartUiService.resetPaymentFlow();
-        // Could show a success message here
-        console.log('Item added to cart successfully');
-      },
-      error: (error) => {
-        console.error('Error adding item to cart:', error);
-        // Could show an error message here
-      }
-    });
+    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
   }
 
   /**
@@ -314,25 +294,11 @@ export class CategoriasComponent implements OnInit, OnDestroy {
    * @param o - offer to buy
    */
   buyNow(o: Offer) {
-    // Using hardcoded user ID for now - in real app would come from auth service
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    // Add to cart first, then open cart sidebar
-    this.cartApi
-      .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
-      .subscribe({
-        next: () => {
-          console.log('Item added to cart successfully');
-          // Reset payment flow when items are added
-          this.cartUiService.resetPaymentFlow();
-          // Open the cart sidebar after adding the item
-          this.cartUiService.openCart();
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-          // Could show an error message here
-        },
-      });
+    // Add to cart and open sidebar
+    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+    this.cartStore.openSidebar();
   }
 }

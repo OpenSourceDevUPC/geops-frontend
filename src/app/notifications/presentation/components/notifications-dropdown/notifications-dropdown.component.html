@@ -2,8 +2,8 @@
   mat-icon-button
   [matMenuTriggerFor]="notificationMenu"
   class="notification-btn"
-  [matBadge]="notificationsService.unreadCount()"
-  [matBadgeHidden]="notificationsService.unreadCount() === 0"
+  [matBadge]="store.unreadCount()"
+  [matBadgeHidden]="store.unreadCount() === 0"
   matBadgeColor="warn"
   [attr.aria-label]="'Notificaciones'">
   <mat-icon>notifications</mat-icon>
@@ -13,10 +13,10 @@
   <div class="notification-header" (click)="$event.stopPropagation()">
     <h3>Notificaciones</h3>
     <div class="notification-actions">
-      <button mat-icon-button (click)="onRefresh()" [disabled]="notificationsService.isLoading()">
+      <button mat-icon-button (click)="onRefresh()" [disabled]="store.loading()">
         <mat-icon>refresh</mat-icon>
       </button>
-      @if (notificationsService.unreadCount() > 0) {
+      @if (store.unreadCount() > 0) {
         <button mat-icon-button (click)="onMarkAllAsRead()">
           <mat-icon>done_all</mat-icon>
         </button>
@@ -27,18 +27,18 @@
   <mat-divider></mat-divider>
 
   <div class="notification-list" (click)="$event.stopPropagation()">
-    @if (notificationsService.isLoading()) {
+    @if (store.loading()) {
       <div class="loading-container">
         <mat-spinner diameter="40"></mat-spinner>
         <p>Cargando notificaciones...</p>
       </div>
-    } @else if (notificationsService.notifications().length === 0) {
+    } @else if (store.notifications().length === 0) {
       <div class="empty-state">
         <mat-icon>notifications_none</mat-icon>
         <p>No hay notificaciones</p>
       </div>
     } @else {
-      @for (notification of notificationsService.notifications(); track notification.id) {
+      @for (notification of store.notifications(); track notification.id) {
         <div
           class="notification-item"
           [class.unread]="!notification.isRead"

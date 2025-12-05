@@ -5,7 +5,7 @@
 
     <section *ngIf="!loading && active() as o" class="card">
       <div class="left">
-        <h1 class="title">{{ ('offersData.titles.' + o.id) | translate }}</h1>
+        <h1 class="title">{{ o.title || (('offersData.titles.' + o.id) | translate) }}</h1>
 
         <div class="partner">{{ o.partner }}</div>
 
@@ -24,7 +24,7 @@
 
       <div class="right">
         <div class="img-wrap">
-          <img [src]="imgFor(o)" [alt]="('offersData.titles.' + o.id) | translate" />
+          <img [src]="imgFor(o)" [alt]="o.title || (('offersData.titles.' + o.id) | translate)" />
         </div>
       </div>
 
@@ -109,7 +109,7 @@
       <article class="offer-card" *ngFor="let o of filtered">
 
         <div class="img-box" tabindex="0">
-          <img [src]="imgFor(o)" [alt]="('offersData.titles.' + o.id) | translate" />
+          <img [src]="imgFor(o)" [alt]="o.title || (('offersData.titles.' + o.id) | translate)" />
           <button class="fav" type="button"
                   [class.active]="isFav(o.id)"
                   (click)="toggleFav(o)">
@@ -129,7 +129,7 @@
         </div>
 
         <div class="card-body">
-          <h3 class="ttl">{{ ('offersData.titles.' + o.id) | translate }}</h3>
+          <h3 class="ttl">{{ o.title || (('offersData.titles.' + o.id) | translate) }}</h3>
           <div class="pname">{{ o.partner }}</div>
 
           <div class="stars-row">

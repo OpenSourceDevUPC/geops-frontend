@@ -1,8 +1,15 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { OffersApiEndpoint } from '../../../../loyalty/infrastructure/offers/offers-api-endpoint';
+import { Coupon } from '../../../domain/model/coupon.entity';
 
+/**
+ * Coupon Item Component
+ *
+ * Displays a single coupon with its details including offer information and payment date.
+ * Allows users to copy the coupon code to clipboard.
+ */
 @Component({
   selector: 'app-coupon-item',
   standalone: true,
@@ -10,12 +17,14 @@ import { OffersApiEndpoint } from '../../../../loyalty/infrastructure/offers/off
   templateUrl: './coupon-item.html',
   styleUrls: ['./coupon-item.css']
 })
-export class CouponItemComponent implements OnInit{
-  @Input() coupon: any = {};
+export class CouponItemComponent implements OnInit {
+  @Input() coupon: Coupon | any = {};
+
   title?: string;
-  private offersApi = inject(OffersApiEndpoint);
   offerPrice?: number;
   paymentDate?: string;
+
+  private readonly offersApi = inject(OffersApiEndpoint);
 
   ngOnInit(): void {
     // Prefer embedded offer data when available to avoid extra HTTP calls
@@ -43,10 +52,13 @@ export class CouponItemComponent implements OnInit{
     }
   }
 
-  copy(){
+  /**
+   * Copy coupon code to clipboard
+   */
+  copy(): void {
     try {
       navigator.clipboard.writeText(this.coupon.code);
-    } catch(e){
+    } catch(e) {
       console.warn('Copy failed', e);
     }
   }

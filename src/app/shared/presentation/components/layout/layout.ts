@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import {Router, RouterLink, RouterOutlet, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,13 +15,13 @@ import { OwnerToolbarComponent } from '../../../../loyalty/presentation/componen
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageSwitcher} from '../language-switcher/language-switcher';
 import { CartSidebarComponent } from '../../../../cart/presentation/components/cart-sidebar/cart-sidebar.component';
-import { CartApi } from '../../../../cart/infrastructure/cart-api';
-import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
+import { CartStore } from '../../../../cart/application/cart.store';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {CommonModule} from '@angular/common';
 import { NavigationLoadingService } from '../../services/navigation-loading.service';
 import { NavigationBackdropComponent } from '../navigation-backdrop/navigation-backdrop.component';
 import { NotificationsDropdownComponent } from '../../../../notifications/presentation/components/notifications-dropdown/notifications-dropdown.component';
+import { NotificationsStore } from '../../../../notifications/application/notifications.store';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -52,19 +52,19 @@ import { filter } from 'rxjs/operators';
   styleUrl: './layout.css'
 })
 export class Layout implements OnInit {
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  readonly cartStore = inject(CartStore);
+  readonly notificationsStore = inject(NotificationsStore);
   private readonly navigationLoadingService = inject(NavigationLoadingService);
-
-  @ViewChild(CartSidebarComponent) cartSidebar!: CartSidebarComponent;
 
   q = '';
   userName = 'Usuario';
   userEmail = 'usuario@geops.com';
-  cartCount = signal(0);
   isMobileMenuOpen = signal(false);
   isSearchFocused = signal(false);
   isOwner = signal(false);
+
+  // Use cartStore's signals directly
+  cartCount = this.cartStore.totalItems;
 
   constructor(
     public authService: AuthService,
@@ -90,7 +90,6 @@ export class Layout implements OnInit {
       }
     });
   }
-
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     if (user) {
@@ -98,30 +97,18 @@ export class Layout implements OnInit {
       this.userEmail = user.email || 'usuario@geops.com';
       this.isOwner.set(user.role === 'OWNER');
       console.log('[Layout] Usuario actual:', this.userName, 'Rol:', user.role, 'IsOwner:', this.isOwner());
+
+      // Load notifications for authenticated user
+      this.notificationsStore.loadNotifications(user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
-    // Subscribe to cart count changes
-    this.cartApi.getCartCount().subscribe(count => {
-      this.cartCount.set(count);
-    });
-
-    // Subscribe to cart open requests
-    this.cartUiService.openCart$.subscribe(() => {
-      this.openCart();
-    });
+    // No need to subscribe - cartStore handles everything internally
   }
 
   get userInitial() {
     const n = this.userName?.trim();
     return n ? n[0].toUpperCase() : '?';
-  }
-
-  /**
-   * Open cart sidebar
-   */
-  openCart() {
-    this.cartSidebar.open();
   }
 
   doSearch() {

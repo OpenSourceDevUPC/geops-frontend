@@ -490,8 +490,190 @@
     },
     "latestCampaigns": "Latest campaigns"
   },
+  "campaigns": {
+    "title": "Campaigns",
+    "tabs": {
+      "active": "Active",
+      "paused": "Paused",
+      "finalized": "Finalized"
+    },
+    "empty": {
+      "active": "No active campaigns",
+      "paused": "No paused campaigns",
+      "finalized": "No finalized campaigns"
+    },
+    "actions": {
+      "create": "Create new campaign",
+      "edit": "Edit",
+      "pause": "Pause",
+      "resume": "Resume",
+      "activate": "Activate",
+      "finalize": "Finalize",
+      "view": "View",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "addOffers": "Add Offers",
+      "removeOffer": "Remove Offer",
+      "back": "Back",
+      "download": "Download Report",
+      "print": "Print"
+    },
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "finalized": "Finalized"
+    },
+    "form": {
+      "createTitle": "Create New Campaign",
+      "editTitle": "Edit Campaign",
+      "name": "Campaign Name",
+      "namePlaceholder": "E.g: Summer Promotion 2025",
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 3 characters",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your campaign...",
+      "descriptionRequired": "Description is required",
+      "descriptionMinLength": "Description must be at least 10 characters",
+      "startDate": "Start Date",
+      "startDateRequired": "Start date is required",
+      "endDate": "End Date",
+      "endDateRequired": "End date is required",
+      "budget": "Estimated Budget (S/.)",
+      "budgetPlaceholder": "0.00",
+      "budgetRequired": "Budget is required",
+      "budgetMin": "Budget must be greater than or equal to 0",
+      "status": "Status",
+      "initialStatus": "Initial Status",
+      "statusRequired": "Status is required",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "createButton": "Create Campaign",
+      "saveButton": "Save Changes"
+    },
+    "stats": {
+      "title": "Campaign Statistics",
+      "impressions": "Impressions",
+      "clicks": "Clicks",
+      "ctr": "CTR",
+      "budget": "Budget",
+      "totalCampaigns": "Total Campaigns",
+      "totalImpressions": "Total Impressions",
+      "totalClicks": "Total Clicks",
+      "totalBudget": "Total Budget",
+      "averageCTR": "Average CTR"
+    },
+    "details": {
+      "title": "Campaign Details",
+      "loading": "Loading campaign...",
+      "description": "Description",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "estimatedBudget": "Estimated Budget",
+      "associatedOffers": "Associated Offers"
+    },
+    "offers": {
+      "title": "Campaign Offers",
+      "empty": "No offers added yet",
+      "add": "Add Offers",
+      "remove": "Remove",
+      "view": "View Offer",
+      "select": "Select Offers",
+      "selected": "{{count}} selected",
+      "availableOffers": "Available Offers",
+      "searchPlaceholder": "Search offers..."
+    },
+    "reports": {
+      "title": "Campaign Reports",
+      "filterByStatus": "Filter by Status",
+      "allCampaigns": "All Campaigns",
+      "exportFormat": "Export Format",
+      "summary": "General Summary",
+      "byStatus": "By Status",
+      "preview": "Preview"
+    },
+    "dashboard": {
+      "title": "Dashboard - Campaign Summary",
+      "subtitle": "Control Panel",
+      "allCampaigns": "All Campaigns"
+    },
+    "messages": {
+      "createSuccess": "Campaign created successfully",
+      "updateSuccess": "Campaign updated successfully",
+      "pauseSuccess": "Campaign paused",
+      "resumeSuccess": "Campaign resumed",
+      "finalizeSuccess": "Campaign finalized",
+      "deleteSuccess": "Campaign deleted",
+      "error": "An error occurred. Please try again."
+    }
+  },
+  "reviewsPage": {
+    "title": "Comments and Reviews",
+    "addReview": "Add Review",
+    "cancel": "Cancel",
+    "loading": "Loading reviews...",
+    "error": "Error loading reviews",
+    "retry": "Retry",
+    "statistics": {
+      "averageRating": "Average Rating",
+      "totalReviews": "Total Reviews",
+      "totalLikes": "Total Likes",
+      "distribution": "Rating Distribution"
+    },
+    "form": {
+      "newReview": "New Review",
+      "rating": "Rating",
+      "ratingRequired": "Rating is required",
+      "excellent": "Excellent",
+      "veryGood": "Very Good",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "comment": "Comment",
+      "commentPlaceholder": "Write your review here (minimum 10 characters)",
+      "commentRequired": "Comment is required",
+      "commentMinLength": "Minimum 10 characters",
+      "commentMaxLength": "Comment must not exceed 500 characters",
+      "submit": "Publish Review",
+      "submitting": "Publishing..."
+    },
+    "actions": {
+      "addReview": "Add Review",
+      "cancel": "Cancel",
+      "publish": "Publish Review",
+      "retry": "Retry",
+      "like": "Like",
+      "unlike": "Unlike",
+      "reply": "Reply",
+      "edit": "Edit",
+      "delete": "Delete",
+      "report": "Report"
+    },
+    "filters": {
+      "sortBy": "Sort by",
+      "mostRecent": "Most Recent",
+      "highestRating": "Highest Rating",
+      "mostLikes": "Most Likes",
+      "filterByRating": "Filter by rating",
+      "all": "All",
+      "stars": "stars"
+    },
+    "empty": {
+      "noReviews": "No reviews available",
+      "beFirst": "Be the first to review"
+    },
+    "messages": {
+      "createSuccess": "Review published successfully",
+      "updateSuccess": "Review updated successfully",
+      "deleteSuccess": "Review deleted",
+      "likeSuccess": "Thanks for your feedback!",
+      "error": "An error occurred. Please try again."
+    }
+  },
   "coupons": {
-    "title": "My Coupons"
+    "title": "My Coupons",
+    "loading": "Loading coupons...",
+    "empty": "You don't have any coupons yet. Buy an offer to get your first coupon!",
+    "error": "Error loading coupons. Please try again."
   },
   "footer": {
     "tagline": "Offers and coupons near you",

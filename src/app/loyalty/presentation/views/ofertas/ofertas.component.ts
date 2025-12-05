@@ -5,8 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
-import { CartApi } from '../../../../cart/infrastructure/cart-api';
-import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
+import { CartStore } from '../../../../cart/application/cart.store';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 
 type Offer = {
@@ -15,7 +14,7 @@ type Offer = {
   partner: string;
   price: number;
   codePrefix: string;
-  validTo: string;
+  validUntil: string;
   rating: number;
   location: string;
   category: string;
@@ -35,8 +34,7 @@ type Offer = {
  */
 export class OfertasComponent implements OnInit, OnDestroy {
 
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  private readonly cartStore = inject(CartStore);
 
   loading = false;
   all: Offer[] = [];
@@ -316,7 +314,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const clickedInsideDropdown = target.closest('.custom-select-wrapper');
-    
+
     if (!clickedInsideDropdown) {
       this.categoryOpen = false;
       this.sortOpen = false;
@@ -384,22 +382,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    this.cartApi.addItemToCart(
-      this.userId,
-      o.id,
-      offerTitle,
-      o.price,
-      offerImageUrl,
-      1
-    ).subscribe({
-      next: () => {
-        this.cartUiService.resetPaymentFlow();
-        console.log('Item added to cart successfully');
-      },
-      error: (error) => {
-        console.error('Error adding item to cart:', error);
-      }
-    });
+    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
   }
 
   /**
@@ -410,17 +393,8 @@ export class OfertasComponent implements OnInit, OnDestroy {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    this.cartApi
-      .addItemToCart(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1)
-      .subscribe({
-        next: () => {
-          console.log('Item added to cart successfully');
-          this.cartUiService.resetPaymentFlow();
-          this.cartUiService.openCart();
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-        },
-      });
+    // Add to cart and open sidebar
+    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+    this.cartStore.openSidebar();
   }
 }
