@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -13,13 +13,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { CampaignService } from '../../services/campaign.service';
+import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
 import { CampaignOffer } from '../../../domain/model/offer.entity';
 import { CampaignOffersListComponent } from '../../components/campaign-offers-list/campaign-offers-list.component';
 import { AddOfferFormComponent } from '../../components/add-offer-form/add-offer-form.component';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
-import { CampaignCartCleanupService } from '../../../infrastructure/campaign-cart-cleanup.service';
 
 /**
  * EditCampaignComponent
@@ -46,6 +45,7 @@ import { CampaignCartCleanupService } from '../../../infrastructure/campaign-car
     MatSnackBarModule,
     MatTabsModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     CampaignOffersListComponent,
     AddOfferFormComponent
   ],
@@ -54,19 +54,18 @@ import { CampaignCartCleanupService } from '../../../infrastructure/campaign-car
 })
 export class EditCampaignComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly campaignService = inject(CampaignService);
+  private readonly store = inject(CampaignStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
-  private readonly cartCleanupService = inject(CampaignCartCleanupService);
 
   campaignForm: FormGroup;
-  loading = false;
-  error: string | null = null;
+  loading = this.store.loading;
+  error = this.store.error;
   campaignId: number = 0;
-  campaign: Campaign | null = null;
-  offers: CampaignOffer[] = [];
+  campaign = this.store.selectedCampaign;
+  offers = this.store.campaignOffers;
   showOfferForm: boolean = false;
   editingOffer: CampaignOffer | undefined = undefined;
 
@@ -79,6 +78,14 @@ export class EditCampaignComponent implements OnInit {
       estimatedBudget: [0, [Validators.required, Validators.min(0)]],
       status: ['PAUSED', Validators.required]
     });
+
+    // Effect to populate form when campaign loads
+    effect(() => {
+      const campaign = this.campaign();
+      if (campaign && campaign.id === this.campaignId) {
+        this.populateForm(campaign);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -90,23 +97,11 @@ export class EditCampaignComponent implements OnInit {
   }
 
   loadCampaign(): void {
-    this.loading = true;
-    this.campaignService.loadCampaignById(this.campaignId);
-
-    this.campaignService.selectedCampaign$.subscribe(campaign => {
-      if (campaign && campaign.id === this.campaignId) {
-        this.campaign = campaign;
-        this.populateForm(campaign);
-        this.loading = false;
-      }
-    });
+    this.store.loadCampaignById(this.campaignId);
   }
 
   loadOffers(): void {
-    this.campaignService.loadOffersByCampaignId(this.campaignId);
-    this.campaignService.campaignOffers$.subscribe(offers => {
-      this.offers = offers;
-    });
+    this.store.loadOffersByCampaignId(this.campaignId);
   }
 
   populateForm(campaign: Campaign): void {
@@ -121,59 +116,31 @@ export class EditCampaignComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.campaignForm.valid && this.campaign) {
-      this.loading = true;
-      this.error = null;
-
-      const oldStatus = this.campaign.status;
-      const newStatus = this.campaignForm.value.status;
-
+    const campaign = this.campaign();
+    if (this.campaignForm.valid && campaign) {
       // Ensure all required fields are present for PATCH request
       const updates: Partial<Campaign> = {
         name: this.campaignForm.value.name,
         description: this.campaignForm.value.description,
         startDate: this.campaignForm.value.startDate,
         endDate: this.campaignForm.value.endDate,
-        status: newStatus,
+        status: this.campaignForm.value.status,
         estimatedBudget: this.campaignForm.value.estimatedBudget,
         // Include existing metrics if available
-        totalImpressions: this.campaign.totalImpressions,
-        totalClicks: this.campaign.totalClicks,
-        CTR: this.campaign.CTR
+        totalImpressions: campaign.totalImpressions,
+        totalClicks: campaign.totalClicks,
+        CTR: campaign.CTR
       };
 
-      // If changing from ACTIVE to PAUSED/FINALIZED, clean carts first
-      if (oldStatus === 'ACTIVE' && (newStatus === 'PAUSED' || newStatus === 'FINALIZED')) {
-        this.cartCleanupService.removeOffersFromAllCarts(this.campaignId).subscribe({
-          next: () => {
-            // Then update campaign
-            this.updateCampaignAndNavigate(updates);
-          },
-          error: (err) => {
-            console.error('[EditCampaign] Error cleaning carts:', err);
-            this.snackBar.open('Error al limpiar carritos', 'Cerrar', { duration: 3000 });
-            this.loading = false;
-          }
-        });
-      } else {
-        // No cart cleanup needed, just update
-        this.updateCampaignAndNavigate(updates);
-      }
-    }
-  }
+      // Store's updateCampaign automatically handles cart cleanup when status changes
+      this.store.updateCampaign(this.campaignId, updates);
 
-  private updateCampaignAndNavigate(updates: Partial<Campaign>): void {
-    this.campaignService.updateCampaign(this.campaignId, updates).subscribe({
-      next: (updatedCampaign) => {
+      // Wait for store update then navigate
+      setTimeout(() => {
         this.snackBar.open('Campaña actualizada exitosamente', 'Cerrar', { duration: 3000 });
         this.router.navigate(['/campañas']);
-      },
-      error: (err) => {
-        this.error = 'Error al actualizar campaña';
-        this.loading = false;
-        this.snackBar.open('Error al actualizar campaña', 'Cerrar', { duration: 3000 });
-      }
-    });
+      }, 500);
+    }
   }
 
   onCancel(): void {
@@ -195,30 +162,18 @@ export class EditCampaignComponent implements OnInit {
   onSaveOffer(offerData: Partial<CampaignOffer>): void {
     if (this.editingOffer && this.editingOffer.id) {
       // Update existing offer
-      this.campaignService.updateOffer(this.editingOffer.id, offerData).subscribe({
-        next: () => {
-          this.snackBar.open('Oferta actualizada exitosamente', 'Cerrar', { duration: 3000 });
-          this.loadOffers();
-          this.onHideOfferForm();
-        },
-        error: (err) => {
-          console.error('[EditCampaign] Error updating offer:', err);
-          this.snackBar.open('Error al actualizar oferta', 'Cerrar', { duration: 3000 });
-        }
-      });
+      this.store.updateOffer(this.editingOffer.id, offerData);
+      setTimeout(() => {
+        this.snackBar.open('Oferta actualizada exitosamente', 'Cerrar', { duration: 3000 });
+        this.onHideOfferForm();
+      }, 300);
     } else {
       // Create new offer
-      this.campaignService.createOffer(offerData).subscribe({
-        next: () => {
-          this.snackBar.open('Oferta agregada exitosamente', 'Cerrar', { duration: 3000 });
-          this.loadOffers();
-          this.onHideOfferForm();
-        },
-        error: (err) => {
-          console.error('[EditCampaign] Error creating offer:', err);
-          this.snackBar.open('Error al agregar oferta', 'Cerrar', { duration: 3000 });
-        }
-      });
+      this.store.createOffer(offerData);
+      setTimeout(() => {
+        this.snackBar.open('Oferta agregada exitosamente', 'Cerrar', { duration: 3000 });
+        this.onHideOfferForm();
+      }, 300);
     }
   }
 
@@ -228,7 +183,7 @@ export class EditCampaignComponent implements OnInit {
   }
 
   onDeleteOffer(offerId: number): void {
-    const offer = this.offers.find(o => o.id === offerId);
+    const offer = this.offers().find(o => o.id === offerId);
     if (!offer) return;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -243,16 +198,10 @@ export class EditCampaignComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.campaignService.deleteOffer(offerId).subscribe({
-          next: () => {
-            this.snackBar.open('Oferta eliminada exitosamente', 'Cerrar', { duration: 3000 });
-            this.loadOffers();
-          },
-          error: (err) => {
-            console.error('[EditCampaign] Error deleting offer:', err);
-            this.snackBar.open('Error al eliminar oferta', 'Cerrar', { duration: 3000 });
-          }
-        });
+        this.store.deleteOffer(offerId);
+        setTimeout(() => {
+          this.snackBar.open('Oferta eliminada exitosamente', 'Cerrar', { duration: 3000 });
+        }, 300);
       }
     });
   }

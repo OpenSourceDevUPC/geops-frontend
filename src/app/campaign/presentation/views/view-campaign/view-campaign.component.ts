@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-import { CampaignService } from '../../services/campaign.service';
+import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
 import { CampaignOffer } from '../../../domain/model/offer.entity';
 
@@ -32,40 +32,21 @@ import { CampaignOffer } from '../../../domain/model/offer.entity';
   styleUrls: ['./view-campaign.component.css']
 })
 export class ViewCampaignComponent implements OnInit {
-  private readonly campaignService = inject(CampaignService);
+  private readonly store = inject(CampaignStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  loading = false;
-  campaignId: number = 0;
-  campaign: Campaign | null = null;
-  offers: CampaignOffer[] = [];
+  // Public reactive signals from store
+  loading = this.store.loading;
+  campaign = this.store.selectedCampaign;
+  offers = this.store.campaignOffers;
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.campaignId = +params['id'];
-      this.loadCampaign();
-      this.loadOffers();
-    });
-  }
+    const campaignId = +this.route.snapshot.params['id'];
 
-  loadCampaign(): void {
-    this.loading = true;
-    this.campaignService.loadCampaignById(this.campaignId);
-
-    this.campaignService.selectedCampaign$.subscribe(campaign => {
-      if (campaign && campaign.id === this.campaignId) {
-        this.campaign = campaign;
-        this.loading = false;
-      }
-    });
-  }
-
-  loadOffers(): void {
-    this.campaignService.loadOffersByCampaignId(this.campaignId);
-    this.campaignService.campaignOffers$.subscribe(offers => {
-      this.offers = offers;
-    });
+    // Load campaign and offers data using store methods
+    this.store.loadCampaignById(campaignId);
+    this.store.loadOffersByCampaignId(campaignId);
   }
 
   getStatusColor(status: string): string {
@@ -95,7 +76,10 @@ export class ViewCampaignComponent implements OnInit {
   }
 
   onEdit(): void {
-    this.router.navigate(['/editar-campaña', this.campaignId]);
+    const campaignId = this.campaign()?.id;
+    if (campaignId) {
+      this.router.navigate(['/editar-campaña', campaignId]);
+    }
   }
 
   onBack(): void {

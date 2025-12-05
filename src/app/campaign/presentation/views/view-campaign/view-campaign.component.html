@@ -12,20 +12,20 @@
   </div>
 
   <!-- Loading Spinner -->
-  <div *ngIf="loading && !campaign" class="loading-container">
+  <div *ngIf="loading() && !campaign()" class="loading-container">
     <mat-spinner></mat-spinner>
     <p>Cargando campaña...</p>
   </div>
 
   <!-- Campaign Details -->
-  <div *ngIf="campaign" class="campaign-details">
+  <div *ngIf="campaign()" class="campaign-details">
     <!-- Campaign Info Card -->
     <mat-card class="info-card">
       <mat-card-header>
         <div class="card-header-content">
-          <mat-card-title>{{ campaign.name }}</mat-card-title>
-          <span class="campaign-status" [style.backgroundColor]="getStatusColor(campaign.status)">
-            {{ getStatusLabel(campaign.status) }}
+          <mat-card-title>{{ campaign()!.name }}</mat-card-title>
+          <span class="campaign-status" [style.backgroundColor]="getStatusColor(campaign()!.status)">
+            {{ getStatusLabel(campaign()!.status) }}
           </span>
         </div>
       </mat-card-header>
@@ -34,23 +34,23 @@
         <div class="info-grid">
           <div class="info-item">
             <label>Descripción</label>
-            <p>{{ campaign.description }}</p>
+            <p>{{ campaign()!.description }}</p>
           </div>
 
           <div class="info-row">
             <div class="info-item">
               <label>Fecha de Inicio</label>
-              <p>{{ campaign.startDate | date:'dd/MM/yyyy' }}</p>
+              <p>{{ campaign()!.startDate | date:'dd/MM/yyyy' }}</p>
             </div>
             <div class="info-item">
               <label>Fecha de Fin</label>
-              <p>{{ campaign.endDate | date:'dd/MM/yyyy' }}</p>
+              <p>{{ campaign()!.endDate | date:'dd/MM/yyyy' }}</p>
             </div>
           </div>
 
           <div class="info-item">
             <label>Presupuesto Estimado</label>
-            <p class="budget">S/ {{ campaign.estimatedBudget | number:'1.2-2' }}</p>
+            <p class="budget">S/ {{ campaign()!.estimatedBudget | number:'1.2-2' }}</p>
           </div>
         </div>
       </mat-card-content>
@@ -68,7 +68,7 @@
             <mat-icon>visibility</mat-icon>
             <div class="stat-content">
               <span class="stat-label">Impresiones</span>
-              <span class="stat-value">{{ campaign.totalImpressions | number }}</span>
+              <span class="stat-value">{{ campaign()!.totalImpressions | number }}</span>
             </div>
           </div>
 
@@ -76,7 +76,7 @@
             <mat-icon>touch_app</mat-icon>
             <div class="stat-content">
               <span class="stat-label">Clicks</span>
-              <span class="stat-value">{{ campaign.totalClicks | number }}</span>
+              <span class="stat-value">{{ campaign()!.totalClicks | number }}</span>
             </div>
           </div>
 
@@ -84,7 +84,7 @@
             <mat-icon>trending_up</mat-icon>
             <div class="stat-content">
               <span class="stat-label">CTR</span>
-              <span class="stat-value">{{ campaign.CTR | number:'1.2-2' }}%</span>
+              <span class="stat-value">{{ campaign()!.CTR | number:'1.2-2' }}%</span>
             </div>
           </div>
         </div>
@@ -94,17 +94,17 @@
     <!-- Offers Section -->
     <mat-card class="offers-card">
       <mat-card-header>
-        <mat-card-title>Ofertas Asociadas ({{ offers.length }})</mat-card-title>
+        <mat-card-title>Ofertas Asociadas ({{ offers().length }})</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
-        <div *ngIf="offers.length === 0" class="empty-state">
+        <div *ngIf="offers().length === 0" class="empty-state">
           <mat-icon>local_offer</mat-icon>
           <p>No hay ofertas asociadas a esta campaña</p>
         </div>
 
-        <div *ngIf="offers.length > 0" class="offers-list">
-          <div *ngFor="let offer of offers" class="offer-item">
+        <div *ngIf="offers().length > 0" class="offers-list">
+          <div *ngFor="let offer of offers()" class="offer-item">
             <img *ngIf="offer.imageUrl" [src]="offer.imageUrl" [alt]="offer.title" class="offer-image">
             <div class="offer-info">
               <h4>{{ offer.title }}</h4>

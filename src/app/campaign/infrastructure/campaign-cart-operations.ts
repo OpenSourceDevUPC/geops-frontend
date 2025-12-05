@@ -1,28 +1,24 @@
 import { Injectable, inject } from '@angular/core';
+import { Observable, switchMap, forkJoin, of, catchError, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, forkJoin, switchMap, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CartApi } from '../../cart/infrastructure/cart-api';
 
 /**
- * Campaign Cart Cleanup Service
+ * Infrastructure service for cross-bounded-context operations
+ * between Campaign and Cart contexts.
  *
- * Infrastructure service responsible for removing offers from all user carts
- * when a campaign changes to a non-active status (PAUSED or FINALIZED).
- *
- * This service is part of the infrastructure layer and can be reused across
- * multiple presentation components (campaigns, resumen, edit-campaign).
+ * Handles cart cleanup when campaigns change status or are deleted.
  */
 @Injectable({
   providedIn: 'root'
 })
-export class CampaignCartCleanupService {
+export class CampaignCartOperations {
   private readonly http = inject(HttpClient);
   private readonly cartApi = inject(CartApi);
 
   /**
    * Remove all offers associated with a campaign from all user carts
-   *
    * @param campaignId - The ID of the campaign whose offers should be removed
    * @returns Observable that completes when all cart items are removed
    *
@@ -32,26 +28,26 @@ export class CampaignCartCleanupService {
    * 3. For each cart, identify items that match the campaign's offers
    * 4. Remove matching items from each cart
    */
-  removeOffersFromAllCarts(campaignId: number): Observable<any> {
-    console.log('[CampaignCartCleanup] Starting cart cleanup for campaign:', campaignId);
+  removeOffersFromAllCarts(campaignId: number): Observable<void> {
+    console.log('[CampaignCartOperations] Starting cart cleanup for campaign:', campaignId);
 
     // 1. Get all offers from this campaign
     return this.http.get<any[]>(`${environment.platformProviderApiBaseUrl}/offers/campaign/${campaignId}`).pipe(
       switchMap(offers => {
         if (!offers || offers.length === 0) {
-          console.log('[CampaignCartCleanup] No offers found for campaign:', campaignId);
-          return of(null);
+          console.log('[CampaignCartOperations] No offers found for campaign:', campaignId);
+          return of(undefined);
         }
 
         const offerIds = offers.map(o => o.id);
-        console.log('[CampaignCartCleanup] Found offers to remove from carts:', offerIds);
+        console.log('[CampaignCartOperations] Found offers to remove from carts:', offerIds);
 
         // 2. Get all carts
         return this.http.get<any[]>(`${environment.platformProviderApiBaseUrl}/carts`).pipe(
           switchMap(carts => {
             if (!carts || carts.length === 0) {
-              console.log('[CampaignCartCleanup] No carts found');
-              return of(null);
+              console.log('[CampaignCartOperations] No carts found');
+              return of(undefined);
             }
 
             // 3. For each cart, remove items that match the offer IDs
@@ -64,13 +60,13 @@ export class CampaignCartCleanupService {
                   return of(null);
                 }
 
-                console.log(`[CampaignCartCleanup] Removing ${itemsToRemove.length} items from cart ${cart.userId}`);
+                console.log(`[CampaignCartOperations] Removing ${itemsToRemove.length} items from cart ${cart.userId}`);
 
-                // Remove each item from the cart
+                // Remove each item from the cart using CartApi
                 const removeRequests = itemsToRemove.map((item: any) =>
                   this.cartApi.removeItemFromCart(cart.userId, item.offerId).pipe(
                     catchError(err => {
-                      console.warn(`[CampaignCartCleanup] Error removing offer ${item.offerId} from cart ${cart.userId}:`, err);
+                      console.warn(`[CampaignCartOperations] Error removing offer ${item.offerId} from cart ${cart.userId}:`, err);
                       return of(null);
                     })
                   )
@@ -80,21 +76,21 @@ export class CampaignCartCleanupService {
               });
 
             if (removeOperations.length === 0) {
-              console.log('[CampaignCartCleanup] No items to remove from any cart');
-              return of(null);
+              console.log('[CampaignCartOperations] No items to remove from any cart');
+              return of(undefined);
             }
 
-            return forkJoin(removeOperations);
+            return forkJoin(removeOperations).pipe(map(() => undefined));
           }),
           catchError(err => {
-            console.error('[CampaignCartCleanup] Error fetching carts:', err);
-            return of(null);
+            console.error('[CampaignCartOperations] Error fetching carts:', err);
+            return of(undefined);
           })
         );
       }),
       catchError(err => {
-        console.error('[CampaignCartCleanup] Error fetching offers:', err);
-        return of(null);
+        console.error('[CampaignCartOperations] Error fetching offers:', err);
+        return of(undefined);
       })
     );
   }

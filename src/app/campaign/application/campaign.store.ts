@@ -1,14 +1,14 @@
 import { computed, Injectable, Signal, signal, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
 import { Campaign } from '../domain/model/campaign.entity';
 import { CampaignOffer } from '../domain/model/offer.entity';
 import { CampaignApi } from '../infrastructure/campaign-api';
+import { CampaignCartOperations } from '../infrastructure/campaign-cart-operations';
 
 /**
  * Application service store for managing campaign state in the 'campaign' bounded context.
  * Handles campaigns and offers using Angular signals.
- * 
+ *
  * This store replaces the old CampaignService pattern (BehaviorSubject) with Angular Signals
  * for better performance and type safety.
  */
@@ -17,6 +17,7 @@ import { CampaignApi } from '../infrastructure/campaign-api';
 })
 export class CampaignStore {
   private readonly api = inject(CampaignApi);
+  private readonly cartOperations = inject(CampaignCartOperations);
 
   // ==================== PRIVATE SIGNALS ====================
 
@@ -99,7 +100,7 @@ export class CampaignStore {
   readonly isSelectedCampaignExpired = computed(() => {
     const campaign = this.selectedCampaign();
     if (!campaign) return false;
-    
+
     const endDate = new Date(campaign.endDate);
     return endDate < new Date() || campaign.status === 'FINALIZED';
   });
@@ -111,8 +112,7 @@ export class CampaignStore {
    * Note: Initial data loading happens on-demand via loadCampaignsByUserId
    */
   constructor() {
-    // Subscribe to API observables to sync with infrastructure layer
-    this.syncWithApi();
+    // No automatic loading - data is loaded on-demand by components
   }
 
   // ==================== CAMPAIGN METHODS ====================
@@ -134,7 +134,7 @@ export class CampaignStore {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    this.api.getCampaignsByUserId(userId).pipe(takeUntilDestroyed()).subscribe({
+    this.api.getCampaignsByUserId(userId).pipe(retry(2)).subscribe({
       next: campaigns => {
         this.campaignsSignal.set(campaigns);
         this.loadingSignal.set(false);
@@ -154,7 +154,7 @@ export class CampaignStore {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    this.api.getCampaignById(id).subscribe({
+    this.api.getCampaignById(id).pipe(retry(2)).subscribe({
       next: campaign => {
         this.selectedCampaignSignal.set(campaign);
         this.loadingSignal.set(false);
@@ -195,6 +195,35 @@ export class CampaignStore {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
+    // Check if status is changing to PAUSED or FINALIZED
+    const currentCampaign = this.campaigns().find(c => c.id === id);
+    const isStatusChangingToNonActive =
+      currentCampaign?.status === 'ACTIVE' &&
+      (updates.status === 'PAUSED' || updates.status === 'FINALIZED');
+
+    // If changing to non-active status, clean carts first
+    if (isStatusChangingToNonActive) {
+      this.cartOperations.removeOffersFromAllCarts(id).subscribe({
+        next: () => {
+          this.performCampaignUpdate(id, updates);
+        },
+        error: err => {
+          this.errorSignal.set(this.formatError(err, 'Failed to clean carts'));
+          this.loadingSignal.set(false);
+        }
+      });
+    } else {
+      // Otherwise, just update
+      this.performCampaignUpdate(id, updates);
+    }
+  }
+
+  /**
+   * Perform the actual campaign update (used internally)
+   * @param id - The ID of the campaign
+   * @param updates - The updates to apply
+   */
+  private performCampaignUpdate(id: number, updates: Partial<Campaign>): void {
     this.api.updateCampaign(id, updates).pipe(retry(2)).subscribe({
       next: updated => {
         this.campaignsSignal.update(campaigns =>
@@ -214,24 +243,35 @@ export class CampaignStore {
 
   /**
    * Delete a campaign
+   * Removes all associated offers from all carts before deletion
    * @param id - The ID of the campaign to delete
    */
   deleteCampaign(id: number): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    this.api.deleteCampaign(id).pipe(retry(2)).subscribe({
+    // First, remove offers from all carts
+    this.cartOperations.removeOffersFromAllCarts(id).subscribe({
       next: () => {
-        this.campaignsSignal.update(campaigns =>
-          campaigns.filter(c => c.id !== id)
-        );
-        if (this.selectedCampaignSignal()?.id === id) {
-          this.selectedCampaignSignal.set(null);
-        }
-        this.loadingSignal.set(false);
+        // Then delete the campaign
+        this.api.deleteCampaign(id).pipe(retry(2)).subscribe({
+          next: () => {
+            this.campaignsSignal.update(campaigns =>
+              campaigns.filter(c => c.id !== id)
+            );
+            if (this.selectedCampaignSignal()?.id === id) {
+              this.selectedCampaignSignal.set(null);
+            }
+            this.loadingSignal.set(false);
+          },
+          error: err => {
+            this.errorSignal.set(this.formatError(err, 'Failed to delete campaign'));
+            this.loadingSignal.set(false);
+          }
+        });
       },
       error: err => {
-        this.errorSignal.set(this.formatError(err, 'Failed to delete campaign'));
+        this.errorSignal.set(this.formatError(err, 'Failed to clean carts before deletion'));
         this.loadingSignal.set(false);
       }
     });
@@ -277,7 +317,7 @@ export class CampaignStore {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    this.api.getOffersByCampaignId(campaignId).subscribe({
+    this.api.getOffersByCampaignId(campaignId).pipe(retry(2)).subscribe({
       next: offers => {
         this.campaignOffersSignal.set(offers);
         this.loadingSignal.set(false);
@@ -390,27 +430,6 @@ export class CampaignStore {
   }
 
   // ==================== PRIVATE METHODS ====================
-
-  /**
-   * Sync with infrastructure layer API observables
-   * This maintains compatibility with existing API layer
-   */
-  private syncWithApi(): void {
-    // Subscribe to API campaigns$ observable
-    this.api.campaigns$.pipe(takeUntilDestroyed()).subscribe(campaigns => {
-      this.campaignsSignal.set(campaigns);
-    });
-
-    // Subscribe to API selectedCampaign$ observable
-    this.api.selectedCampaign$.pipe(takeUntilDestroyed()).subscribe(campaign => {
-      this.selectedCampaignSignal.set(campaign);
-    });
-
-    // Subscribe to API campaignOffers$ observable
-    this.api.campaignOffers$.pipe(takeUntilDestroyed()).subscribe(offers => {
-      this.campaignOffersSignal.set(offers);
-    });
-  }
 
   /**
    * Format error messages for user-friendly display

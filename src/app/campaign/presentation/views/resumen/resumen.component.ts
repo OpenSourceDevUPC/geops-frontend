@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,11 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { CampaignService } from '../../services/campaign.service';
+import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign, CampaignStatus } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
-import { CampaignCartCleanupService } from '../../../infrastructure/campaign-cart-cleanup.service';
 
 /**
  * ResumenComponent
@@ -26,55 +25,46 @@ import { CampaignCartCleanupService } from '../../../infrastructure/campaign-car
   styleUrls: ['./resumen.component.css']
 })
 export class ResumenComponent implements OnInit {
-  private readonly campaignService = inject(CampaignService);
+  private readonly store = inject(CampaignStore);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly cartCleanupService = inject(CampaignCartCleanupService);
 
-  campaigns: Campaign[] = [];
-  totalImpressions = 0;
-  totalClicks = 0;
-  averageCTR = 0;
+  // Reactive signals from store
+  campaigns = this.store.campaigns;
+  loading = this.store.loading;
+
+  // Computed metrics using signals
+  totalImpressions = computed(() =>
+    this.campaigns().reduce((sum, c) => sum + (c.totalImpressions || 0), 0)
+  );
+
+  totalClicks = computed(() =>
+    this.campaigns().reduce((sum, c) => sum + (c.totalClicks || 0), 0)
+  );
+
+  averageCTR = computed(() => {
+    const campaigns = this.campaigns();
+    if (campaigns.length === 0) return 0;
+
+    const validCTRs = campaigns
+      .map((c) => c.CTR || 0)
+      .filter((ctr) => !isNaN(ctr) && isFinite(ctr));
+
+    return validCTRs.length > 0
+      ? validCTRs.reduce((sum, ctr) => sum + ctr, 0) / validCTRs.length
+      : 0;
+  });
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  loadData(): void {
-    // Get current user ID and load campaigns
+  private loadData(): void {
     const userId = this.authService.getCurrentUserId();
-
     if (userId) {
-      console.log('[Resumen] Loading campaigns for user:', userId);
-      this.campaignService.loadCampaignsByUserId(userId);
-    } else {
-      console.warn('[Resumen] No authenticated user found');
-    }
-
-    // Subscribe to campaigns changes
-    this.campaignService.campaigns$.subscribe(campaigns => {
-      this.campaigns = campaigns;
-      this.calculateMetrics();
-    });
-  }
-
-  private calculateMetrics(): void {
-    this.totalImpressions = this.campaigns.reduce((sum, c) => sum + (c.totalImpressions || 0), 0);
-    this.totalClicks = this.campaigns.reduce((sum, c) => sum + (c.totalClicks || 0), 0);
-
-    // Calculate average CTR safely
-    if (this.campaigns.length > 0) {
-      const validCTRs = this.campaigns
-        .map((c) => c.CTR || 0)
-        .filter((ctr) => !isNaN(ctr) && isFinite(ctr));
-
-      this.averageCTR = validCTRs.length > 0
-        ? validCTRs.reduce((sum, ctr) => sum + ctr, 0) / validCTRs.length
-        : 0;
-    } else {
-      this.averageCTR = 0;
+      this.store.loadCampaignsByUserId(userId);
     }
   }
 
@@ -114,7 +104,6 @@ export class ResumenComponent implements OnInit {
    * View campaign details (read-only)
    */
   onView(campaignId: number): void {
-    console.log('[Resumen] Viewing campaign:', campaignId);
     this.router.navigate(['/ver-campaña', campaignId]);
   }
 
@@ -122,16 +111,14 @@ export class ResumenComponent implements OnInit {
    * Edit campaign
    */
   onEdit(campaignId: number): void {
-    console.log('[Resumen] Editing campaign:', campaignId);
     this.router.navigate(['/editar-campaña', campaignId]);
   }
 
   /**
    * Toggle campaign active/paused status
-   * IMPORTANT: Backend requires all mandatory fields in PATCH request
    */
   onToggleStatus(campaignId: number): void {
-    const campaign = this.campaigns.find(c => c.id === campaignId);
+    const campaign = this.campaigns().find(c => c.id === campaignId);
     if (!campaign) return;
 
     const newStatus: CampaignStatus = campaign.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
@@ -148,7 +135,6 @@ export class ResumenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        // Send all required fields for PATCH
         const updates: Partial<Campaign> = {
           name: campaign.name,
           description: campaign.description,
@@ -161,40 +147,8 @@ export class ResumenComponent implements OnInit {
           CTR: campaign.CTR
         };
 
-        // If changing to PAUSED, clean carts first
-        if (newStatus === 'PAUSED') {
-          this.cartCleanupService.removeOffersFromAllCarts(campaignId).subscribe({
-            next: () => {
-              // Then update campaign status
-              this.campaignService.updateCampaign(campaignId, updates).subscribe({
-                next: () => {
-                  this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
-                  this.loadData();
-                },
-                error: (err) => {
-                  console.error('[Resumen] Error toggling status:', err);
-                  this.snackBar.open('Error al cambiar el estado de la campaña', 'Cerrar', { duration: 3000 });
-                }
-              });
-            },
-            error: (err) => {
-              console.error('[Resumen] Error cleaning carts:', err);
-              this.snackBar.open('Error al limpiar carritos', 'Cerrar', { duration: 3000 });
-            }
-          });
-        } else {
-          // If changing to ACTIVE, just update status
-          this.campaignService.updateCampaign(campaignId, updates).subscribe({
-            next: () => {
-              this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
-              this.loadData();
-            },
-            error: (err) => {
-              console.error('[Resumen] Error toggling status:', err);
-              this.snackBar.open('Error al cambiar el estado de la campaña', 'Cerrar', { duration: 3000 });
-            }
-          });
-        }
+        this.store.updateCampaign(campaignId, updates);
+        this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
       }
     });
   }
@@ -203,7 +157,7 @@ export class ResumenComponent implements OnInit {
    * Delete campaign with confirmation
    */
   onDelete(campaignId: number): void {
-    const campaign = this.campaigns.find(c => c.id === campaignId);
+    const campaign = this.campaigns().find(c => c.id === campaignId);
     if (!campaign) return;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -218,26 +172,45 @@ export class ResumenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        // First, clean carts
-        this.cartCleanupService.removeOffersFromAllCarts(campaignId).subscribe({
-          next: () => {
-            // Then delete campaign
-            this.campaignService.deleteCampaign(campaignId).subscribe({
-              next: () => {
-                this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', { duration: 3000 });
-                this.loadData();
-              },
-              error: (err) => {
-                console.error('[Resumen] Error deleting campaign:', err);
-                this.snackBar.open('Error al eliminar la campaña', 'Cerrar', { duration: 3000 });
-              }
-            });
-          },
-          error: (err) => {
-            console.error('[Resumen] Error cleaning carts:', err);
-            this.snackBar.open('Error al limpiar carritos', 'Cerrar', { duration: 3000 });
-          }
-        });
+        this.store.deleteCampaign(campaignId);
+        this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  /**
+   * Finalize campaign (change status to FINALIZED)
+   */
+  onFinalize(campaignId: number): void {
+    const campaign = this.campaigns().find(c => c.id === campaignId);
+    if (!campaign) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: '¿Finalizar campaña?',
+        message: `¿Estás seguro de que deseas finalizar la campaña "${campaign.name}"? Esta acción no se podrá revertir.`,
+        confirmText: 'Finalizar',
+        cancelText: 'Cancelar',
+        isDanger: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        const updates: Partial<Campaign> = {
+          name: campaign.name,
+          description: campaign.description,
+          startDate: campaign.startDate,
+          endDate: campaign.endDate,
+          estimatedBudget: campaign.estimatedBudget,
+          status: 'FINALIZED' as const,
+          totalImpressions: campaign.totalImpressions,
+          totalClicks: campaign.totalClicks,
+          CTR: campaign.CTR
+        };
+
+        this.store.updateCampaign(campaignId, updates);
+        this.snackBar.open('Campaña finalizada exitosamente', 'Cerrar', { duration: 3000 });
       }
     });
   }

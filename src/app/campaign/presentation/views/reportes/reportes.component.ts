@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { CampaignService } from '../../services/campaign.service';
+import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
@@ -24,10 +24,10 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
   styleUrls: ['./reportes.component.css']
 })
 export class ReportesComponent implements OnInit {
-  private readonly campaignService = inject(CampaignService);
+  private readonly store = inject(CampaignStore);
   private readonly authService = inject(AuthService);
 
-  campaigns: Campaign[] = [];
+  campaigns = this.store.campaigns;
   filterStatus: string = 'ALL';
   reportFormat: 'json' | 'csv' = 'json';
 
@@ -38,18 +38,16 @@ export class ReportesComponent implements OnInit {
   loadCampaigns(): void {
     const userId = this.authService.getCurrentUserId();
     if (userId) {
-      this.campaignService.loadCampaignsByUserId(userId);
-      this.campaignService.campaigns$.subscribe(campaigns => {
-        this.campaigns = campaigns;
-      });
+      this.store.loadCampaignsByUserId(userId);
     }
   }
 
   get filteredCampaigns(): Campaign[] {
+    const campaigns = this.campaigns();
     if (this.filterStatus === 'ALL') {
-      return this.campaigns;
+      return campaigns;
     }
-    return this.campaigns.filter(c => c.status === this.filterStatus);
+    return campaigns.filter(c => c.status === this.filterStatus);
   }
 
   get reportData(): any {

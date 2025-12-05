@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { CampaignService } from '../../services/campaign.service';
+import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
@@ -40,13 +40,13 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
 })
 export class CrearCampaignComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly campaignService = inject(CampaignService);
+  private readonly store = inject(CampaignStore);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
   campaignForm: FormGroup;
-  loading = false;
-  error: string | null = null;
+  loading = this.store.loading;
+  error = this.store.error;
 
   constructor() {
     this.campaignForm = this.fb.group({
@@ -60,27 +60,18 @@ export class CrearCampaignComponent {
   }
 
   onSubmit(): void {
-    if (!this.loading) {
-      this.loading = true;
-      this.error = null;
-
+    if (this.campaignForm.valid && !this.loading()) {
       const campaign: Partial<Campaign> = {
         ...this.campaignForm.value,
-        userId: this.getUserId(), // Get from auth service
+        userId: this.getUserId(),
         totalImpressions: 0,
         totalClicks: 0,
         ctr: 0
       };
 
-      this.campaignService.createCampaign(campaign).subscribe({
-        next: () => {
-          this.router.navigate(['/campañas']);
-        },
-        error: (err) => {
-          this.error = 'Error al crear campaña';
-          this.loading = false;
-        }
-      });
+      this.store.createCampaign(campaign);
+      // Navigate after a short delay to allow store to update
+      setTimeout(() => this.router.navigate(['/campañas']), 500);
     }
   }
 
