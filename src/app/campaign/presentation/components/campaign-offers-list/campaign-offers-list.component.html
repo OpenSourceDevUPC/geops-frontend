@@ -9,14 +9,14 @@
       <div class="offer-image-container" *ngIf="offer.imageUrl">
         <img [src]="offer.imageUrl" [alt]="offer.title" class="offer-image">
       </div>
-      
+
       <mat-card-content>
         <h3 class="offer-title">{{ offer.title }}</h3>
         <p class="offer-partner">
           <mat-icon>store</mat-icon>
           {{ offer.partner }}
         </p>
-        
+
         <div class="offer-price">
           <span class="current-price">S/ {{ offer.price | number:'1.2-2' }}</span>
           <span *ngIf="offer.originalPrice" class="original-price">

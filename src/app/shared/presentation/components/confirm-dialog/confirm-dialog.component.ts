@@ -28,17 +28,17 @@ export interface ConfirmDialogData {
         <mat-icon>{{ data.isDanger ? 'warning' : 'help_outline' }}</mat-icon>
         <h2 mat-dialog-title>{{ data.title }}</h2>
       </div>
-      
+
       <mat-dialog-content>
         <p>{{ data.message }}</p>
       </mat-dialog-content>
-      
+
       <mat-dialog-actions align="end">
         <button mat-button (click)="onCancel()">
           {{ data.cancelText || 'Cancelar' }}
         </button>
-        <button 
-          mat-raised-button 
+        <button
+          mat-raised-button
           [color]="data.isDanger ? 'warn' : 'primary'"
           (click)="onConfirm()">
           {{ data.confirmText || 'Confirmar' }}

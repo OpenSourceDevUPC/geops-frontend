@@ -63,7 +63,7 @@ export class AddOfferFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.isEditMode = !!this.offer;
-    
+
     if (this.offer) {
       this.populateForm(this.offer);
     }
@@ -98,7 +98,7 @@ export class AddOfferFormComponent implements OnInit {
       }
 
       this.saveOffer.emit(offerData);
-      
+
       if (!this.isEditMode) {
         this.offerForm.reset();
       }
