@@ -14,7 +14,7 @@
       <article class="offer-card" *ngFor="let o of filtered">
 
         <div class="img-box" tabindex="0">
-          <img [src]="imgFor(o)" [alt]="('offersData.titles.' + o.id) | translate" />
+          <img [src]="imgFor(o)" [alt]="o.title || (('offersData.titles.' + o.id) | translate)" />
           <button class="fav" type="button"
                   [class.active]="isFav(o.id)"
                   (click)="toggleFav(o)">
@@ -26,14 +26,14 @@
           <button
             type="button"
             class="view-offer"
-            [attr.aria-label]="('offersPage.card.view' | translate) + ' ' + (('offersData.titles.' + o.id) | translate)">
+            [attr.aria-label]="('offersPage.card.view' | translate) + ' ' + (o.title || (('offersData.titles.' + o.id) | translate))">
             {{ 'offersPage.card.view' | translate }}
           </button>
         </div>
 
         <div class="card-body">
           <!-- título traducido -->
-          <h3 class="ttl">{{ ('offersData.titles.' + o.id) | translate }}</h3>
+          <h3 class="ttl">{{ o.title || (('offersData.titles.' + o.id) | translate) }}</h3>
           <div class="pname">{{ o.partner }}</div>
 
           <div class="stars-row">

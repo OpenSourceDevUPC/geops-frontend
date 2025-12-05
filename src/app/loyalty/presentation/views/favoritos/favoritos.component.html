@@ -14,7 +14,7 @@
       <article class="offer-card" *ngFor="let o of offers">
 
         <div class="img-box" tabindex="0">
-          <img [src]="imgFor(o)" [alt]="('offersData.titles.' + o.id) | translate" />
+          <img [src]="imgFor(o)" [alt]="o.title || (('offersData.titles.' + o.id) | translate)" />
 
           <button class="fav active" type="button" (click)="remove(o)">
             <span class="heart">❤️</span>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="card-body">
-          <h3 class="ttl">{{ ('offersData.titles.' + o.id) | translate }}</h3>
+          <h3 class="ttl">{{ o.title || (('offersData.titles.' + o.id) | translate) }}</h3>
           <div class="pname">{{ o.partner }}</div>
 
           <div class="stars-row">
