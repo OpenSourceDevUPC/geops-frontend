@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, map, tap, switchMap, of } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap, switchMap, of, catchError } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Cart } from '../domain/model/cart.entity';
 import { CartItem } from '../domain/model/cart-item.entity';
@@ -55,6 +55,19 @@ export class CartApi extends BaseApi {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         } as Cart;
+      }),
+      catchError((error) => {
+        // If cart doesn't exist (404 or any error), return empty cart
+        console.log('Cart not found for user, returning empty cart', userId);
+        return of({
+          id: 0,
+          userId,
+          items: [],
+          totalItems: 0,
+          totalAmount: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as Cart);
       }),
       tap((cart) => this.cartSubject.next(cart))
     );

@@ -99,7 +99,7 @@
               <div class="offer-loc-item" [routerLink]="['/ofertas', location.offer.id]">
                 <div class="offer-loc-info">
                   <h4 class="offer-loc-title">{{location.offer.title}}</h4>
-                  <p class="offer-loc-partner">{{'offersData.titles.' + location.offer.id | translate}}</p>
+                  <p class="offer-loc-partner">{{ location.offer.title }} | {{ ('offersData.titles.' + location.offer.id) | translate }}</p>
                   <p class="offer-loc-location">📍 {{location.offer.location}}</p>
                 </div>
                 <div class="offer-loc-price">
