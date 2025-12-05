@@ -39,14 +39,16 @@ export interface CreateCampaignResource {
 
 /**
  * Update Campaign Resource (request payload)
+ * Backend requires all mandatory fields in PATCH request
  */
 export interface UpdateCampaignResource {
-  name?: string;
-  description?: string;
-  startDate?: string;
-  endDate?: string;
-  status?: string;
-  estimatedBudget?: number;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  estimatedBudget: number;
+  // Optional metrics fields
   totalImpressions?: number;
   totalClicks?: number;
   ctr?: number;

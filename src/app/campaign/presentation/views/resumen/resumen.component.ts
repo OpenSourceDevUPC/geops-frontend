@@ -83,9 +83,9 @@ export class ResumenComponent implements OnInit {
     switch (status) {
       case 'ACTIVE':
         return '#4CAF50';
-      case 'INACTIVE':
+      case 'PAUSED':
         return '#FFC107';
-      case 'EXPIRED':
+      case 'FINALIZED':
         return '#9E9E9E';
       default:
         return '#2196F3';
@@ -99,9 +99,9 @@ export class ResumenComponent implements OnInit {
     switch (status) {
       case 'ACTIVE':
         return 'Activa';
-      case 'INACTIVE':
+      case 'PAUSED':
         return 'Pausada';
-      case 'EXPIRED':
+      case 'FINALIZED':
         return 'Finalizada';
       default:
         return status;
@@ -125,13 +125,14 @@ export class ResumenComponent implements OnInit {
   }
 
   /**
-   * Toggle campaign active/inactive status
+   * Toggle campaign active/paused status
+   * IMPORTANT: Backend requires all mandatory fields in PATCH request
    */
   onToggleStatus(campaignId: number): void {
     const campaign = this.campaigns.find(c => c.id === campaignId);
     if (!campaign) return;
 
-    const newStatus: CampaignStatus = campaign.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    const newStatus: CampaignStatus = campaign.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
     const actionText = newStatus === 'ACTIVE' ? 'activar' : 'pausar';
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -145,7 +146,20 @@ export class ResumenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.campaignService.updateCampaign(campaignId, { status: newStatus }).subscribe({
+        // Send all required fields for PATCH
+        const updates: Partial<Campaign> = {
+          name: campaign.name,
+          description: campaign.description,
+          startDate: campaign.startDate,
+          endDate: campaign.endDate,
+          estimatedBudget: campaign.estimatedBudget,
+          status: newStatus,
+          totalImpressions: campaign.totalImpressions,
+          totalClicks: campaign.totalClicks,
+          CTR: campaign.CTR
+        };
+
+        this.campaignService.updateCampaign(campaignId, updates).subscribe({
           next: () => {
             this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
             this.loadData();

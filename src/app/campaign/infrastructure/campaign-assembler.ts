@@ -31,7 +31,7 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       description: resource.description,
       startDate: resource.startDate,
       endDate: resource.endDate,
-      status: resource.status as 'ACTIVE' | 'INACTIVE' | 'EXPIRED',
+      status: resource.status as 'ACTIVE' | 'PAUSED' | 'FINALIZED',
       estimatedBudget: resource.estimatedBudget,
       totalImpressions: resource.totalImpressions,
       totalClicks: resource.totalClicks,
@@ -82,28 +82,29 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       description: entity.description!,
       startDate: entity.startDate!,
       endDate: entity.endDate!,
-      status: entity.status || 'INACTIVE',
+      status: entity.status || 'PAUSED',
       estimatedBudget: entity.estimatedBudget || 0
     };
   }
 
   /**
    * Converts update command to API resource
+   * IMPORTANT: Backend requires all mandatory fields in PATCH request
    */
   toUpdateResource(entity: Partial<Campaign>): UpdateCampaignResource {
-    const resource: UpdateCampaignResource = {};
-
-    if (entity.name !== undefined) resource.name = entity.name;
-    if (entity.description !== undefined) resource.description = entity.description;
-    if (entity.startDate !== undefined) resource.startDate = entity.startDate;
-    if (entity.endDate !== undefined) resource.endDate = entity.endDate;
-    if (entity.status !== undefined) resource.status = entity.status;
-    if (entity.estimatedBudget !== undefined) resource.estimatedBudget = entity.estimatedBudget;
-    if (entity.totalImpressions !== undefined) resource.totalImpressions = entity.totalImpressions;
-    if (entity.totalClicks !== undefined) resource.totalClicks = entity.totalClicks;
-    if (entity.CTR !== undefined) resource.ctr = entity.CTR;
-
-    return resource;
+    // Backend requires all these fields to be present in PATCH
+    return {
+      name: entity.name!,
+      description: entity.description!,
+      startDate: entity.startDate!,
+      endDate: entity.endDate!,
+      status: entity.status!,
+      estimatedBudget: entity.estimatedBudget!,
+      // Optional fields
+      ...(entity.totalImpressions !== undefined && { totalImpressions: entity.totalImpressions }),
+      ...(entity.totalClicks !== undefined && { totalClicks: entity.totalClicks }),
+      ...(entity.CTR !== undefined && { ctr: entity.CTR })
+    };
   }
 }
 

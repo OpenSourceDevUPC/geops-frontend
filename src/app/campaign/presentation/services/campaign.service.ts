@@ -170,7 +170,7 @@ export class CampaignService {
    */
   isExpired(campaign: Campaign): boolean {
     const endDate = new Date(campaign.endDate);
-    return endDate < new Date() || campaign.status === 'EXPIRED';
+    return endDate < new Date() || campaign.status === 'FINALIZED';
   }
 
   /**
@@ -178,13 +178,13 @@ export class CampaignService {
    */
   groupCampaignsByStatus(campaigns: Campaign[]): {
     active: Campaign[];
-    inactive: Campaign[];
-    expired: Campaign[];
+    paused: Campaign[];
+    finalized: Campaign[];
   } {
     return {
       active: campaigns.filter(c => c.status === 'ACTIVE'),
-      inactive: campaigns.filter(c => c.status === 'INACTIVE'),
-      expired: campaigns.filter(c => c.status === 'EXPIRED')
+      paused: campaigns.filter(c => c.status === 'PAUSED'),
+      finalized: campaigns.filter(c => c.status === 'FINALIZED')
     };
   }
 }

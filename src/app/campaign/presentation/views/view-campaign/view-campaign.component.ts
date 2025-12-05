@@ -72,9 +72,9 @@ export class ViewCampaignComponent implements OnInit {
     switch (status) {
       case 'ACTIVE':
         return '#4CAF50';
-      case 'INACTIVE':
+      case 'PAUSED':
         return '#FFC107';
-      case 'EXPIRED':
+      case 'FINALIZED':
         return '#9E9E9E';
       default:
         return '#2196F3';
@@ -85,9 +85,9 @@ export class ViewCampaignComponent implements OnInit {
     switch (status) {
       case 'ACTIVE':
         return 'Activa';
-      case 'INACTIVE':
+      case 'PAUSED':
         return 'Pausada';
-      case 'EXPIRED':
+      case 'FINALIZED':
         return 'Finalizada';
       default:
         return status;

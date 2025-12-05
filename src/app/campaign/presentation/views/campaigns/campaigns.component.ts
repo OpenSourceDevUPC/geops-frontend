@@ -51,11 +51,11 @@ export class CampaignsComponent implements OnInit, OnDestroy {
   }
 
   get pausedCampaigns(): Campaign[] {
-    return this.campaigns.filter(c => c.status === 'INACTIVE');
+    return this.campaigns.filter(c => c.status === 'PAUSED');
   }
 
   get finishedCampaigns(): Campaign[] {
-    return this.campaigns.filter(c => c.status === 'EXPIRED');
+    return this.campaigns.filter(c => c.status === 'FINALIZED');
   }
 
   ngOnInit(): void {
@@ -95,9 +95,9 @@ export class CampaignsComponent implements OnInit, OnDestroy {
     switch (status.toUpperCase()) {
       case 'ACTIVE':
         return '#4CAF50';
-      case 'INACTIVE':
+      case 'PAUSED':
         return '#FFC107';
-      case 'EXPIRED':
+      case 'FINALIZED':
         return '#9E9E9E';
       default:
         return '#2196F3';

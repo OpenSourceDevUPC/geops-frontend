@@ -75,7 +75,7 @@ export class EditCampaignComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       estimatedBudget: [0, [Validators.required, Validators.min(0)]],
-      status: ['INACTIVE', Validators.required]
+      status: ['PAUSED', Validators.required]
     });
   }
 
@@ -119,12 +119,22 @@ export class EditCampaignComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.campaignForm.valid) {
+    if (this.campaignForm.valid && this.campaign) {
       this.loading = true;
       this.error = null;
 
+      // Ensure all required fields are present for PATCH request
       const updates: Partial<Campaign> = {
-        ...this.campaignForm.value
+        name: this.campaignForm.value.name,
+        description: this.campaignForm.value.description,
+        startDate: this.campaignForm.value.startDate,
+        endDate: this.campaignForm.value.endDate,
+        status: this.campaignForm.value.status,
+        estimatedBudget: this.campaignForm.value.estimatedBudget,
+        // Include existing metrics if available
+        totalImpressions: this.campaign.totalImpressions,
+        totalClicks: this.campaign.totalClicks,
+        CTR: this.campaign.CTR
       };
 
       this.campaignService.updateCampaign(this.campaignId, updates).subscribe({

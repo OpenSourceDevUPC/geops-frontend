@@ -55,7 +55,7 @@ export class CrearCampaignComponent {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       estimatedBudget: [0, [Validators.required, Validators.min(0)]],
-      status: ['INACTIVE', Validators.required]
+      status: ['PAUSED', Validators.required]
     });
   }
 

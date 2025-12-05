@@ -15,8 +15,8 @@
           <mat-select [(ngModel)]="filterStatus">
             <mat-option value="ALL">Todas las Campañas</mat-option>
             <mat-option value="ACTIVE">Activas</mat-option>
-            <mat-option value="INACTIVE">Inactivas</mat-option>
-            <mat-option value="EXPIRED">Expiradas</mat-option>
+            <mat-option value="PAUSED">Pausadas</mat-option>
+            <mat-option value="FINALIZED">Finalizadas</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -62,13 +62,13 @@
               <span class="status-label">Activas</span>
               <span class="status-count">{{ reportData.summary.byStatus.active }}</span>
             </div>
-            <div class="status-item inactive">
-              <span class="status-label">Inactivas</span>
-              <span class="status-count">{{ reportData.summary.byStatus.inactive }}</span>
+            <div class="status-item paused">
+              <span class="status-label">Pausadas</span>
+              <span class="status-count">{{ reportData.summary.byStatus.paused }}</span>
             </div>
-            <div class="status-item expired">
-              <span class="status-label">Expiradas</span>
-              <span class="status-count">{{ reportData.summary.byStatus.expired }}</span>
+            <div class="status-item finalized">
+              <span class="status-label">Finalizadas</span>
+              <span class="status-count">{{ reportData.summary.byStatus.finalized }}</span>
             </div>
           </div>
         </div>

@@ -78,8 +78,8 @@
             <mat-label>Estado</mat-label>
             <mat-select formControlName="status">
               <mat-option value="ACTIVE">Activa</mat-option>
-              <mat-option value="INACTIVE">Inactiva</mat-option>
-              <mat-option value="EXPIRED">Finalizada</mat-option>
+              <mat-option value="PAUSED">Pausada</mat-option>
+              <mat-option value="FINALIZED">Finalizada</mat-option>
             </mat-select>
             <mat-error *ngIf="campaignForm.get('status')?.hasError('required')">
               El estado es requerido
