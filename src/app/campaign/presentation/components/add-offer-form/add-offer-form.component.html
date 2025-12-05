@@ -59,6 +59,9 @@
         <mat-label>Categoría</mat-label>
         <input matInput formControlName="category" placeholder="Ej: Restaurantes, Entretenimiento">
         <mat-icon matPrefix>label</mat-icon>
+        <mat-error *ngIf="offerForm.get('category')?.invalid">
+          {{ getErrorMessage('category') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -76,6 +79,9 @@
         <mat-label>Ubicación</mat-label>
         <input matInput formControlName="location" placeholder="Ej: Av. Principal 123, Miraflores">
         <mat-icon matPrefix>location_on</mat-icon>
+        <mat-error *ngIf="offerForm.get('location')?.invalid">
+          {{ getErrorMessage('location') }}
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -105,6 +111,9 @@
         <input matInput [matDatepicker]="validityPicker" formControlName="validUntil">
         <mat-datepicker-toggle matIconSuffix [for]="validityPicker"></mat-datepicker-toggle>
         <mat-datepicker #validityPicker></mat-datepicker>
+        <mat-error *ngIf="offerForm.get('validUntil')?.invalid">
+          {{ getErrorMessage('validUntil') }}
+        </mat-error>
       </mat-form-field>
     </div>
 
