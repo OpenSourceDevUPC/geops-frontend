@@ -51,12 +51,12 @@ export class AddOfferFormComponent implements OnInit {
       price: [0, [Validators.required, Validators.min(0)]],
       originalPrice: [0, Validators.min(0)],
       description: [''],
-      category: [''],
-      location: [''],
+      category: ['', Validators.required],
+      location: ['', Validators.required],
       latitude: [null],
       longitude: [null],
       imageUrl: [''],
-      validUntil: [''],
+      validUntil: [null, Validators.required],
       codePrefix: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]]
     });
   }
@@ -81,15 +81,20 @@ export class AddOfferFormComponent implements OnInit {
       latitude: offer.latitude,
       longitude: offer.longitude,
       imageUrl: offer.imageUrl,
-      validUntil: offer.validUntil,
+      validUntil: offer.validUntil ? new Date(offer.validUntil) : null,
       codePrefix: offer.codePrefix
     });
   }
 
   onSubmit(): void {
     if (this.offerForm.valid) {
+      const formValue = this.offerForm.value;
+      const normalizedValidUntil = this.normalizeDateInput(formValue.validUntil);
       const offerData: Partial<CampaignOffer> = {
-        ...this.offerForm.value,
+        ...formValue,
+        category: formValue.category?.trim(),
+        location: formValue.location?.trim(),
+        validUntil: normalizedValidUntil || undefined,
         campaignId: this.campaignId
       };
 
@@ -100,14 +105,39 @@ export class AddOfferFormComponent implements OnInit {
       this.saveOffer.emit(offerData);
 
       if (!this.isEditMode) {
-        this.offerForm.reset();
+        this.resetForm();
       }
     }
   }
 
   onCancel(): void {
     this.cancel.emit();
-    this.offerForm.reset();
+    this.resetForm();
+  }
+
+  private normalizeDateInput(value: Date | string | null | undefined): string | null {
+    if (!value) return null;
+    if (value instanceof Date) {
+      return value.toISOString().split('T')[0];
+    }
+    return value;
+  }
+
+  private resetForm(): void {
+    this.offerForm.reset({
+      title: '',
+      partner: '',
+      price: 0,
+      originalPrice: 0,
+      description: '',
+      category: '',
+      location: '',
+      latitude: null,
+      longitude: null,
+      imageUrl: '',
+      validUntil: null,
+      codePrefix: ''
+    });
   }
 
   getErrorMessage(fieldName: string): string {
