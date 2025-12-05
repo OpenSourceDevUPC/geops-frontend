@@ -189,7 +189,22 @@
 }
 
 .pause-btn {
+  background: #FFC107 !important;
+  color: white !important;
+}
+
+.activate-btn {
   background: #4CAF50 !important;
+  color: white !important;
+}
+
+.finalize-btn {
+  background: #9E9E9E !important;
+  color: white !important;
+}
+
+.view-btn {
+  background: #607D8B !important;
   color: white !important;
 }
 

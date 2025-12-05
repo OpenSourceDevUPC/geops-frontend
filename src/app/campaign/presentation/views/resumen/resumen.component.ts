@@ -10,6 +10,7 @@ import { CampaignService } from '../../services/campaign.service';
 import { Campaign, CampaignStatus } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
+import { CampaignCartCleanupService } from '../../../infrastructure/campaign-cart-cleanup.service';
 
 /**
  * ResumenComponent
@@ -30,6 +31,7 @@ export class ResumenComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly cartCleanupService = inject(CampaignCartCleanupService);
 
   campaigns: Campaign[] = [];
   totalImpressions = 0;
@@ -159,16 +161,40 @@ export class ResumenComponent implements OnInit {
           CTR: campaign.CTR
         };
 
-        this.campaignService.updateCampaign(campaignId, updates).subscribe({
-          next: () => {
-            this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
-            this.loadData();
-          },
-          error: (err) => {
-            console.error('[Resumen] Error toggling status:', err);
-            this.snackBar.open('Error al cambiar el estado de la campaña', 'Cerrar', { duration: 3000 });
-          }
-        });
+        // If changing to PAUSED, clean carts first
+        if (newStatus === 'PAUSED') {
+          this.cartCleanupService.removeOffersFromAllCarts(campaignId).subscribe({
+            next: () => {
+              // Then update campaign status
+              this.campaignService.updateCampaign(campaignId, updates).subscribe({
+                next: () => {
+                  this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
+                  this.loadData();
+                },
+                error: (err) => {
+                  console.error('[Resumen] Error toggling status:', err);
+                  this.snackBar.open('Error al cambiar el estado de la campaña', 'Cerrar', { duration: 3000 });
+                }
+              });
+            },
+            error: (err) => {
+              console.error('[Resumen] Error cleaning carts:', err);
+              this.snackBar.open('Error al limpiar carritos', 'Cerrar', { duration: 3000 });
+            }
+          });
+        } else {
+          // If changing to ACTIVE, just update status
+          this.campaignService.updateCampaign(campaignId, updates).subscribe({
+            next: () => {
+              this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
+              this.loadData();
+            },
+            error: (err) => {
+              console.error('[Resumen] Error toggling status:', err);
+              this.snackBar.open('Error al cambiar el estado de la campaña', 'Cerrar', { duration: 3000 });
+            }
+          });
+        }
       }
     });
   }
@@ -192,14 +218,24 @@ export class ResumenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.campaignService.deleteCampaign(campaignId).subscribe({
+        // First, clean carts
+        this.cartCleanupService.removeOffersFromAllCarts(campaignId).subscribe({
           next: () => {
-            this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', { duration: 3000 });
-            this.loadData();
+            // Then delete campaign
+            this.campaignService.deleteCampaign(campaignId).subscribe({
+              next: () => {
+                this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', { duration: 3000 });
+                this.loadData();
+              },
+              error: (err) => {
+                console.error('[Resumen] Error deleting campaign:', err);
+                this.snackBar.open('Error al eliminar la campaña', 'Cerrar', { duration: 3000 });
+              }
+            });
           },
           error: (err) => {
-            console.error('[Resumen] Error deleting campaign:', err);
-            this.snackBar.open('Error al eliminar la campaña', 'Cerrar', { duration: 3000 });
+            console.error('[Resumen] Error cleaning carts:', err);
+            this.snackBar.open('Error al limpiar carritos', 'Cerrar', { duration: 3000 });
           }
         });
       }

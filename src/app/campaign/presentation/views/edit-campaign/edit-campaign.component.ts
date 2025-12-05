@@ -19,6 +19,7 @@ import { CampaignOffer } from '../../../domain/model/offer.entity';
 import { CampaignOffersListComponent } from '../../components/campaign-offers-list/campaign-offers-list.component';
 import { AddOfferFormComponent } from '../../components/add-offer-form/add-offer-form.component';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
+import { CampaignCartCleanupService } from '../../../infrastructure/campaign-cart-cleanup.service';
 
 /**
  * EditCampaignComponent
@@ -58,6 +59,7 @@ export class EditCampaignComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly cartCleanupService = inject(CampaignCartCleanupService);
 
   campaignForm: FormGroup;
   loading = false;
@@ -123,13 +125,16 @@ export class EditCampaignComponent implements OnInit {
       this.loading = true;
       this.error = null;
 
+      const oldStatus = this.campaign.status;
+      const newStatus = this.campaignForm.value.status;
+
       // Ensure all required fields are present for PATCH request
       const updates: Partial<Campaign> = {
         name: this.campaignForm.value.name,
         description: this.campaignForm.value.description,
         startDate: this.campaignForm.value.startDate,
         endDate: this.campaignForm.value.endDate,
-        status: this.campaignForm.value.status,
+        status: newStatus,
         estimatedBudget: this.campaignForm.value.estimatedBudget,
         // Include existing metrics if available
         totalImpressions: this.campaign.totalImpressions,
@@ -137,18 +142,38 @@ export class EditCampaignComponent implements OnInit {
         CTR: this.campaign.CTR
       };
 
-      this.campaignService.updateCampaign(this.campaignId, updates).subscribe({
-        next: (updatedCampaign) => {
-          this.snackBar.open('Campaña actualizada exitosamente', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/campañas']);
-        },
-        error: (err) => {
-          this.error = 'Error al actualizar campaña';
-          this.loading = false;
-          this.snackBar.open('Error al actualizar campaña', 'Cerrar', { duration: 3000 });
-        }
-      });
+      // If changing from ACTIVE to PAUSED/FINALIZED, clean carts first
+      if (oldStatus === 'ACTIVE' && (newStatus === 'PAUSED' || newStatus === 'FINALIZED')) {
+        this.cartCleanupService.removeOffersFromAllCarts(this.campaignId).subscribe({
+          next: () => {
+            // Then update campaign
+            this.updateCampaignAndNavigate(updates);
+          },
+          error: (err) => {
+            console.error('[EditCampaign] Error cleaning carts:', err);
+            this.snackBar.open('Error al limpiar carritos', 'Cerrar', { duration: 3000 });
+            this.loading = false;
+          }
+        });
+      } else {
+        // No cart cleanup needed, just update
+        this.updateCampaignAndNavigate(updates);
+      }
     }
+  }
+
+  private updateCampaignAndNavigate(updates: Partial<Campaign>): void {
+    this.campaignService.updateCampaign(this.campaignId, updates).subscribe({
+      next: (updatedCampaign) => {
+        this.snackBar.open('Campaña actualizada exitosamente', 'Cerrar', { duration: 3000 });
+        this.router.navigate(['/campañas']);
+      },
+      error: (err) => {
+        this.error = 'Error al actualizar campaña';
+        this.loading = false;
+        this.snackBar.open('Error al actualizar campaña', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
   onCancel(): void {

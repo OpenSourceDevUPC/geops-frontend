@@ -57,10 +57,17 @@
               </button>
               <button
                 mat-raised-button
-                (click)="onDelete(campaign.id)"
-                class="action-btn delete-btn">
-                <mat-icon>delete</mat-icon>
-                Eliminar
+                (click)="onPause(campaign.id)"
+                class="action-btn pause-btn">
+                <mat-icon>pause</mat-icon>
+                Pausar
+              </button>
+              <button
+                mat-raised-button
+                (click)="onFinalize(campaign.id)"
+                class="action-btn finalize-btn">
+                <mat-icon>check_circle</mat-icon>
+                Finalizar
               </button>
             </div>
           </div>
@@ -114,10 +121,10 @@
             <div class="campaign-actions">
               <button
                 mat-raised-button
-                (click)="onResumeEdit(campaign.id)"
-                class="action-btn pause-btn">
+                (click)="onActivate(campaign.id)"
+                class="action-btn activate-btn">
                 <mat-icon>play_arrow</mat-icon>
-                Reanudar
+                Activar
               </button>
               <button
                 mat-raised-button
@@ -128,10 +135,10 @@
               </button>
               <button
                 mat-raised-button
-                (click)="onDelete(campaign.id)"
-                class="action-btn delete-btn">
-                <mat-icon>delete</mat-icon>
-                Eliminar
+                (click)="onFinalize(campaign.id)"
+                class="action-btn finalize-btn">
+                <mat-icon>check_circle</mat-icon>
+                Finalizar
               </button>
             </div>
           </div>
@@ -186,10 +193,16 @@
               <button
                 mat-raised-button
                 (click)="onEdit(campaign.id)"
-                class="action-btn edit-btn"
-                disabled>
+                class="action-btn view-btn">
                 <mat-icon>visibility</mat-icon>
                 Ver detalles
+              </button>
+              <button
+                mat-raised-button
+                (click)="onDelete(campaign.id)"
+                class="action-btn delete-btn">
+                <mat-icon>delete</mat-icon>
+                Eliminar
               </button>
             </div>
           </div>
