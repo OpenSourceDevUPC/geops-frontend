@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -29,6 +30,7 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
     ReactiveFormsModule,
     FormsModule,
     MatCardModule,

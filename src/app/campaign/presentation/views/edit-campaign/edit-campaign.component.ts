@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,6 +33,7 @@ import { ConfirmDialogComponent } from '../../../../shared/presentation/componen
   imports: [
     CommonModule,
     RouterModule,
+    TranslateModule,
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,

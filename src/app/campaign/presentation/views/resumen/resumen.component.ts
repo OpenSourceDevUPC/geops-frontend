@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -20,7 +21,7 @@ import { ConfirmDialogComponent } from '../../../../shared/presentation/componen
 @Component({
   selector: 'app-resumen',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, MatSnackBarModule],
+  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './resumen.component.html',
   styleUrls: ['./resumen.component.css']
 })

@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -19,7 +20,7 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatSelectModule, MatFormFieldModule, FormsModule],
+  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, MatCardModule, MatSelectModule, MatFormFieldModule, FormsModule],
   templateUrl: './reportes.component.html',
   styleUrls: ['./reportes.component.css']
 })

@@ -4,17 +4,17 @@
     <button mat-icon-button (click)="onBack()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2>Detalles de la Campaña</h2>
+    <h2>{{ 'campaigns.details.title' | translate }}</h2>
     <button mat-raised-button color="primary" (click)="onEdit()">
       <mat-icon>edit</mat-icon>
-      Editar
+      {{ 'campaigns.actions.edit' | translate }}
     </button>
   </div>
 
   <!-- Loading Spinner -->
   <div *ngIf="loading() && !campaign()" class="loading-container">
     <mat-spinner></mat-spinner>
-    <p>Cargando campaña...</p>
+    <p>{{ 'campaigns.details.loading' | translate }}</p>
   </div>
 
   <!-- Campaign Details -->
@@ -33,23 +33,23 @@
       <mat-card-content>
         <div class="info-grid">
           <div class="info-item">
-            <label>Descripción</label>
+            <label>{{ 'campaigns.details.description' | translate }}</label>
             <p>{{ campaign()!.description }}</p>
           </div>
 
           <div class="info-row">
             <div class="info-item">
-              <label>Fecha de Inicio</label>
+              <label>{{ 'campaigns.details.startDate' | translate }}</label>
               <p>{{ campaign()!.startDate | date:'dd/MM/yyyy' }}</p>
             </div>
             <div class="info-item">
-              <label>Fecha de Fin</label>
+              <label>{{ 'campaigns.details.endDate' | translate }}</label>
               <p>{{ campaign()!.endDate | date:'dd/MM/yyyy' }}</p>
             </div>
           </div>
 
           <div class="info-item">
-            <label>Presupuesto Estimado</label>
+            <label>{{ 'campaigns.details.estimatedBudget' | translate }}</label>
             <p class="budget">S/ {{ campaign()!.estimatedBudget | number:'1.2-2' }}</p>
           </div>
         </div>
@@ -59,7 +59,7 @@
     <!-- Stats Card -->
     <mat-card class="stats-card">
       <mat-card-header>
-        <mat-card-title>Estadísticas de la Campaña</mat-card-title>
+        <mat-card-title>{{ 'campaigns.stats.title' | translate }}</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -67,7 +67,7 @@
           <div class="stat-item">
             <mat-icon>visibility</mat-icon>
             <div class="stat-content">
-              <span class="stat-label">Impresiones</span>
+              <span class="stat-label">{{ 'campaigns.stats.impressions' | translate }}</span>
               <span class="stat-value">{{ campaign()!.totalImpressions | number }}</span>
             </div>
           </div>
@@ -75,7 +75,7 @@
           <div class="stat-item">
             <mat-icon>touch_app</mat-icon>
             <div class="stat-content">
-              <span class="stat-label">Clicks</span>
+              <span class="stat-label">{{ 'campaigns.stats.clicks' | translate }}</span>
               <span class="stat-value">{{ campaign()!.totalClicks | number }}</span>
             </div>
           </div>
@@ -83,7 +83,7 @@
           <div class="stat-item">
             <mat-icon>trending_up</mat-icon>
             <div class="stat-content">
-              <span class="stat-label">CTR</span>
+              <span class="stat-label">{{ 'campaigns.stats.ctr' | translate }}</span>
               <span class="stat-value">{{ campaign()!.CTR | number:'1.2-2' }}%</span>
             </div>
           </div>
@@ -94,13 +94,13 @@
     <!-- Offers Section -->
     <mat-card class="offers-card">
       <mat-card-header>
-        <mat-card-title>Ofertas Asociadas ({{ offers().length }})</mat-card-title>
+        <mat-card-title>{{ 'campaigns.details.associatedOffers' | translate }} ({{ offers().length }})</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
         <div *ngIf="offers().length === 0" class="empty-state">
           <mat-icon>local_offer</mat-icon>
-          <p>No hay ofertas asociadas a esta campaña</p>
+          <p>{{ 'campaigns.offers.empty' | translate }}</p>
         </div>
 
         <div *ngIf="offers().length > 0" class="offers-list">

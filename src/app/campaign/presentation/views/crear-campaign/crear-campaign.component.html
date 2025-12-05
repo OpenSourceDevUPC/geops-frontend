@@ -1,6 +1,6 @@
 <div class="crear-campaign-container">
   <div class="form-header">
-    <h2>Crear Nueva Campaña</h2>
+    <h2>{{ 'campaigns.form.createTitle' | translate }}</h2>
     <button mat-icon-button (click)="onCancel()">
       <mat-icon>close</mat-icon>
     </button>
@@ -8,31 +8,31 @@
 
   <form [formGroup]="campaignForm" (ngSubmit)="onSubmit()" class="campaign-form">
     <mat-form-field appearance="outline">
-      <mat-label>Nombre de la Campaña</mat-label>
-      <input matInput formControlName="name" placeholder="Ej: Promoción Verano 2025">
+      <mat-label>{{ 'campaigns.form.name' | translate }}</mat-label>
+      <input matInput formControlName="name" [placeholder]="'campaigns.form.namePlaceholder' | translate">
       <mat-error *ngIf="campaignForm.get('name')?.hasError('required')">
-        El nombre es requerido
+        {{ 'campaigns.form.nameRequired' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="description" rows="4" placeholder="Describe tu campaña..."></textarea>
+      <mat-label>{{ 'campaigns.form.description' | translate }}</mat-label>
+      <textarea matInput formControlName="description" rows="4" [placeholder]="'campaigns.form.descriptionPlaceholder' | translate"></textarea>
       <mat-error *ngIf="campaignForm.get('description')?.hasError('required')">
-        La descripción es requerida
+        {{ 'campaigns.form.descriptionRequired' | translate }}
       </mat-error>
     </mat-form-field>
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Fecha de Inicio</mat-label>
+        <mat-label>{{ 'campaigns.form.startDate' | translate }}</mat-label>
         <input matInput [matDatepicker]="startPicker" formControlName="startDate">
         <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
         <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Fecha de Fin</mat-label>
+        <mat-label>{{ 'campaigns.form.endDate' | translate }}</mat-label>
         <input matInput [matDatepicker]="endPicker" formControlName="endDate">
         <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
         <mat-datepicker #endPicker></mat-datepicker>
@@ -40,23 +40,23 @@
     </div>
 
     <mat-form-field appearance="outline">
-      <mat-label>Presupuesto Estimado (S/.)</mat-label>
-      <input matInput type="number" formControlName="estimatedBudget" placeholder="0.00">
+      <mat-label>{{ 'campaigns.form.budget' | translate }}</mat-label>
+      <input matInput type="number" formControlName="estimatedBudget" [placeholder]="'campaigns.form.budgetPlaceholder' | translate">
       <mat-icon matPrefix>attach_money</mat-icon>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Estado Inicial</mat-label>
+      <mat-label>{{ 'campaigns.form.initialStatus' | translate }}</mat-label>
       <mat-select formControlName="status">
-        <mat-option value="ACTIVE">Activa</mat-option>
-        <mat-option value="PAUSED">Pausada</mat-option>
+        <mat-option value="ACTIVE">{{ 'campaigns.status.active' | translate }}</mat-option>
+        <mat-option value="PAUSED">{{ 'campaigns.status.paused' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <div class="form-actions">
-      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+      <button mat-button type="button" (click)="onCancel()">{{ 'campaigns.actions.cancel' | translate }}</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="loading()">
-        {{ loading() ? 'Creando...' : 'Crear Campaña' }}
+        {{ loading() ? ('campaigns.form.creating' | translate) : ('campaigns.form.createButton' | translate) }}
       </button>
     </div>
 

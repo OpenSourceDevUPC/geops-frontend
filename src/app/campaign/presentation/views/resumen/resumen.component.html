@@ -2,8 +2,8 @@
   <!-- Header -->
   <div class="resumen-header">
     <div class="resumen-welcome">
-      <h1>Dashboard - Resumen de Campañas</h1>
-      <p class="greeting">Panel de Control</p>
+      <h1>{{ 'campaigns.dashboard.title' | translate }}</h1>
+      <p class="greeting">{{ 'campaigns.dashboard.subtitle' | translate }}</p>
     </div>
   </div>
 
@@ -11,25 +11,25 @@
   <div class="resumen-stats">
     <div class="stat-card">
       <div class="stat-value">{{ campaigns().length }}</div>
-      <div class="stat-label">Campañas Totales</div>
+      <div class="stat-label">{{ 'campaigns.stats.totalCampaigns' | translate }}</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">{{ totalImpressions() | number }}</div>
-      <div class="stat-label">Impresiones Totales</div>
+      <div class="stat-label">{{ 'campaigns.stats.totalImpressions' | translate }}</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">{{ totalClicks() | number }}</div>
-      <div class="stat-label">Clicks Totales</div>
+      <div class="stat-label">{{ 'campaigns.stats.totalClicks' | translate }}</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">{{ averageCTR() | number:'1.2-2' }}%</div>
-      <div class="stat-label">CTR Promedio</div>
+      <div class="stat-label">{{ 'campaigns.stats.averageCTR' | translate }}</div>
     </div>
   </div>
 
   <!-- Listado de campañas -->
   <div class="resumen-campaigns">
-    <h2>Todas las Campañas</h2>
+    <h2>{{ 'campaigns.dashboard.allCampaigns' | translate }}</h2>
 
     <div class="campaigns-list">
       <div *ngFor="let campaign of campaigns()" class="campaign-card">
@@ -54,19 +54,19 @@
         <!-- Datos de campaña -->
         <div class="campaign-stats">
           <div class="campaign-stat">
-            <span class="stat-label-small">Imp:</span>
+            <span class="stat-label-small">{{ 'campaigns.stats.impressions' | translate }}:</span>
             <span class="stat-value-small">{{ campaign.totalImpressions | number }}</span>
           </div>
           <div class="campaign-stat">
-            <span class="stat-label-small">Clicks:</span>
+            <span class="stat-label-small">{{ 'campaigns.stats.clicks' | translate }}:</span>
             <span class="stat-value-small">{{ campaign.totalClicks | number }}</span>
           </div>
           <div class="campaign-stat">
-            <span class="stat-label-small">CTR:</span>
+            <span class="stat-label-small">{{ 'campaigns.stats.ctr' | translate }}:</span>
             <span class="stat-value-small">{{ campaign.CTR | number:'1.2-2' }}%</span>
           </div>
           <div class="campaign-stat">
-            <span class="stat-label-small">Presupuesto:</span>
+            <span class="stat-label-small">{{ 'campaigns.stats.budget' | translate }}:</span>
             <span class="stat-value-small">S/ {{ campaign.estimatedBudget | number:'1.2-2' }}</span>
           </div>
         </div>
@@ -78,14 +78,14 @@
             (click)="onView(campaign.id)"
             class="action-btn view-btn">
             <mat-icon>visibility</mat-icon>
-            Visualizar
+            {{ 'campaigns.actions.view' | translate }}
           </button>
           <button
             mat-raised-button
             (click)="onEdit(campaign.id)"
             class="action-btn edit-btn">
             <mat-icon>edit</mat-icon>
-            Editar
+            {{ 'campaigns.actions.edit' | translate }}
           </button>
           <button
             mat-raised-button
@@ -93,14 +93,14 @@
             [class.pause-btn]="campaign.status === 'ACTIVE'"
             [class.activate-btn]="campaign.status !== 'ACTIVE'">
             <mat-icon>{{ campaign.status === 'ACTIVE' ? 'pause' : 'play_arrow' }}</mat-icon>
-            {{ campaign.status === 'ACTIVE' ? 'Pausar' : 'Activar' }}
+            {{ campaign.status === 'ACTIVE' ? ('campaigns.actions.pause' | translate) : ('campaigns.actions.activate' | translate) }}
           </button>
           <button
             mat-raised-button
             (click)="onFinalize(campaign.id)"
             class="action-btn finalize-btn">
             <mat-icon>check_circle</mat-icon>
-            Finalizar
+            {{ 'campaigns.actions.finalize' | translate }}
           </button>
         </div>
       </div>
@@ -109,12 +109,8 @@
     <!-- Mensaje si no hay campañas -->
     <div *ngIf="campaigns().length === 0" class="no-campaigns">
       <mat-icon>campaign</mat-icon>
-      <p>No hay campañas disponibles</p>
+      <p>{{ 'campaigns.empty.active' | translate }}</p>
     </div>
   </div>
 
-  <!-- Footer -->
-  <div class="resumen-footer">
-    <p>© 2025 GeoPs Platform - Todos los derechos reservados</p>
-  </div>
 </div>

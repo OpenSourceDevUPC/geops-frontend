@@ -468,6 +468,185 @@
     },
     "latestCampaigns": "Últimas campañas"
   },
+  "campaigns": {
+    "title": "Campañas",
+    "tabs": {
+      "active": "Activas",
+      "paused": "Pausadas",
+      "finalized": "Finalizadas"
+    },
+    "empty": {
+      "active": "No hay campañas activas",
+      "paused": "No hay campañas pausadas",
+      "finalized": "No hay campañas finalizadas"
+    },
+    "actions": {
+      "create": "Crear nueva campaña",
+      "edit": "Editar",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "activate": "Activar",
+      "finalize": "Finalizar",
+      "view": "Visualizar",
+      "cancel": "Cancelar",
+      "save": "Guardar Cambios",
+      "addOffers": "Agregar Ofertas",
+      "removeOffer": "Quitar Oferta",
+      "back": "Volver",
+      "download": "Descargar Reporte",
+      "print": "Imprimir"
+    },
+    "status": {
+      "active": "Activa",
+      "paused": "Pausada",
+      "finalized": "Finalizada"
+    },
+    "form": {
+      "createTitle": "Crear Nueva Campaña",
+      "editTitle": "Editar Campaña",
+      "name": "Nombre de la Campaña",
+      "namePlaceholder": "Ej: Promoción Verano 2025",
+      "nameRequired": "El nombre es requerido",
+      "nameMinLength": "El nombre debe tener al menos 3 caracteres",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe tu campaña...",
+      "descriptionRequired": "La descripción es requerida",
+      "descriptionMinLength": "La descripción debe tener al menos 10 caracteres",
+      "startDate": "Fecha de Inicio",
+      "startDateRequired": "La fecha de inicio es requerida",
+      "endDate": "Fecha de Fin",
+      "endDateRequired": "La fecha de fin es requerida",
+      "budget": "Presupuesto Estimado (S/.)",
+      "budgetPlaceholder": "0.00",
+      "budgetRequired": "El presupuesto es requerido",
+      "budgetMin": "El presupuesto debe ser mayor o igual a 0",
+      "status": "Estado",
+      "initialStatus": "Estado Inicial",
+      "statusRequired": "El estado es requerido",
+      "creating": "Creando...",
+      "saving": "Guardando...",
+      "createButton": "Crear Campaña",
+      "saveButton": "Guardar Cambios"
+    },
+    "stats": {
+      "title": "Estadísticas de la Campaña",
+      "impressions": "Impresiones",
+      "clicks": "Clicks",
+      "ctr": "CTR",
+      "budget": "Presupuesto",
+      "totalCampaigns": "Total Campañas",
+      "totalImpressions": "Impresiones Totales",
+      "totalClicks": "Clicks Totales",
+      "totalBudget": "Presupuesto Total",
+      "averageCTR": "CTR Promedio"
+    },
+    "details": {
+      "title": "Detalles de la Campaña",
+      "loading": "Cargando campaña...",
+      "description": "Descripción",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "estimatedBudget": "Presupuesto Estimado",
+      "associatedOffers": "Ofertas Asociadas"
+    },
+    "offers": {
+      "title": "Ofertas de la Campaña",
+      "empty": "Aún no se han agregado ofertas",
+      "add": "Agregar Ofertas",
+      "remove": "Quitar",
+      "view": "Ver Oferta",
+      "select": "Seleccionar Ofertas",
+      "selected": "{{count}} seleccionadas",
+      "availableOffers": "Ofertas Disponibles",
+      "searchPlaceholder": "Buscar ofertas..."
+    },
+    "reports": {
+      "title": "Reportes de Campañas",
+      "filterByStatus": "Filtrar por Estado",
+      "allCampaigns": "Todas las Campañas",
+      "exportFormat": "Formato de Exportación",
+      "summary": "Resumen General",
+      "byStatus": "Por Estado",
+      "preview": "Vista Previa"
+    },
+    "dashboard": {
+      "title": "Dashboard - Resumen de Campañas",
+      "subtitle": "Panel de Control",
+      "allCampaigns": "Todas las Campañas"
+    },
+    "messages": {
+      "createSuccess": "Campaña creada exitosamente",
+      "updateSuccess": "Campaña actualizada exitosamente",
+      "pauseSuccess": "Campaña pausada",
+      "resumeSuccess": "Campaña reanudada",
+      "finalizeSuccess": "Campaña finalizada",
+      "deleteSuccess": "Campaña eliminada",
+      "error": "Ocurrió un error. Por favor, intenta de nuevo."
+    }
+  },
+  "reviewsPage": {
+    "title": "Comentarios y Reseñas",
+    "addReview": "Agregar Reseña",
+    "cancel": "Cancelar",
+    "loading": "Cargando reseñas...",
+    "error": "Error al cargar reseñas",
+    "retry": "Reintentar",
+    "statistics": {
+      "averageRating": "Rating Promedio",
+      "totalReviews": "Total Reseñas",
+      "totalLikes": "Total Likes",
+      "distribution": "Distribución de Calificaciones"
+    },
+    "form": {
+      "newReview": "Nueva Reseña",
+      "rating": "Calificación",
+      "ratingRequired": "La calificación es requerida",
+      "excellent": "Excelente",
+      "veryGood": "Muy Bueno",
+      "good": "Bueno",
+      "fair": "Regular",
+      "poor": "Malo",
+      "comment": "Comentario",
+      "commentPlaceholder": "Escribe tu reseña aquí (mínimo 10 caracteres)",
+      "commentRequired": "El comentario es requerido",
+      "commentMinLength": "Mínimo 10 caracteres",
+      "commentMaxLength": "El comentario no debe exceder 500 caracteres",
+      "submit": "Publicar Reseña",
+      "submitting": "Publicando..."
+    },
+    "actions": {
+      "addReview": "Agregar Reseña",
+      "cancel": "Cancelar",
+      "publish": "Publicar Reseña",
+      "retry": "Reintentar",
+      "like": "Me gusta",
+      "unlike": "Quitar me gusta",
+      "reply": "Responder",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "report": "Reportar"
+    },
+    "filters": {
+      "sortBy": "Ordenar por",
+      "mostRecent": "Más Recientes",
+      "highestRating": "Mayor Calificación",
+      "mostLikes": "Más Likes",
+      "filterByRating": "Filtrar por calificación",
+      "all": "Todas",
+      "stars": "estrellas"
+    },
+    "empty": {
+      "noReviews": "No hay reseñas disponibles",
+      "beFirst": "Sé el primero en opinar"
+    },
+    "messages": {
+      "createSuccess": "Reseña publicada exitosamente",
+      "updateSuccess": "Reseña actualizada exitosamente",
+      "deleteSuccess": "Reseña eliminada",
+      "likeSuccess": "¡Gracias por tu opinión!",
+      "error": "Ocurrió un error. Por favor, intenta de nuevo."
+    }
+  },
   "coupons": {
     "title": "Mis Cupones",
     "loading": "Cargando cupones...",
