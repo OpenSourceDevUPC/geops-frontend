@@ -6,7 +6,7 @@
       routerLinkActive="active"
       class="toolbar-item"
       (click)="navigateTo(item.route)">
-      <span class="toolbar-label">{{ item.label }}</span>
+      <span class="toolbar-label">{{ item.labelKey | translate }}</span>
     </a>
   </div>
 </nav>

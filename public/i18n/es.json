@@ -142,6 +142,13 @@
     "currentBasic": "Plan básico",
     "currentPremium": "Plan premium"
   },
+  "ownerToolbar": {
+    "summary": "Resumen",
+    "campaigns": "Campañas",
+    "create": "Crear",
+    "reports": "Reportes",
+    "comments": "Comentarios"
+  },
   "subscriptions": {
     "title": "Planes",
     "subtitle": "Elige el plan que se ajusta a ti. Puedes cambiar cuando quieras.",
