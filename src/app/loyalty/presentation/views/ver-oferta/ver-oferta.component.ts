@@ -10,8 +10,7 @@ import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorite
 import { ReviewsApiEndpoint } from '../../../infrastructure/reviews-api-endpoint';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import { Review } from '../../../domain/model/review.entity';
-import { CartApi } from '../../../../cart/infrastructure/cart-api';
-import { CartUiService } from '../../../../cart/presentation/services/cart-ui.service';
+import { CartStore } from '../../../../cart/application/cart.store';
 
 
 type Offer = {
@@ -32,8 +31,7 @@ type Offer = {
  * offer detail screen
  */
 export class VerOfertaComponent implements OnInit {
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  private readonly cartStore = inject(CartStore);
 
   offer?: Offer;
   loading = false;
@@ -253,19 +251,7 @@ export class VerOfertaComponent implements OnInit {
     const offerTitle = this.offer.title;
     const offerImageUrl = this.imgFor();
 
-    this.cartApi
-      .addItemToCart(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1)
-      .subscribe({
-        next: () => {
-          // Reset payment flow when items are added
-          this.cartUiService.resetPaymentFlow();
-          console.log('Item added to cart successfully');
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-          alert('Error al agregar al carrito. Por favor, inténtalo de nuevo.');
-        },
-      });
+    this.cartStore.addItem(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1);
   }
 
   /**
@@ -282,22 +268,9 @@ export class VerOfertaComponent implements OnInit {
     const offerTitle = this.offer.title;
     const offerImageUrl = this.imgFor();
 
-    // Add to cart first, then open cart sidebar
-    this.cartApi
-      .addItemToCart(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1)
-      .subscribe({
-        next: () => {
-          console.log('Item added to cart successfully');
-          // Reset payment flow when items are added
-          this.cartUiService.resetPaymentFlow();
-          // Open the cart sidebar after adding the item
-          this.cartUiService.openCart();
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-          alert('Error al procesar la compra. Por favor, inténtalo de nuevo.');
-        },
-      });
+    // Add to cart and open sidebar
+    this.cartStore.addItem(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1);
+    this.cartStore.openSidebar();
   }
 
   protected readonly String = String;

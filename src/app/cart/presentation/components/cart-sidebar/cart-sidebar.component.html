@@ -82,12 +82,12 @@
           <div *ngIf="!isEmpty && paymentStep !== 'confirmation'" class="cart-summary">
             <div class="summary-row">
               <span class="summary-label">{{ 'cart.summary.items' | translate }}:</span>
-              <span class="summary-value">{{ totalItems }}</span>
+              <span class="summary-value">{{ totalItems() }}</span>
             </div>
 
             <div class="summary-row total">
               <span class="summary-label">{{ 'cart.summary.total' | translate }}:</span>
-              <span class="summary-value">S/ {{ totalAmount | number:'1.2-2' }}</span>
+              <span class="summary-value">S/ {{ totalAmount() | number:'1.2-2' }}</span>
             </div>
           </div>
 
@@ -185,7 +185,7 @@
                 class="pay-button"
                 [disabled]="cardForm.invalid || isProcessingPayment()">
                 <span *ngIf="!isProcessingPayment()">
-                  {{ 'payment.form.processPayment' | translate }} S/ {{ totalAmount | number:'1.2-2' }}
+                  {{ 'payment.form.processPayment' | translate }} S/ {{ totalAmount() | number:'1.2-2' }}
                 </span>
                 <span *ngIf="isProcessingPayment()">
                   {{ 'payment.form.processing' | translate }}

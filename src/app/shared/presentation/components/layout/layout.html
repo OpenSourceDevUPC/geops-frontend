@@ -96,7 +96,7 @@
         [matBadge]="cartCount()"
         [matBadgeHidden]="cartCount() === 0"
         matBadgeColor="warn"
-        (click)="openCart()">
+        (click)="cartStore.openSidebar()">
         <mat-icon>shopping_cart</mat-icon>
         <span class="cart-text">{{ 'header.cart' | translate }}</span>
       </button>
@@ -115,7 +115,7 @@
         [matBadge]="cartCount()"
         [matBadgeHidden]="cartCount() === 0"
         matBadgeColor="warn"
-        (click)="openCart()">
+        (click)="cartStore.openSidebar()">
         <mat-icon>shopping_cart</mat-icon>
       </button>
     </div>
