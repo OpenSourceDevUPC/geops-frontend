@@ -14,7 +14,7 @@ import { PaymentApi, CreatePaymentRequest } from '../../../../payment/infrastruc
 import { PaymentMethod } from '../../../../payment/domain/model/payment-method.enum';
 import { Payment } from '../../../../payment/domain/model/payment.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
-import { NotificationsService } from '../../../../notifications/presentation/services/notifications.service';
+import { NotificationsStore } from '../../../../notifications/application/notifications.store';
 
 export type CartView = 'cart' | 'checkout' | 'confirmation';
 export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
@@ -39,7 +39,7 @@ export class CartSidebarComponent implements OnInit {
   private readonly store = inject(CartStore);
   private readonly paymentApi = inject(PaymentApi);
   private readonly fb = inject(FormBuilder);
-  private readonly notificationsService = inject(NotificationsService);
+  private readonly notificationsStore = inject(NotificationsStore);
   private readonly translateService = inject(TranslateService);
   private readonly authService = inject(AuthService);
 
@@ -257,10 +257,7 @@ export class CartSidebarComponent implements OnInit {
     // Clear the cart after successful payment
     this.clearCart();
     // Refresh notifications to show the new payment notification
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.notificationsService.refresh(user.id);
-    }
+    this.notificationsStore.refresh();
   }
 
   /**

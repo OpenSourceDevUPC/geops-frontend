@@ -21,6 +21,7 @@ import {CommonModule} from '@angular/common';
 import { NavigationLoadingService } from '../../services/navigation-loading.service';
 import { NavigationBackdropComponent } from '../navigation-backdrop/navigation-backdrop.component';
 import { NotificationsDropdownComponent } from '../../../../notifications/presentation/components/notifications-dropdown/notifications-dropdown.component';
+import { NotificationsStore } from '../../../../notifications/application/notifications.store';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -52,6 +53,7 @@ import { filter } from 'rxjs/operators';
 })
 export class Layout implements OnInit {
   readonly cartStore = inject(CartStore);
+  readonly notificationsStore = inject(NotificationsStore);
   private readonly navigationLoadingService = inject(NavigationLoadingService);
 
   q = '';
@@ -88,7 +90,6 @@ export class Layout implements OnInit {
       }
     });
   }
-
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     if (user) {
@@ -96,6 +97,9 @@ export class Layout implements OnInit {
       this.userEmail = user.email || 'usuario@geops.com';
       this.isOwner.set(user.role === 'OWNER');
       console.log('[Layout] Usuario actual:', this.userName, 'Rol:', user.role, 'IsOwner:', this.isOwner());
+
+      // Load notifications for authenticated user
+      this.notificationsStore.loadNotifications(user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
