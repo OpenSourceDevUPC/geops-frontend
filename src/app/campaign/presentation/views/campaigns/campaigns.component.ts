@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 import { CampaignService } from '../../services/campaign.service';
 import { Campaign } from '../../../domain/model/campaign.entity';
@@ -26,7 +27,8 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
     TranslateModule,
     MatButtonModule,
     MatIconModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSnackBarModule
   ],
   templateUrl: './campaigns.component.html',
   styleUrls: ['./campaigns.component.css']
@@ -35,6 +37,7 @@ export class CampaignsComponent implements OnInit, OnDestroy {
   private readonly campaignService = inject(CampaignService);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly snackBar = inject(MatSnackBar);
   private destroy$ = new Subject<void>();
 
   selectedTabIndex = 0;
@@ -119,12 +122,9 @@ export class CampaignsComponent implements OnInit, OnDestroy {
 
   /**
    * Navigate to edit campaign
-   * TODO: Implement edit route
    */
   onEdit(campaignId: number): void {
-    // this.router.navigate(['/editar-campaña', campaignId]);
-    console.log('Edit campaign:', campaignId);
-    alert('La funcionalidad de edición está en desarrollo');
+    this.router.navigate(['/editar-campaña', campaignId]);
   }
 
   /**
@@ -138,11 +138,19 @@ export class CampaignsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Delete campaign
+   * Delete campaign with confirmation
    */
   onDelete(campaignId: number): void {
-    if (confirm('¿Estás seguro de eliminar esta campaña?')) {
+    const campaign = this.campaigns.find(c => c.id === campaignId);
+    const campaignName = campaign ? campaign.name : 'esta campaña';
+
+    if (confirm(`¿Estás seguro de eliminar "${campaignName}"? Esta acción no se puede deshacer.`)) {
       this.campaignService.deleteCampaign(campaignId);
+      this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', {
+        duration: 3000,
+        horizontalPosition: 'end',
+        verticalPosition: 'top'
+      });
     }
   }
 

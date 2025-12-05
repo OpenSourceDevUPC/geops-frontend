@@ -1,16 +1,97 @@
 <div class="reportes-container">
-  <div class="reportes-header">
-    <h2>Reportes de Campañas</h2>
-    <button mat-raised-button color="primary" (click)="exportReport()" class="export-btn">
-      Exportar JSON
-    </button>
-  </div>
+  <mat-card class="report-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>assessment</mat-icon>
+        Reportes de Campañas
+      </mat-card-title>
+    </mat-card-header>
 
-  <div class="json-container">
-    <pre class="json-content">{{ jsonData }}</pre>
-  </div>
+    <mat-card-content>
+      <!-- Filter and Format Options -->
+      <div class="report-options">
+        <mat-form-field>
+          <mat-label>Filtrar por Estado</mat-label>
+          <mat-select [(ngModel)]="filterStatus">
+            <mat-option value="ALL">Todas las Campañas</mat-option>
+            <mat-option value="ACTIVE">Activas</mat-option>
+            <mat-option value="INACTIVE">Inactivas</mat-option>
+            <mat-option value="EXPIRED">Expiradas</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-  <div class="reportes-footer">
-    <p>© 2025 GeoPs Labs</p>
-  </div>
+        <mat-form-field>
+          <mat-label>Formato de Exportación</mat-label>
+          <mat-select [(ngModel)]="reportFormat">
+            <mat-option value="json">JSON</mat-option>
+            <mat-option value="csv">CSV</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Summary Statistics -->
+      <div class="report-summary">
+        <h3>Resumen General</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Total Campañas</span>
+            <span class="summary-value">{{ reportData.summary.totalCampaigns }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Impresiones Totales</span>
+            <span class="summary-value">{{ reportData.summary.totalImpressions | number }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Clicks Totales</span>
+            <span class="summary-value">{{ reportData.summary.totalClicks | number }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Presupuesto Total</span>
+            <span class="summary-value">S/ {{ reportData.summary.totalBudget | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">CTR Promedio</span>
+            <span class="summary-value">{{ reportData.summary.averageCTR }}%</span>
+          </div>
+        </div>
+
+        <div class="status-breakdown">
+          <h4>Por Estado</h4>
+          <div class="status-grid">
+            <div class="status-item active">
+              <span class="status-label">Activas</span>
+              <span class="status-count">{{ reportData.summary.byStatus.active }}</span>
+            </div>
+            <div class="status-item inactive">
+              <span class="status-label">Inactivas</span>
+              <span class="status-count">{{ reportData.summary.byStatus.inactive }}</span>
+            </div>
+            <div class="status-item expired">
+              <span class="status-label">Expiradas</span>
+              <span class="status-count">{{ reportData.summary.byStatus.expired }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="report-preview">
+        <h3>Vista Previa ({{ reportFormat === 'json' ? 'JSON' : 'CSV' }})</h3>
+        <pre *ngIf="reportFormat === 'json'">{{ jsonData }}</pre>
+        <pre *ngIf="reportFormat === 'csv'">{{ csvData }}</pre>
+      </div>
+
+      <!-- Actions -->
+      <div class="report-actions">
+        <button mat-raised-button color="primary" (click)="exportReport()">
+          <mat-icon>download</mat-icon>
+          Descargar Reporte
+        </button>
+        <button mat-raised-button (click)="printReport()">
+          <mat-icon>print</mat-icon>
+          Imprimir
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

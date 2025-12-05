@@ -44,7 +44,7 @@ export class CampaignApiEndpoint extends BaseApiEndpoint<
    */
   getByUserId(userId: number): Observable<Campaign[]> {
     return this.http
-      .get<CampaignResource[]>(`${this.endpointUrl}/user/${userId}`)
+      .get<CampaignResource[]>(`${this.endpointUrl}/user/${userId}/campaigns`)
       .pipe(map((resources) => resources.map((r) => this.assembler.toEntityFromResource(r))));
   }
 

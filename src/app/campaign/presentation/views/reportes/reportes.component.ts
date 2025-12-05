@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CampaignService } from '../../services/campaign.service';
 import { Campaign } from '../../../domain/model/campaign.entity';
@@ -11,14 +12,14 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
 
 /**
  * ReportesComponent
- * 
+ *
  * Component for generating and exporting campaign reports.
  * Supports JSON, CSV, and filtered exports.
  */
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatSelectModule, FormsModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatSelectModule, MatFormFieldModule, FormsModule],
   templateUrl: './reportes.component.html',
   styleUrls: ['./reportes.component.css']
 })
@@ -56,8 +57,8 @@ export class ReportesComponent implements OnInit {
     const totalImpressions = campaigns.reduce((sum, c) => sum + c.totalImpressions, 0);
     const totalClicks = campaigns.reduce((sum, c) => sum + c.totalClicks, 0);
     const totalBudget = campaigns.reduce((sum, c) => sum + c.estimatedBudget, 0);
-    const averageCTR = campaigns.length > 0 
-      ? campaigns.reduce((sum, c) => sum + c.ctr, 0) / campaigns.length 
+    const averageCTR = campaigns.length > 0
+      ? campaigns.reduce((sum, c) => sum + c.ctr, 0) / campaigns.length
       : 0;
 
     return {
