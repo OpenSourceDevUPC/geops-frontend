@@ -30,7 +30,7 @@ export interface Campaign extends BaseEntity {
   estimatedBudget: number;
   totalImpressions: number;
   totalClicks: number;
-  ctr: number;
+  CTR: number;
   createdAt: string;
   updatedAt: string;
 }

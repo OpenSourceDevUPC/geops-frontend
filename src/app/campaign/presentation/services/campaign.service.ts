@@ -154,7 +154,7 @@ export class CampaignService {
     return {
       impressions: campaign.totalImpressions,
       clicks: campaign.totalClicks,
-      ctr: campaign.ctr
+      ctr: campaign.CTR,
     };
   }
 

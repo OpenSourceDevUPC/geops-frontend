@@ -54,11 +54,21 @@ export class ResumenComponent implements OnInit {
   }
 
   private calculateMetrics(): void {
-    this.totalImpressions = this.campaigns.reduce((sum, c) => sum + c.totalImpressions, 0);
-    this.totalClicks = this.campaigns.reduce((sum, c) => sum + c.totalClicks, 0);
-    this.averageCTR = this.campaigns.length > 0
-      ? this.campaigns.reduce((sum, c) => sum + c.ctr, 0) / this.campaigns.length
-      : 0;
+    this.totalImpressions = this.campaigns.reduce((sum, c) => sum + (c.totalImpressions || 0), 0);
+    this.totalClicks = this.campaigns.reduce((sum, c) => sum + (c.totalClicks || 0), 0);
+
+    // Calculate average CTR safely
+    if (this.campaigns.length > 0) {
+      const validCTRs = this.campaigns
+        .map((c) => c.CTR || 0)
+        .filter((ctr) => !isNaN(ctr) && isFinite(ctr));
+
+      this.averageCTR = validCTRs.length > 0
+        ? validCTRs.reduce((sum, ctr) => sum + ctr, 0) / validCTRs.length
+        : 0;
+    } else {
+      this.averageCTR = 0;
+    }
   }
 
   /**

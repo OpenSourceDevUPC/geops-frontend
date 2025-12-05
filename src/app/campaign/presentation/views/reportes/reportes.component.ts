@@ -57,9 +57,19 @@ export class ReportesComponent implements OnInit {
     const totalImpressions = campaigns.reduce((sum, c) => sum + c.totalImpressions, 0);
     const totalClicks = campaigns.reduce((sum, c) => sum + c.totalClicks, 0);
     const totalBudget = campaigns.reduce((sum, c) => sum + c.estimatedBudget, 0);
-    const averageCTR = campaigns.length > 0
-      ? campaigns.reduce((sum, c) => sum + c.ctr, 0) / campaigns.length
-      : 0;
+        // Calculate average CTR safely
+    let averageCTR = 0;
+    if (campaigns.length > 0) {
+      const validCTRs = campaigns
+        .map(c => c.CTR || 0)
+        .filter(ctr => !isNaN(ctr) && isFinite(ctr));
+
+      averageCTR = validCTRs.length > 0
+        ? validCTRs.reduce((sum, ctr) => sum + ctr, 0) / validCTRs.length
+        : 0;
+    } else {
+      averageCTR = 0;
+    }
 
     return {
       generatedAt: new Date().toISOString(),
@@ -85,7 +95,7 @@ export class ReportesComponent implements OnInit {
         estimatedBudget: c.estimatedBudget,
         totalImpressions: c.totalImpressions,
         totalClicks: c.totalClicks,
-        ctr: c.ctr,
+        ctr: c.CTR,
         createdAt: c.createdAt,
         updatedAt: c.updatedAt
       }))
@@ -99,7 +109,7 @@ export class ReportesComponent implements OnInit {
   get csvData(): string {
     const campaigns = this.filteredCampaigns;
     const headers = ['ID', 'Nombre', 'Estado', 'Fecha Inicio', 'Fecha Fin', 'Presupuesto', 'Impresiones', 'Clicks', 'CTR (%)'];
-    const rows = campaigns.map(c => [
+    const rows = campaigns.map((c) => [
       c.id,
       c.name,
       c.status,
@@ -108,7 +118,7 @@ export class ReportesComponent implements OnInit {
       c.estimatedBudget,
       c.totalImpressions,
       c.totalClicks,
-      c.ctr
+      c.CTR,
     ]);
 
     return [

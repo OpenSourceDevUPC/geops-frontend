@@ -35,9 +35,9 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       estimatedBudget: resource.estimatedBudget,
       totalImpressions: resource.totalImpressions,
       totalClicks: resource.totalClicks,
-      ctr: resource.ctr,
+      CTR: resource.CTR,
       createdAt: resource.createdAt,
-      updatedAt: resource.updatedAt
+      updatedAt: resource.updatedAt,
     };
   }
 
@@ -56,9 +56,9 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       estimatedBudget: entity.estimatedBudget,
       totalImpressions: entity.totalImpressions,
       totalClicks: entity.totalClicks,
-      ctr: entity.ctr,
+      CTR: entity.CTR,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      updatedAt: entity.updatedAt,
     };
   }
 
@@ -101,7 +101,7 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
     if (entity.estimatedBudget !== undefined) resource.estimatedBudget = entity.estimatedBudget;
     if (entity.totalImpressions !== undefined) resource.totalImpressions = entity.totalImpressions;
     if (entity.totalClicks !== undefined) resource.totalClicks = entity.totalClicks;
-    if (entity.ctr !== undefined) resource.ctr = entity.ctr;
+    if (entity.CTR !== undefined) resource.ctr = entity.CTR;
 
     return resource;
   }

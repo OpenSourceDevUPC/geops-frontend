@@ -19,7 +19,7 @@ export interface CampaignResource {
   estimatedBudget: number;
   totalImpressions: number;
   totalClicks: number;
-  ctr: number;
+  CTR: number;
   createdAt: string;
   updatedAt: string;
 }
