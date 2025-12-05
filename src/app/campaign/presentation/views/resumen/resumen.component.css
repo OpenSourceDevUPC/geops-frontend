@@ -1,0 +1,37 @@
+.resumen-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.metric {
+  text-align: center;
+  padding: 20px;
+}
+
+.metric mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #A751D4;
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 15px 0 10px;
+}
+
+.metric-label {
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+}

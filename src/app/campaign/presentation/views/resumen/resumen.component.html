@@ -1,0 +1,45 @@
+<div class="resumen-container">
+  <h2>Dashboard - Resumen de Campañas</h2>
+  
+  <div class="metrics-grid">
+    <mat-card>
+      <mat-card-content>
+        <div class="metric">
+          <mat-icon>visibility</mat-icon>
+          <div class="metric-value">{{ totalImpressions | number }}</div>
+          <div class="metric-label">Impresiones Totales</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-content>
+        <div class="metric">
+          <mat-icon>touch_app</mat-icon>
+          <div class="metric-value">{{ totalClicks | number }}</div>
+          <div class="metric-label">Clicks Totales</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-content>
+        <div class="metric">
+          <mat-icon>trending_up</mat-icon>
+          <div class="metric-value">{{ averageCTR | number:'1.2-2' }}%</div>
+          <div class="metric-label">CTR Promedio</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-content>
+        <div class="metric">
+          <mat-icon>campaign</mat-icon>
+          <div class="metric-value">{{ campaigns.length }}</div>
+          <div class="metric-label">Campañas Activas</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

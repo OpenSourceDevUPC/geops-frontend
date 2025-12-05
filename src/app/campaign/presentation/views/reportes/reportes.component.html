@@ -1,0 +1,16 @@
+<div class="reportes-container">
+  <div class="reportes-header">
+    <h2>Reportes de Campañas</h2>
+    <button mat-raised-button color="primary" (click)="exportReport()" class="export-btn">
+      Exportar JSON
+    </button>
+  </div>
+
+  <div class="json-container">
+    <pre class="json-content">{{ jsonData }}</pre>
+  </div>
+
+  <div class="reportes-footer">
+    <p>© 2025 GeoPs Labs</p>
+  </div>
+</div>
