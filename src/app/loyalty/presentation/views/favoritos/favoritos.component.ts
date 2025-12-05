@@ -37,10 +37,7 @@ export class FavoritosComponent implements OnInit {
   loading = false;
   offers: Offer[] = [];
 
-
   private currentUserId: number | null = null;
-
-  userId = 0;
 
   /**
    * creates an instance of the 'favoritesComponent' component
@@ -150,10 +147,15 @@ export class FavoritosComponent implements OnInit {
    * @param o - Oferta a añadir
    */
   addToCart(o: Offer) {
+    if (!this.currentUserId) {
+      console.warn('[Favoritos] No hay usuario autenticado para añadir al carrito');
+      return;
+    }
+
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+    this.cartStore.addItem(this.currentUserId, o.id, offerTitle, o.price, offerImageUrl, 1);
   }
 
   /**
@@ -161,11 +163,16 @@ export class FavoritosComponent implements OnInit {
    * @param o - Oferta a comprar
    */
   buyNow(o: Offer) {
+    if (!this.currentUserId) {
+      console.warn('[Favoritos] No hay usuario autenticado para comprar');
+      return;
+    }
+
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
     // Add to cart and open sidebar
-    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+    this.cartStore.addItem(this.currentUserId, o.id, offerTitle, o.price, offerImageUrl, 1);
     this.cartStore.openSidebar();
   }
 
