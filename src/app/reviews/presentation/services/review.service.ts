@@ -17,9 +17,13 @@ export class ReviewService {
 
   // Expose observables from infrastructure layer
   public reviews$ = this.api.reviews$;
-  public selectedReview$ = this.api.selectedReview$;
-  public loading$ = this.api.loading$;
-  public error$ = this.api.error$;
+
+  /**
+   * Load all reviews
+   */
+  loadAllReviews(): void {
+    this.api.getAllReviews().subscribe();
+  }
 
   /**
    * Load all reviews for a specific offer
@@ -29,59 +33,30 @@ export class ReviewService {
   }
 
   /**
-   * Load a single review by ID
+   * Load all reviews by user ID
    */
-  loadReviewById(id: number): void {
-    this.api.getReviewById(id).subscribe();
+  loadReviewsByUserId(userId: number): void {
+    this.api.getReviewsByUserId(userId).subscribe();
+  }
+
+  /**
+   * Load reviews filtered by user's campaigns
+   *
+   * This loads only reviews that belong to offers from campaigns owned by the user.
+   * Uses cross-bounded-context filtering:
+   * 1. Gets user's campaigns
+   * 2. Gets offers from those campaigns
+   * 3. Filters reviews by those offer IDs
+   */
+  loadReviewsByUserCampaigns(userId: number): void {
+    this.api.getReviewsByUserCampaigns(userId).subscribe();
   }
 
   /**
    * Create a new review
    */
-  createReview(review: Partial<Review>): Observable<Review | null> {
+  createReview(review: Omit<Review, 'id'>): Observable<Review> {
     return this.api.createReview(review);
-  }
-
-  /**
-   * Update an existing review
-   */
-  updateReview(id: number, review: Partial<Review>): Observable<Review | null> {
-    return this.api.updateReview(id, review);
-  }
-
-  /**
-   * Delete a review
-   */
-  deleteReview(id: number): Observable<boolean> {
-    return this.api.deleteReview(id);
-  }
-
-  /**
-   * Increment likes for a review
-   */
-  likeReview(id: number): void {
-    this.api.incrementLikes(id).subscribe();
-  }
-
-  /**
-   * Clear all reviews from state
-   */
-  clearReviews(): void {
-    this.api.clearReviews();
-  }
-
-  /**
-   * Clear selected review from state
-   */
-  clearSelectedReview(): void {
-    this.api.clearSelectedReview();
-  }
-
-  /**
-   * Get current reviews (non-reactive)
-   */
-  getCurrentReviews(): Review[] {
-    return this.api.getCurrentReviews();
   }
 
   /**

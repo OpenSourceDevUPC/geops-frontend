@@ -1,7 +1,10 @@
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, tap, of, map } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, map, tap, forkJoin, switchMap, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Review } from '../domain/model/review.entity';
 import { ReviewApiEndpoint } from './review-api-endpoint';
+import { environment } from '../../../environments/environment';
 
 /**
  * Review API Service
@@ -9,180 +12,88 @@ import { ReviewApiEndpoint } from './review-api-endpoint';
  * Infrastructure service for managing review data and state.
  * Provides reactive state management using BehaviorSubjects.
  */
-@Injectable({
-  providedIn: 'root'
-})
-export class ReviewApi {
-  private readonly endpoint = inject(ReviewApiEndpoint);
-
-  // State management with BehaviorSubjects
+@Injectable({ providedIn: 'root' })
+export class ReviewApi extends BaseApi {
+  private readonly endpoint: ReviewApiEndpoint;
   private reviewsSubject = new BehaviorSubject<Review[]>([]);
-  private selectedReviewSubject = new BehaviorSubject<Review | null>(null);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  private errorSubject = new BehaviorSubject<string | null>(null);
-
-  // Public observables
   public reviews$ = this.reviewsSubject.asObservable();
-  public selectedReview$ = this.selectedReviewSubject.asObservable();
-  public loading$ = this.loadingSubject.asObservable();
-  public error$ = this.errorSubject.asObservable();
 
-  /**
-   * Get all reviews for a specific offer
-   */
+  constructor(private http: HttpClient) {
+    super();
+    this.endpoint = new ReviewApiEndpoint(http);
+  }
+
+  getAllReviews(): Observable<Review[]> {
+    return this.endpoint
+      .getAll()
+      .pipe(tap((reviews: Review[]) => this.reviewsSubject.next(reviews)));
+  }
+
   getReviewsByOfferId(offerId: number): Observable<Review[]> {
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
-
     return this.endpoint.getByOfferId(offerId).pipe(
-      tap(reviews => {
-        this.reviewsSubject.next(reviews);
-        this.loadingSubject.next(false);
-      }),
-      catchError(error => {
-        this.errorSubject.next(error.message);
-        this.loadingSubject.next(false);
-        return of([]);
-      })
+      tap((reviews: Review[]) => this.reviewsSubject.next(reviews))
     );
   }
 
-  /**
-   * Get a single review by ID
-   */
-  getReviewById(id: number): Observable<Review | null> {
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
-
-    return this.endpoint.getById(id).pipe(
-      tap(review => {
-        this.selectedReviewSubject.next(review);
-        this.loadingSubject.next(false);
-      }),
-      catchError(error => {
-        this.errorSubject.next(error.message);
-        this.loadingSubject.next(false);
-        return of(null);
-      })
+  getReviewsByUserId(userId: number): Observable<Review[]> {
+    return this.endpoint.getAll().pipe(
+      map((reviews: Review[]) => reviews.filter((r) => r.userId === userId)),
+      tap((filtered) => this.reviewsSubject.next(filtered))
     );
   }
 
-  /**
-   * Create a new review
-   */
-  createReview(review: Partial<Review>): Observable<Review | null> {
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
-
-    return this.endpoint.createReview(review).pipe(
-      tap(newReview => {
-        const currentReviews = this.reviewsSubject.value;
-        this.reviewsSubject.next([...currentReviews, newReview]);
-        this.loadingSubject.next(false);
-      }),
-      catchError(error => {
-        this.errorSubject.next(error.message);
-        this.loadingSubject.next(false);
-        return of(null);
-      })
-    );
+  createReview(review: Omit<Review, 'id'>): Observable<Review> {
+    return this.endpoint
+      .createReview(review as Review)
+      .pipe(tap((r) => this.reviewsSubject.next([...this.reviewsSubject.value, r])));
   }
 
   /**
-   * Update an existing review
+   * Get reviews filtered by user's campaigns.
+   *
+   * This method performs cross-bounded-context filtering:
+   * 1. Gets user's campaigns from the campaign endpoint
+   * 2. Gets all offers from those campaigns
+   * 3. Filters all reviews to show only those matching the offer IDs
+   *
+   * @param userId user id to filter reviews by campaigns
    */
-  updateReview(id: number, review: Partial<Review>): Observable<Review | null> {
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
+  getReviewsByUserCampaigns(userId: number): Observable<Review[]> {
+    const campaignsUrl = `${environment.platformProviderApiBaseUrl}/campaigns/user/${encodeURIComponent(
+      userId
+    )}`;
 
-    return this.endpoint.updateReview(id, review).pipe(
-      tap(updatedReview => {
-        const currentReviews = this.reviewsSubject.value;
-        const index = currentReviews.findIndex(r => r.id === id);
-        if (index !== -1) {
-          currentReviews[index] = updatedReview;
-          this.reviewsSubject.next([...currentReviews]);
+    return this.http.get<any[]>(campaignsUrl).pipe(
+      switchMap((campaigns) => {
+        if (campaigns.length === 0) {
+          return of([]);
         }
-        this.loadingSubject.next(false);
-      }),
-      catchError(error => {
-        this.errorSubject.next(error.message);
-        this.loadingSubject.next(false);
-        return of(null);
-      })
-    );
-  }
 
-  /**
-   * Delete a review
-   */
-  deleteReview(id: number): Observable<boolean> {
-    this.loadingSubject.next(true);
-    this.errorSubject.next(null);
+        // Get all offers for each campaign
+        const offerRequests = campaigns.map((campaign) =>
+          this.http.get<any[]>(
+            `${environment.platformProviderApiBaseUrl}/offers/campaign/${campaign.id}`
+          )
+        );
 
-    return this.endpoint.deleteReview(id).pipe(
-      tap(() => {
-        const currentReviews = this.reviewsSubject.value;
-        this.reviewsSubject.next(currentReviews.filter(r => r.id !== id));
-        this.loadingSubject.next(false);
+        return forkJoin(offerRequests).pipe(
+          map((offersArrays) => {
+            // Flatten the arrays of offers
+            const allOffers = offersArrays.flat();
+            return allOffers.map((offer) => offer.id);
+          })
+        );
       }),
-      catchError(error => {
-        this.errorSubject.next(error.message);
-        this.loadingSubject.next(false);
-        return of(false);
-      }),
-      map(() => true)
-    );
-  }
-
-  /**
-   * Increment likes for a review
-   */
-  incrementLikes(id: number): Observable<Review | null> {
-    return this.endpoint.incrementLikes(id).pipe(
-      tap(updatedReview => {
-        const currentReviews = this.reviewsSubject.value;
-        const index = currentReviews.findIndex(r => r.id === id);
-        if (index !== -1) {
-          currentReviews[index] = updatedReview;
-          this.reviewsSubject.next([...currentReviews]);
+      switchMap((offerIds) => {
+        if (offerIds.length === 0) {
+          return of([]);
         }
-        if (this.selectedReviewSubject.value?.id === id) {
-          this.selectedReviewSubject.next(updatedReview);
-        }
+
+        return this.endpoint.getAll().pipe(
+          map((reviews) => reviews.filter((review) => offerIds.includes(review.offerId)))
+        );
       }),
-      catchError(error => {
-        this.errorSubject.next(error.message);
-        return of(null);
-      })
+      tap((reviews: Review[]) => this.reviewsSubject.next(reviews))
     );
-  }
-
-  /**
-   * Clear reviews state
-   */
-  clearReviews(): void {
-    this.reviewsSubject.next([]);
-  }
-
-  /**
-   * Clear selected review
-   */
-  clearSelectedReview(): void {
-    this.selectedReviewSubject.next(null);
-  }
-
-  /**
-   * Get current reviews value (non-reactive)
-   */
-  getCurrentReviews(): Review[] {
-    return this.reviewsSubject.value;
-  }
-
-  /**
-   * Get current selected review value (non-reactive)
-   */
-  getCurrentSelectedReview(): Review | null {
-    return this.selectedReviewSubject.value;
   }
 }

@@ -134,8 +134,8 @@ export const routes: Routes = [
       {
         path: 'comentarios',
         loadComponent: () =>
-          import('./campaign/presentation/views/comentarios/comentarios.component').then(
-            (m) => m.ComentariosComponent
+          import('./reviews/presentation/views/reviews-list/reviews-list.component').then(
+            (m) => m.ReviewsListComponent
           ),
         title: 'GeoPs - Comentarios',
       },
