@@ -141,6 +141,23 @@ mat-card-title mat-icon {
   margin-bottom: 24px;
 }
 
+/* Estilos para el dropdown del filtro by status */
+::ng-deep .mat-mdc-select-panel {
+  background: linear-gradient(135deg, #f8f3fc 0%, #ffffff 100%) !important;
+}
+
+::ng-deep .mat-mdc-select-panel .mat-mdc-option {
+  background: transparent !important;
+}
+
+::ng-deep .mat-mdc-select-panel .mat-mdc-option:hover {
+  background: rgba(167, 81, 212, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-option.mat-mdc-option-active {
+  background: rgba(167, 81, 212, 0.2) !important;
+}
+
 .report-preview h3 {
   margin: 0 0 16px 0;
   color: #4A0072;

@@ -15,7 +15,7 @@
     <span class="spacer desktop-only"></span>
 
     <!-- Search Field -->
-    <mat-form-field class="search-field" appearance="outline">
+    <mat-form-field class="search-field" appearance="outline" *ngIf="!isOwner()">
       <mat-icon matPrefix>search</mat-icon>
       <input
         matInput
@@ -74,14 +74,6 @@
           <mat-icon>settings</mat-icon>
           <span>{{ 'header.profile.menu.settings' | translate }}</span>
         </button>
-        <button mat-menu-item [routerLink]="'/favoritos'">
-          <mat-icon>favorite</mat-icon>
-          <span>{{ 'option.favorites' | translate }}</span>
-        </button>
-        <button mat-menu-item [routerLink]="'/mis-cupones'">
-          <mat-icon>local_offer</mat-icon>
-          <span>{{ 'option.coupons' | translate }}</span>
-        </button>
         <mat-divider></mat-divider>
         <button mat-menu-item (click)="onLogout()" class="logout-btn">
           <mat-icon>logout</mat-icon>
@@ -92,6 +84,7 @@
       <button
         mat-raised-button
         class="action-btn cart"
+        *ngIf="!isOwner()"
         [attr.aria-label]="'header.cart' | translate"
         [matBadge]="cartCount()"
         [matBadgeHidden]="cartCount() === 0"
@@ -111,6 +104,7 @@
       <button
         mat-icon-button
         class="action-btn cart-mobile"
+        *ngIf="!isOwner()"
         [attr.aria-label]="'header.cart' | translate"
         [matBadge]="cartCount()"
         [matBadgeHidden]="cartCount() === 0"
@@ -143,14 +137,6 @@
     <a routerLink="/settings" class="mobile-menu-item" (click)="closeMobileMenu()">
       <mat-icon>settings</mat-icon>
       <span>{{ 'header.profile.menu.settings' | translate }}</span>
-    </a>
-    <a routerLink="/favoritos" class="mobile-menu-item" (click)="closeMobileMenu()">
-      <mat-icon>favorite</mat-icon>
-      <span>{{ 'option.favorites' | translate }}</span>
-    </a>
-    <a routerLink="/mis-cupones" class="mobile-menu-item" (click)="closeMobileMenu()">
-      <mat-icon>local_offer</mat-icon>
-      <span>{{ 'option.coupons' | translate }}</span>
     </a>
     <a [routerLink]="isOwner() ? '/help/help-center-provider' : '/help/help-center'" class="mobile-menu-item" (click)="closeMobileMenu()">
       <mat-icon>help</mat-icon>

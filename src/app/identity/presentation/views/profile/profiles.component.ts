@@ -50,7 +50,6 @@ export class ProfilesComponent implements OnInit {
       this.favoritesApi.getByUser(this.user.id).subscribe({
         next: (favoriteRows) => {
           this.favoriteCount = favoriteRows.length;
-          console.log(`User ${this.user?.name} has ${this.favoriteCount} favorites`);
         },
         error: (err) => {
           console.error('Error fetching favorites:', err);
@@ -63,7 +62,6 @@ export class ProfilesComponent implements OnInit {
         this.detailsConsumerService.getByUserId(this.user.id).subscribe({
           next: (details) => {
             this.consumerDetails = details;
-            console.log('[ProfileComponent] Consumer details loaded:', details);
             // Check browser location permission after loading details
             this.checkBrowserLocationPermission();
           },
@@ -84,7 +82,6 @@ export class ProfilesComponent implements OnInit {
     if ('permissions' in navigator) {
       try {
         const permission = await navigator.permissions.query({ name: 'geolocation' });
-        console.log('[ProfileComponent] Browser location permission state:', permission.state);
 
         switch (permission.state) {
           case 'granted':
@@ -101,7 +98,6 @@ export class ProfilesComponent implements OnInit {
 
         // Listen for permission changes
         permission.addEventListener('change', () => {
-          console.log('[ProfileComponent] Location permission changed to:', permission.state);
           switch (permission.state) {
             case 'granted':
               this.browserLocationPermission = 'ALWAYS';

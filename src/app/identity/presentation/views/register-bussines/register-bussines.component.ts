@@ -58,7 +58,6 @@ export class RegisterBussinesComponent implements OnInit {
 
     try {
       this.ownerData = JSON.parse(storedData);
-      console.log('[RegisterBussines] ✅ Datos cargados:', this.ownerData.email);
     } catch (e) {
       console.error('[RegisterBussines] ❌ Error al parsear datos:', e);
       this.errorMessage = 'Error: Datos inválidos. Por favor vuelve a registrarte.';
@@ -116,12 +115,8 @@ export class RegisterBussinesComponent implements OnInit {
       plan: this.ownerData.plan || 'BASIC'
     };
 
-    console.log('[RegisterBussines] 🔄 Creando usuario OWNER:', JSON.stringify(userPayload, null, 2));
-
     this.authService.register(userPayload).subscribe({
       next: (user: any) => {
-        console.log('[RegisterBussines] ✅ Usuario OWNER creado exitosamente');
-        console.log('[RegisterBussines] User ID:', user.id, '| Role:', user.role, '| Plan:', user.plan);
 
         // Verificar que el backend creó el usuario con el rol correcto
         if (user.role !== 'OWNER') {
@@ -159,7 +154,6 @@ export class RegisterBussinesComponent implements OnInit {
    * @param userId The ID of the user to create details for
    */
   private createOwnerDetails(userId: number): void {
-    console.log('[RegisterBussines] 🔄 Creando detalles de propietario para user:', userId);
 
     const ownerDetailsPayload = {
       businessName: this.business.businessName,

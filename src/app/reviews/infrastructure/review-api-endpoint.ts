@@ -74,11 +74,8 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
     return this.http.get<any[]>(campaignsUrl).pipe(
       switchMap((campaigns) => {
         if (!campaigns || campaigns.length === 0) {
-          console.log('[ReviewApiEndpoint] No campaigns found for user:', userId);
           return of([]);
         }
-
-        console.log('[ReviewApiEndpoint] Found campaigns:', campaigns.length);
 
         // Step 2: Get all offers for each campaign
         const offerRequests = campaigns.map((campaign) =>
@@ -96,14 +93,12 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
           map((offersArrays) => {
             // Flatten the arrays of offers
             const allOffers = offersArrays.flat();
-            console.log('[ReviewApiEndpoint] Found offers:', allOffers.length);
             return allOffers.map((offer) => offer.id);
           })
         );
       }),
       switchMap((offerIds) => {
         if (!offerIds || offerIds.length === 0) {
-          console.log('[ReviewApiEndpoint] No offers found for user campaigns');
           return of([]);
         }
 
@@ -127,7 +122,6 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
 
             // Filter reviews by offer IDs
             const filtered = allReviews.filter(review => offerIds.includes(review.offerId));
-            console.log('[ReviewApiEndpoint] Filtered reviews:', filtered.length, 'from', allReviews.length);
 
             return filtered;
           })

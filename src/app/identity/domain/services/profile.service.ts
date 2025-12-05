@@ -57,9 +57,7 @@ export class ProfileService {
     if (!userId) {
       throw new Error('No authenticated user found');
     }
-    return this.consumerDetailsService.createOrUpdate(userId, details).pipe(
-      tap(() => console.log('[ProfileService] Consumer details saved successfully'))
-    );
+    return this.consumerDetailsService.createOrUpdate(userId, details);
   }
 
   /**
@@ -72,9 +70,7 @@ export class ProfileService {
     if (!userId) {
       throw new Error('No authenticated user found');
     }
-    return this.ownerDetailsService.createOrUpdate(userId, details).pipe(
-      tap(() => console.log('[ProfileService] Owner details saved successfully'))
-    );
+    return this.ownerDetailsService.createOrUpdate(userId, details);
   }
 
   /**

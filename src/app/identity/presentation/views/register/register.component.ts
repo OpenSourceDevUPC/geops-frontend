@@ -114,9 +114,7 @@ export class RegisterComponent {
         plan: this.model.plan
       };
 
-      console.log('[Register] Guardando datos de OWNER:', ownerData.email);
       localStorage.setItem('register-owner-data', JSON.stringify(ownerData));
-      console.log('[Register] ✅ Datos guardados. Navegando a register-bussines.');
 
       this.router.navigate(['/register-bussines']);
       this.registering = false;
@@ -133,11 +131,8 @@ export class RegisterComponent {
       plan: 'BASIC'
     };
 
-    console.log('[Register] Registrando CONSUMER:', payload.email);
-
     this.authService.register(payload).subscribe({
       next: (user: any) => {
-        console.log('[Register] ✅ Usuario CONSUMER registrado. ID:', user.id);
         this.router.navigate(['/home']);
         this.registering = false;
       },

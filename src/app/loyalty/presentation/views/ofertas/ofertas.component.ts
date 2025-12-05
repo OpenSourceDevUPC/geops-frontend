@@ -361,7 +361,6 @@ export class OfertasComponent implements OnInit, OnDestroy {
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
           this.favSet.delete((o.id));
-          console.log('[Ofertas] Favorito eliminado:', o.id);
         },
         error: (err) => {
           console.error('[Ofertas] Error al eliminar favorito:', err);

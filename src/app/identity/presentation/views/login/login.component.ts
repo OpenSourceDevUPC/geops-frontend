@@ -67,19 +67,13 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    console.log('[Login] Intentando login con email:', this.model.email);
-
     this.authService.login(this.model.email, this.model.password).subscribe({
       next: (user) => {
         if (user) {
-          console.log('[Login] ✅ Autenticado. User ID:', user.id, 'Role:', user.role);
-
           // Redirigir según el rol del usuario
           if (user.role === 'OWNER') {
-            console.log('[Login] Navegando a /resumen');
             this.router.navigate(['/resumen']);
           } else {
-            console.log('[Login] Navegando a /home');
             this.router.navigate(['/home']);
           }
         } else {

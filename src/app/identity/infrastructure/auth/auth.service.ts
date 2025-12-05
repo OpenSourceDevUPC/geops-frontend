@@ -24,7 +24,6 @@ export class AuthService {
       try {
         const user = JSON.parse(stored);
         this.currentUserSubject.next(user);
-        console.log('[AuthService] User loaded from localStorage:', user.id);
       } catch (e) {
         console.error('[AuthService] Error parsing user:', e);
         localStorage.removeItem('currentUser');
@@ -72,7 +71,6 @@ export class AuthService {
         };
 
         this.setCurrentUser(user);
-        console.log('[AuthService] Successful login. User ID:', user.id);
         return user;
       }),
       catchError(error => {
@@ -98,7 +96,6 @@ export class AuthService {
         };
 
         this.setCurrentUser(user);
-        console.log('[AuthService] Successful registration. User ID:', user.id, 'Role:', user.role);
         return user;
       }),
       catchError(error => {
@@ -112,7 +109,6 @@ export class AuthService {
    * Logs out
    */
   logout(): void {
-    console.log('[AuthService] Logging out');
     this.currentUserSubject.next(null);
     localStorage.removeItem('currentUser');
   }
@@ -158,7 +154,6 @@ export class AuthService {
     return this.usersApi.getMe(user.email).pipe(
       map(refreshedUser => {
         this.setCurrentUser(refreshedUser);
-        console.log('[AuthService] User refreshed:', refreshedUser.id);
         return refreshedUser;
       }),
       catchError(error => {

@@ -106,7 +106,6 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
       this.store.loadReviewsByOfferId(this.offerId);
     } else {
       // Load all reviews (already filtered by user's campaigns in the API)
-      console.log('[ReviewsListComponent] Loading reviews filtered by user campaigns');
       this.store.loadAllReviews();
     }
   }
