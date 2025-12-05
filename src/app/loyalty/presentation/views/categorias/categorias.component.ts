@@ -48,7 +48,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   userId = 0;
 
   /**
-   * filttros de búsqueda
+   * search filters
    */
   filters = {
     q: '',
@@ -62,7 +62,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   private currentUserId: number | null = null;
 
   /**
-   * crea una instancia del componente ofertascomponent
+   * creates an instance of the offerscomponent component
    */
   constructor(
     private route: ActivatedRoute,
@@ -73,10 +73,10 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
-   * obtiene las ofertas de la API
-   * carga todo lo que tiene que tener ofertas
-   * inicia el carrusel de las ofertas destacadas
-   * recupera los favoritos del usuario
+   * retrieves offers from the API
+   * loads all offers
+   * starts the featured offers carousel
+   * retrieves user favorites
    */
   ngOnInit(): void {
 
@@ -92,8 +92,6 @@ export class CategoriasComponent implements OnInit, OnDestroy {
 
     if (!this.currentUserId) {
       console.warn('[Ofertas] No hay usuario autenticado');
-      // Opcional: redirigir al login
-      // this.router.navigate(['/login']);
     }
 
     this.loading = true;
@@ -121,8 +119,8 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * se ejecuta al destruir el componente
-   * y tambien detiene el temporizador del carrusel
+   * it is executed when the component is destroyed
+   * it also stops the carousel timer
    * @return { void}
    */
   ngOnDestroy(): void {
@@ -130,7 +128,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * inicia el desplazamiento automático del carrusel
+   * starts the automatic scrolling of the carousel
    */
   startAuto() {
     clearInterval(this.timer);
@@ -138,14 +136,14 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * cambia la oferta destacada en el carrusel
+   * changes the featured offer in the carousel
    */
   next() {
     this.idx = (this.idx + 1) % this.featured.length;
   }
 
   /**
-   * cambia el carrusel a una oferta especifica
+   * changes the carousel to a specific offer
    * @param index
    */
   goTo(index: number) {
@@ -154,15 +152,15 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * obtiene la oferta destacada actualmente activa
+   * gets the currently active featured offer
    */
   active(): Offer | null {
     return this.featured[this.idx] ?? null;
   }
 
   /**
-   * devuelve la url de la imagen correspondiente de una oferta, en caso no haya imagen
-   * devuelve una ruta
+   * returns the image URL for an offer, or a default path if no image is available
+   * returns a route
    * @param o
    */
   imgFor(o: Offer | null): string {
@@ -170,7 +168,21 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * se aplican filtros
+   * checks if a location is a district (no translation needed)
+   * @param location
+   */
+  isDistrict(location: string): boolean {
+    const districts = [
+      'Surco', 'San Miguel', 'San Borja', 'Chorrillos', 'Santa Marina', 'Trujillo',
+      'Arequipa', 'Ica', 'Ate', 'Breña', 'Comas', 'Barranco', 'Los Olivos', 'Magdalena',
+      'Miraflores', 'Pueblo Libre', 'San Isidro'
+    ];
+    const locationParts = location.split(',').map(part => part.trim());
+    return locationParts.some(part => districts.includes(part));
+  }
+
+  /**
+   * applies filters
    */
   applyFilters() {
     const q = this.filters.q.trim().toLowerCase();
@@ -205,7 +217,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * limpia los filtros aplicados
+   * clears the applied filters
    */
   clearFilters() {
     this.filters = { q: '', category: 'all', location: 'all', sort: 'relevance' };
@@ -213,7 +225,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * obtiene los favoritos del usuario actual desde la API
+   * fetches the current user's favorites from the API
    * @private
    */
   private fetchFavs() {
@@ -231,14 +243,14 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * verifica si una oferta esta marcada como favorita
+   * checks if an offer is marked as favorite
    * @param id
    */
   isFav(id: number) { return this.favSet.has((id)); }
 
   /**
-   * aqui basicamente se actualiza el estado de favorito de una oferta
-   * si ya esta marcada, la elimina de favoritos, sino la agrega
+   * basically updates the favorite state of an offer
+   * if it's already marked, it removes it from favorites, otherwise it adds it
    * @param o
    */
   toggleFav(o: Offer) {
@@ -249,7 +261,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     }
 
     if (this.favSet.has((o.id))) {
-      // REMOVER favorito usando el endpoint directo
+      // REMOVE favorite using the direct endpoint
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
           this.favSet.delete((o.id));
@@ -260,7 +272,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      // AGREGAR favorito
+      // ADD favorite
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
         this.favSet.add((o.id));
         console.log('[Ofertas] Favorito agregado:', o.id);
@@ -269,8 +281,8 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Añade una oferta al carrito
-   * @param o - Oferta a añadir
+   * adds an offer to the cart
+   * @param o - offer to add
    */
   addToCart(o: Offer) {
     const offerTitle = o.title;
@@ -298,8 +310,8 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Procede a comprar directamente - añade al carrito y abre el sidebar
-   * @param o - Oferta a comprar
+   * proceeds to buy directly - adds to cart and opens the sidebar
+   * @param o - offer to buy
    */
   buyNow(o: Offer) {
     // Using hardcoded user ID for now - in real app would come from auth service
