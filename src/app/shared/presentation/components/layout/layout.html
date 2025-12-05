@@ -39,7 +39,7 @@
 
     <!-- Desktop Actions -->
     <div class="desktop-actions">
-      <a mat-raised-button class="action-btn help" routerLink="/help/help-center">
+      <a mat-raised-button class="action-btn help" [routerLink]="isOwner() ? '/help/help-center-provider' : '/help/help-center'">
         {{ 'header.help' | translate }}
       </a>
 
@@ -152,7 +152,7 @@
       <mat-icon>local_offer</mat-icon>
       <span>{{ 'option.coupons' | translate }}</span>
     </a>
-    <a routerLink="/help/help-center" class="mobile-menu-item" (click)="closeMobileMenu()">
+    <a [routerLink]="isOwner() ? '/help/help-center-provider' : '/help/help-center'" class="mobile-menu-item" (click)="closeMobileMenu()">
       <mat-icon>help</mat-icon>
       <span>{{ 'header.help' | translate }}</span>
     </a>

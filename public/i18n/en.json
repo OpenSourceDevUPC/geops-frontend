@@ -416,6 +416,19 @@
     "allowLocation": "Allow location",
     "allow": "Allow"
   },
+  "helpCenterProvider": {
+    "title": "Help Center",
+    "createCampaignQuestion": "How do I create a campaign?",
+    "createCampaignBefore": "Go to",
+    "createCampaignWord": "Create campaign",
+    "createCampaignAfter": ", complete title, budget, dates and segmentation (location or radius), and publish.",
+    "pauseReactivateQuestion": "How do I pause or reactivate?",
+    "pauseReactivateBefore": "In Campaigns, use the buttons",
+    "pauseReactivateAfter": "according to the status.",
+    "pauseReactivate": "Pause / Reactivate",
+    "metricsQuestion": "Why don't I see metrics?",
+    "metricsAnswer": "If the campaign is new or paused, metrics may take time. Check back later or verify the budget."
+  },
   "common": {
     "currency": "s/"
   },

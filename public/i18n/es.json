@@ -416,6 +416,19 @@
     "allowLocation": "Permitir ubicación",
     "allow": "Permitir"
   },
+  "helpCenterProvider": {
+    "title": "Centro de ayuda",
+    "createCampaignQuestion": "¿Cómo creo una campaña?",
+    "createCampaignBefore": "Ve a",
+    "createCampaignWord": "Crear campaña",
+    "createCampaignAfter": ", completa título, presupuesto, fechas y segmentación (ubicación o radio), y publica.",
+    "pauseReactivateQuestion": "¿Cómo pauso o reactivo?",
+    "pauseReactivateBefore": "En Campañas, usa los botones",
+    "pauseReactivateAfter": "según el estado.",
+    "pauseReactivate": "Pausar / Reactivar",
+    "metricsQuestion": "¿Por qué no veo métricas?",
+    "metricsAnswer": "Si la campaña es nueva o está pausada, las métricas pueden tardar. Revisa más tarde o verifica el presupuesto."
+  },
   "common": {
     "currency": "s/"
   },
