@@ -124,6 +124,14 @@ export const routes: Routes = [
         title: 'GeoPs - Editar Campaña',
       },
       {
+        path: 'ver-campaña/:id',
+        loadComponent: () =>
+          import('./campaign/presentation/views/view-campaign/view-campaign.component').then(
+            (m) => m.ViewCampaignComponent
+          ),
+        title: 'GeoPs - Ver Campaña',
+      },
+      {
         path: 'reportes',
         loadComponent: () =>
           import('./campaign/presentation/views/reportes/reportes.component').then(

@@ -11,8 +11,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CampaignService } from '../../services/campaign.service';
 import { Campaign } from '../../../domain/model/campaign.entity';
+import { CampaignOffer } from '../../../domain/model/offer.entity';
+import { CampaignOffersListComponent } from '../../components/campaign-offers-list/campaign-offers-list.component';
+import { AddOfferFormComponent } from '../../components/add-offer-form/add-offer-form.component';
+import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
 
 /**
  * EditCampaignComponent
@@ -36,7 +42,11 @@ import { Campaign } from '../../../domain/model/campaign.entity';
     MatNativeDateModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTabsModule,
+    MatDialogModule,
+    CampaignOffersListComponent,
+    AddOfferFormComponent
   ],
   templateUrl: './edit-campaign.component.html',
   styleUrls: ['./edit-campaign.component.css']
@@ -47,12 +57,16 @@ export class EditCampaignComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   campaignForm: FormGroup;
   loading = false;
   error: string | null = null;
   campaignId: number = 0;
   campaign: Campaign | null = null;
+  offers: CampaignOffer[] = [];
+  showOfferForm: boolean = false;
+  editingOffer: CampaignOffer | undefined = undefined;
 
   constructor() {
     this.campaignForm = this.fb.group({
@@ -69,6 +83,7 @@ export class EditCampaignComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.campaignId = +params['id'];
       this.loadCampaign();
+      this.loadOffers();
     });
   }
 
@@ -82,6 +97,13 @@ export class EditCampaignComponent implements OnInit {
         this.populateForm(campaign);
         this.loading = false;
       }
+    });
+  }
+
+  loadOffers(): void {
+    this.campaignService.loadOffersByCampaignId(this.campaignId);
+    this.campaignService.campaignOffers$.subscribe(offers => {
+      this.offers = offers;
     });
   }
 
@@ -120,6 +142,83 @@ export class EditCampaignComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/campañas']);
+    this.router.navigate(['/resumen']);
+  }
+
+  // ==================== OFFER MANAGEMENT ====================
+
+  onShowOfferForm(): void {
+    this.showOfferForm = true;
+    this.editingOffer = undefined;
+  }
+
+  onHideOfferForm(): void {
+    this.showOfferForm = false;
+    this.editingOffer = undefined;
+  }
+
+  onSaveOffer(offerData: Partial<CampaignOffer>): void {
+    if (this.editingOffer && this.editingOffer.id) {
+      // Update existing offer
+      this.campaignService.updateOffer(this.editingOffer.id, offerData).subscribe({
+        next: () => {
+          this.snackBar.open('Oferta actualizada exitosamente', 'Cerrar', { duration: 3000 });
+          this.loadOffers();
+          this.onHideOfferForm();
+        },
+        error: (err) => {
+          console.error('[EditCampaign] Error updating offer:', err);
+          this.snackBar.open('Error al actualizar oferta', 'Cerrar', { duration: 3000 });
+        }
+      });
+    } else {
+      // Create new offer
+      this.campaignService.createOffer(offerData).subscribe({
+        next: () => {
+          this.snackBar.open('Oferta agregada exitosamente', 'Cerrar', { duration: 3000 });
+          this.loadOffers();
+          this.onHideOfferForm();
+        },
+        error: (err) => {
+          console.error('[EditCampaign] Error creating offer:', err);
+          this.snackBar.open('Error al agregar oferta', 'Cerrar', { duration: 3000 });
+        }
+      });
+    }
+  }
+
+  onEditOffer(offer: CampaignOffer): void {
+    this.editingOffer = offer;
+    this.showOfferForm = true;
+  }
+
+  onDeleteOffer(offerId: number): void {
+    const offer = this.offers.find(o => o.id === offerId);
+    if (!offer) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: '¿Eliminar oferta?',
+        message: `¿Estás seguro de que deseas eliminar la oferta "${offer.title}"? Esta acción no se puede deshacer.`,
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        isDanger: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.campaignService.deleteOffer(offerId).subscribe({
+          next: () => {
+            this.snackBar.open('Oferta eliminada exitosamente', 'Cerrar', { duration: 3000 });
+            this.loadOffers();
+          },
+          error: (err) => {
+            console.error('[EditCampaign] Error deleting offer:', err);
+            this.snackBar.open('Error al eliminar oferta', 'Cerrar', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 }

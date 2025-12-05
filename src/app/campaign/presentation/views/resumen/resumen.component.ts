@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CampaignService } from '../../services/campaign.service';
 import { Campaign, CampaignStatus } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
+import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
 
 /**
  * ResumenComponent
@@ -17,7 +20,7 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
 @Component({
   selector: 'app-resumen',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, MatSnackBarModule],
   templateUrl: './resumen.component.html',
   styleUrls: ['./resumen.component.css']
 })
@@ -25,6 +28,8 @@ export class ResumenComponent implements OnInit {
   private readonly campaignService = inject(CampaignService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   campaigns: Campaign[] = [];
   totalImpressions = 0;
@@ -104,12 +109,11 @@ export class ResumenComponent implements OnInit {
   }
 
   /**
-   * View campaign details
+   * View campaign details (read-only)
    */
   onView(campaignId: number): void {
     console.log('[Resumen] Viewing campaign:', campaignId);
-    // TODO: Navigate to campaign detail view
-    // this.router.navigate(['/campaigns', campaignId]);
+    this.router.navigate(['/ver-campaña', campaignId]);
   }
 
   /**
@@ -117,31 +121,74 @@ export class ResumenComponent implements OnInit {
    */
   onEdit(campaignId: number): void {
     console.log('[Resumen] Editing campaign:', campaignId);
-    // TODO: Navigate to campaign edit view
-    // this.router.navigate(['/campaigns', campaignId, 'edit']);
+    this.router.navigate(['/editar-campaña', campaignId]);
   }
 
   /**
    * Toggle campaign active/inactive status
    */
   onToggleStatus(campaignId: number): void {
-    console.log('[Resumen] Toggling status for campaign:', campaignId);
-    // TODO: Implement status toggle
-    // const campaign = this.campaigns.find(c => c.id === campaignId);
-    // if (campaign) {
-    //   const newStatus = campaign.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    //   this.campaignService.updateStatus(campaignId, newStatus).subscribe();
-    // }
+    const campaign = this.campaigns.find(c => c.id === campaignId);
+    if (!campaign) return;
+
+    const newStatus: CampaignStatus = campaign.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    const actionText = newStatus === 'ACTIVE' ? 'activar' : 'pausar';
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: `¿${actionText.charAt(0).toUpperCase() + actionText.slice(1)} campaña?`,
+        message: `¿Estás seguro de que deseas ${actionText} la campaña "${campaign.name}"?`,
+        confirmText: actionText.charAt(0).toUpperCase() + actionText.slice(1),
+        cancelText: 'Cancelar'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.campaignService.updateCampaign(campaignId, { status: newStatus }).subscribe({
+          next: () => {
+            this.snackBar.open(`Campaña ${actionText === 'activar' ? 'activada' : 'pausada'} exitosamente`, 'Cerrar', { duration: 3000 });
+            this.loadData();
+          },
+          error: (err) => {
+            console.error('[Resumen] Error toggling status:', err);
+            this.snackBar.open('Error al cambiar el estado de la campaña', 'Cerrar', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
   /**
-   * Delete campaign
+   * Delete campaign with confirmation
    */
   onDelete(campaignId: number): void {
-    console.log('[Resumen] Deleting campaign:', campaignId);
-    if (confirm('¿Estás seguro de que deseas eliminar esta campaña?')) {
-      // TODO: Implement campaign deletion
-      // this.campaignService.delete(campaignId).subscribe();
-    }
+    const campaign = this.campaigns.find(c => c.id === campaignId);
+    if (!campaign) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: '¿Eliminar campaña?',
+        message: `¿Estás seguro de que deseas eliminar la campaña "${campaign.name}"? Esta acción no se puede deshacer.`,
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        isDanger: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.campaignService.deleteCampaign(campaignId).subscribe({
+          next: () => {
+            this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', { duration: 3000 });
+            this.loadData();
+          },
+          error: (err) => {
+            console.error('[Resumen] Error deleting campaign:', err);
+            this.snackBar.open('Error al eliminar la campaña', 'Cerrar', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 }

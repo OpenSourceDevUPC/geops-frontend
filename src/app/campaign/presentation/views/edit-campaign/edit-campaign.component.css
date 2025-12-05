@@ -1,5 +1,5 @@
 .edit-campaign-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 24px;
   background: white;
@@ -36,6 +36,15 @@
 .loading-container p {
   margin-top: 20px;
   font-size: 16px;
+}
+
+/* Tabs */
+.campaign-tabs {
+  margin-top: 20px;
+}
+
+.tab-content {
+  padding: 24px 0;
 }
 
 /* Form */
@@ -93,6 +102,33 @@ mat-form-field {
   font-size: 24px;
   font-weight: 700;
   color: #A751D4;
+}
+
+/* Offers Tab */
+.offers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.offers-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.offer-form-section {
+  background: #f9f9f9;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: 2px solid #E8D5F2;
+}
+
+.offers-list-section {
+  margin-top: 24px;
 }
 
 /* Form Actions */

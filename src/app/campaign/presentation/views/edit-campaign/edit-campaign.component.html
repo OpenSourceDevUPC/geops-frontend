@@ -12,105 +12,145 @@
     <p>Cargando campaña...</p>
   </div>
 
-  <form *ngIf="campaign" [formGroup]="campaignForm" (ngSubmit)="onSubmit()" class="campaign-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Nombre de la Campaña</mat-label>
-      <input matInput formControlName="name" placeholder="Ej: Promoción Verano 2025">
-      <mat-error *ngIf="campaignForm.get('name')?.hasError('required')">
-        El nombre es requerido
-      </mat-error>
-      <mat-error *ngIf="campaignForm.get('name')?.hasError('minlength')">
-        El nombre debe tener al menos 3 caracteres
-      </mat-error>
-    </mat-form-field>
+  <!-- Tabs for Campaign Data and Offers -->
+  <mat-tab-group *ngIf="campaign" class="campaign-tabs">
+    <!-- Tab 1: Campaign Information -->
+    <mat-tab label="Información de la Campaña">
+      <div class="tab-content">
+        <form [formGroup]="campaignForm" (ngSubmit)="onSubmit()" class="campaign-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre de la Campaña</mat-label>
+            <input matInput formControlName="name" placeholder="Ej: Promoción Verano 2025">
+            <mat-error *ngIf="campaignForm.get('name')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+            <mat-error *ngIf="campaignForm.get('name')?.hasError('minlength')">
+              El nombre debe tener al menos 3 caracteres
+            </mat-error>
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="description" rows="4" placeholder="Describe tu campaña..."></textarea>
-      <mat-error *ngIf="campaignForm.get('description')?.hasError('required')">
-        La descripción es requerida
-      </mat-error>
-      <mat-error *ngIf="campaignForm.get('description')?.hasError('minlength')">
-        La descripción debe tener al menos 10 caracteres
-      </mat-error>
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" rows="4" placeholder="Describe tu campaña..."></textarea>
+            <mat-error *ngIf="campaignForm.get('description')?.hasError('required')">
+              La descripción es requerida
+            </mat-error>
+            <mat-error *ngIf="campaignForm.get('description')?.hasError('minlength')">
+              La descripción debe tener al menos 10 caracteres
+            </mat-error>
+          </mat-form-field>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Fecha de Inicio</mat-label>
-        <input matInput [matDatepicker]="startPicker" formControlName="startDate">
-        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker></mat-datepicker>
-        <mat-error *ngIf="campaignForm.get('startDate')?.hasError('required')">
-          La fecha de inicio es requerida
-        </mat-error>
-      </mat-form-field>
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Inicio</mat-label>
+              <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+              <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+              <mat-error *ngIf="campaignForm.get('startDate')?.hasError('required')">
+                La fecha de inicio es requerida
+              </mat-error>
+            </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Fecha de Fin</mat-label>
-        <input matInput [matDatepicker]="endPicker" formControlName="endDate">
-        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-        <mat-datepicker #endPicker></mat-datepicker>
-        <mat-error *ngIf="campaignForm.get('endDate')?.hasError('required')">
-          La fecha de fin es requerida
-        </mat-error>
-      </mat-form-field>
-    </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Fin</mat-label>
+              <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+              <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+              <mat-error *ngIf="campaignForm.get('endDate')?.hasError('required')">
+                La fecha de fin es requerida
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Presupuesto Estimado (S/.)</mat-label>
-      <input matInput type="number" formControlName="estimatedBudget" placeholder="0.00">
-      <mat-icon matPrefix>attach_money</mat-icon>
-      <mat-error *ngIf="campaignForm.get('estimatedBudget')?.hasError('required')">
-        El presupuesto es requerido
-      </mat-error>
-      <mat-error *ngIf="campaignForm.get('estimatedBudget')?.hasError('min')">
-        El presupuesto debe ser mayor o igual a 0
-      </mat-error>
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Presupuesto Estimado (S/.)</mat-label>
+            <input matInput type="number" formControlName="estimatedBudget" placeholder="0.00">
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <mat-error *ngIf="campaignForm.get('estimatedBudget')?.hasError('required')">
+              El presupuesto es requerido
+            </mat-error>
+            <mat-error *ngIf="campaignForm.get('estimatedBudget')?.hasError('min')">
+              El presupuesto debe ser mayor o igual a 0
+            </mat-error>
+          </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Estado</mat-label>
-      <mat-select formControlName="status">
-        <mat-option value="ACTIVE">Activa</mat-option>
-        <mat-option value="INACTIVE">Inactiva</mat-option>
-        <mat-option value="EXPIRED">Finalizada</mat-option>
-      </mat-select>
-      <mat-error *ngIf="campaignForm.get('status')?.hasError('required')">
-        El estado es requerido
-      </mat-error>
-    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="ACTIVE">Activa</mat-option>
+              <mat-option value="INACTIVE">Inactiva</mat-option>
+              <mat-option value="EXPIRED">Finalizada</mat-option>
+            </mat-select>
+            <mat-error *ngIf="campaignForm.get('status')?.hasError('required')">
+              El estado es requerido
+            </mat-error>
+          </mat-form-field>
 
-    <!-- Campaign Stats (Read-only) -->
-    <div class="stats-section" *ngIf="campaign">
-      <h3>Estadísticas de la Campaña</h3>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-label">Impresiones:</span>
-          <span class="stat-value">{{ campaign.totalImpressions | number }}</span>
+          <!-- Campaign Stats (Read-only) -->
+          <div class="stats-section">
+            <h3>Estadísticas de la Campaña</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">Impresiones:</span>
+                <span class="stat-value">{{ campaign.totalImpressions | number }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Clicks:</span>
+                <span class="stat-value">{{ campaign.totalClicks | number }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">CTR:</span>
+                <span class="stat-value">{{ campaign.CTR | number:'1.2-2' }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!campaignForm.valid || loading">
+              <mat-icon>save</mat-icon>
+              {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
+          </div>
+
+          <div *ngIf="error" class="error-message">
+            <mat-icon>error</mat-icon>
+            {{ error }}
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Offers Management -->
+    <mat-tab label="Ofertas ({{ offers.length }})">
+      <div class="tab-content">
+        <div class="offers-header">
+          <h3>Gestión de Ofertas</h3>
+          <button mat-raised-button color="primary" (click)="onShowOfferForm()" *ngIf="!showOfferForm">
+            <mat-icon>add</mat-icon>
+            Nueva Oferta
+          </button>
         </div>
-        <div class="stat-item">
-          <span class="stat-label">Clicks:</span>
-          <span class="stat-value">{{ campaign.totalClicks | number }}</span>
+
+        <!-- Add/Edit Offer Form -->
+        <div *ngIf="showOfferForm" class="offer-form-section">
+          <app-add-offer-form
+            [campaignId]="campaignId"
+            [offer]="editingOffer"
+            (saveOffer)="onSaveOffer($event)"
+            (cancel)="onHideOfferForm()">
+          </app-add-offer-form>
         </div>
-        <div class="stat-item">
-          <span class="stat-label">CTR:</span>
-          <span class="stat-value">{{ campaign.CTR | number:'1.2-2' }}%</span>
+
+        <!-- Offers List -->
+        <div class="offers-list-section">
+          <app-campaign-offers-list
+            [offers]="offers"
+            (editOffer)="onEditOffer($event)"
+            (deleteOffer)="onDeleteOffer($event)">
+          </app-campaign-offers-list>
         </div>
       </div>
-    </div>
-
-    <div class="form-actions">
-      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!campaignForm.valid || loading">
-        <mat-icon>save</mat-icon>
-        {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
-      </button>
-    </div>
-
-    <div *ngIf="error" class="error-message">
-      <mat-icon>error</mat-icon>
-      {{ error }}
-    </div>
-  </form>
+    </mat-tab>
+  </mat-tab-group>
 </div>
