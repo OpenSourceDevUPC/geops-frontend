@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ReviewService } from '../../services/review.service';
+import { ReviewsStore } from '../../../application/reviews.store';
 import { Review } from '../../../domain/model/review.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
@@ -48,25 +48,34 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
   styleUrls: ['./reviews-list.component.css'],
 })
 export class ReviewsListComponent implements OnInit, OnDestroy {
-  private readonly reviewService = inject(ReviewService);
+  readonly store = inject(ReviewsStore);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
   private readonly authService = inject(AuthService);
   private destroy$ = new Subject<void>();
 
-  reviews: Review[] = [];
-  filteredReviews: Review[] = [];
-  statistics: any = null;
-  loading = false;
-  error: string | null = null;
-  offerId: number | null = null;
-  userId: number | null = null;
+  // Local UI state signals
+  sortBy = signal<'date' | 'rating' | 'likes'>('date');
+  filterRating = signal<number>(0);
+  showForm = signal<boolean>(false);
+
+  // Computed signals for filtered and sorted reviews
+  filteredReviews = computed(() => {
+    let reviews = this.store.reviews();
+
+    // Apply rating filter
+    if (this.filterRating() > 0) {
+      reviews = this.store.filterByRating(this.filterRating());
+    }
+
+    // Apply sorting
+    return this.store.sortReviews(reviews, this.sortBy());
+  });
 
   reviewForm: FormGroup;
-  sortBy: 'date' | 'rating' | 'likes' = 'date';
-  filterRating: number = 0;
-  showForm = false;
+  offerId: number | null = null;
+  userId: number | null = null;
 
   constructor() {
     this.reviewForm = this.fb.group({
@@ -84,14 +93,6 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
 
     // Get current user
     this.userId = this.authService.getCurrentUserId();
-
-    // Subscribe to reviews changes
-    this.reviewService.reviews$.pipe(takeUntil(this.destroy$)).subscribe((reviews: Review[]) => {
-      this.reviews = reviews;
-      this.loading = false;
-      this.applyFiltersAndSort();
-      this.statistics = this.reviewService.getReviewStatistics(reviews);
-    });
   }
 
   ngOnDestroy(): void {
@@ -100,14 +101,13 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   }
 
   loadReviews(): void {
-    this.loading = true;
     if (this.offerId) {
       // Load reviews for specific offer
-      this.reviewService.loadReviewsByOfferId(this.offerId);
+      this.store.loadReviewsByOfferId(this.offerId);
     } else {
       // Load all reviews (already filtered by user's campaigns in the API)
       console.log('[ReviewsListComponent] Loading reviews filtered by user campaigns');
-      this.reviewService.loadAllReviews();
+      this.store.loadAllReviews();
     }
   }
 
@@ -137,17 +137,16 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
       updatedAt: new Date().toISOString()
     };
 
-    this.reviewService.createReview(review).subscribe({
-      next: (createdReview) => {
-        this.snackBar.open('Reseña creada exitosamente', 'Cerrar', { duration: 3000 });
-        this.reviewForm.reset({ rating: 5, text: '' });
-        this.showForm = false;
-        this.loadReviews();
-      },
-      error: (err) => {
-        this.snackBar.open('Error al crear reseña: ' + err.message, 'Cerrar', { duration: 5000 });
-      },
-    });
+    this.store.createReview(review);
+
+    // Check for error after creation
+    if (!this.store.error()) {
+      this.snackBar.open('Reseña creada exitosamente', 'Cerrar', { duration: 3000 });
+      this.reviewForm.reset({ rating: 5, text: '' });
+      this.showForm.set(false);
+    } else {
+      this.snackBar.open('Error al crear reseña: ' + this.store.error(), 'Cerrar', { duration: 5000 });
+    }
   }
 
   onLike(reviewId: number): void {
@@ -160,25 +159,19 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
   }
 
   onSortChange(): void {
-    this.applyFiltersAndSort();
+    // Sorting is handled by computed signal, just update the signal
   }
 
   onFilterChange(): void {
-    this.applyFiltersAndSort();
+    // Filtering is handled by computed signal, just update the signal
   }
 
   toggleForm(): void {
-    this.showForm = !this.showForm;
+    this.showForm.update(current => !current);
   }
 
   private applyFiltersAndSort(): void {
-    let filtered = [...this.reviews];
-
-    if (this.filterRating > 0) {
-      filtered = this.reviewService.filterByRating(filtered, this.filterRating);
-    }
-
-    this.filteredReviews = this.reviewService.sortReviews(filtered, this.sortBy);
+    // No longer needed - computed signal handles this
   }
 
   getUserId(): number {
