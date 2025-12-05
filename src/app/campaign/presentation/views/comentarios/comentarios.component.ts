@@ -53,7 +53,7 @@ export class ComentariosComponent implements OnInit, OnDestroy {
   loading = false;
   error: string | null = null;
   offerId: number = 0;
-  
+
   reviewForm: FormGroup;
   sortBy: 'date' | 'rating' | 'likes' = 'date';
   filterRating: number = 0;
@@ -162,11 +162,11 @@ export class ComentariosComponent implements OnInit, OnDestroy {
 
   private applyFiltersAndSort(): void {
     let filtered = [...this.reviews];
-    
+
     if (this.filterRating > 0) {
       filtered = this.reviewService.filterByRating(filtered, this.filterRating);
     }
-    
+
     this.filteredReviews = this.reviewService.sortReviews(filtered, this.sortBy);
   }
 

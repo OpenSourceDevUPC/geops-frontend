@@ -57,7 +57,7 @@ export class CampaignsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCampaigns();
-    
+
     // Subscribe to campaign updates
     this.campaignService.campaigns$
       .pipe(takeUntil(this.destroy$))
@@ -77,10 +77,10 @@ export class CampaignsComponent implements OnInit, OnDestroy {
   loadCampaigns(): void {
     this.loading = true;
     this.error = null;
-    
+
     // Get user ID from storage (adjust according to your auth implementation)
     const userId = this.getUserId();
-    
+
     this.campaignService.loadCampaignsByUserId(userId);
     this.loading = false;
   }
@@ -119,9 +119,12 @@ export class CampaignsComponent implements OnInit, OnDestroy {
 
   /**
    * Navigate to edit campaign
+   * TODO: Implement edit route
    */
   onEdit(campaignId: number): void {
-    this.router.navigate(['/campaign/edit', campaignId]);
+    // this.router.navigate(['/editar-campaña', campaignId]);
+    console.log('Edit campaign:', campaignId);
+    alert('La funcionalidad de edición está en desarrollo');
   }
 
   /**

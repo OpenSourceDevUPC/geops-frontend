@@ -15,7 +15,7 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
 
 /**
  * CreateCampaignComponent
- * 
+ *
  * Form for creating new campaigns.
  * Includes validation and API integration.
  */
@@ -60,7 +60,7 @@ export class CrearCampaignComponent {
   }
 
   onSubmit(): void {
-    if (this.campaignForm.valid) {
+    if (!this.loading) {
       this.loading = true;
       this.error = null;
 
@@ -74,7 +74,7 @@ export class CrearCampaignComponent {
 
       this.campaignService.createCampaign(campaign).subscribe({
         next: () => {
-          this.router.navigate(['/campaign/campaigns']);
+          this.router.navigate(['/campañas']);
         },
         error: (err) => {
           this.error = 'Error al crear campaña';
@@ -85,7 +85,7 @@ export class CrearCampaignComponent {
   }
 
   onCancel(): void {
-    this.router.navigate(['/campaign/campaigns']);
+    this.router.navigate(['/campañas']);
   }
 
   private getUserId(): number {

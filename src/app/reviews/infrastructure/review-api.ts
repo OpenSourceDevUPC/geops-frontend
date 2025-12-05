@@ -5,7 +5,7 @@ import { ReviewApiEndpoint } from './review-api-endpoint';
 
 /**
  * Review API Service
- * 
+ *
  * Infrastructure service for managing review data and state.
  * Provides reactive state management using BehaviorSubjects.
  */

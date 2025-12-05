@@ -5,7 +5,7 @@ import { ReviewApi } from '../../infrastructure/review-api';
 
 /**
  * Review Service (Presentation Layer)
- * 
+ *
  * Provides business logic and state management for reviews.
  * Acts as a facade between UI components and infrastructure layer.
  */
@@ -98,18 +98,18 @@ export class ReviewService {
    */
   groupReviewsByRating(reviews: Review[]): Map<number, Review[]> {
     const grouped = new Map<number, Review[]>();
-    
+
     for (let rating = 1; rating <= 5; rating++) {
       grouped.set(rating, []);
     }
-    
+
     reviews.forEach(review => {
       const group = grouped.get(review.rating);
       if (group) {
         group.push(review);
       }
     });
-    
+
     return grouped;
   }
 
@@ -125,23 +125,23 @@ export class ReviewService {
     const total = reviews.length;
     const averageRating = this.calculateAverageRating(reviews);
     const totalLikes = reviews.reduce((acc, review) => acc + review.likes, 0);
-    
+
     const ratingCounts = new Map<number, number>();
     for (let rating = 1; rating <= 5; rating++) {
       ratingCounts.set(rating, 0);
     }
-    
+
     reviews.forEach(review => {
       const count = ratingCounts.get(review.rating) || 0;
       ratingCounts.set(review.rating, count + 1);
     });
-    
+
     const ratingDistribution = Array.from(ratingCounts.entries()).map(([rating, count]) => ({
       rating,
       count,
       percentage: total > 0 ? (count / total) * 100 : 0
     })).reverse(); // Show 5 stars first
-    
+
     return {
       total,
       averageRating,
@@ -155,10 +155,10 @@ export class ReviewService {
    */
   sortReviews(reviews: Review[], sortBy: 'date' | 'rating' | 'likes'): Review[] {
     const sorted = [...reviews];
-    
+
     switch (sortBy) {
       case 'date':
-        return sorted.sort((a, b) => 
+        return sorted.sort((a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       case 'rating':

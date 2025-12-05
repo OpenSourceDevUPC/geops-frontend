@@ -1,28 +1,143 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 import { CampaignService } from '../../services/campaign.service';
+import { Campaign } from '../../../domain/model/campaign.entity';
+import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
+/**
+ * ReportesComponent
+ * 
+ * Component for generating and exporting campaign reports.
+ * Supports JSON, CSV, and filtered exports.
+ */
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatSelectModule, FormsModule],
   templateUrl: './reportes.component.html',
   styleUrls: ['./reportes.component.css']
 })
-export class ReportesComponent {
+export class ReportesComponent implements OnInit {
   private readonly campaignService = inject(CampaignService);
+  private readonly authService = inject(AuthService);
+
+  campaigns: Campaign[] = [];
+  filterStatus: string = 'ALL';
+  reportFormat: 'json' | 'csv' = 'json';
+
+  ngOnInit(): void {
+    this.loadCampaigns();
+  }
+
+  loadCampaigns(): void {
+    const userId = this.authService.getCurrentUserId();
+    if (userId) {
+      this.campaignService.loadCampaignsByUserId(userId);
+      this.campaignService.campaigns$.subscribe(campaigns => {
+        this.campaigns = campaigns;
+      });
+    }
+  }
+
+  get filteredCampaigns(): Campaign[] {
+    if (this.filterStatus === 'ALL') {
+      return this.campaigns;
+    }
+    return this.campaigns.filter(c => c.status === this.filterStatus);
+  }
+
+  get reportData(): any {
+    const campaigns = this.filteredCampaigns;
+    const totalImpressions = campaigns.reduce((sum, c) => sum + c.totalImpressions, 0);
+    const totalClicks = campaigns.reduce((sum, c) => sum + c.totalClicks, 0);
+    const totalBudget = campaigns.reduce((sum, c) => sum + c.estimatedBudget, 0);
+    const averageCTR = campaigns.length > 0 
+      ? campaigns.reduce((sum, c) => sum + c.ctr, 0) / campaigns.length 
+      : 0;
+
+    return {
+      generatedAt: new Date().toISOString(),
+      summary: {
+        totalCampaigns: campaigns.length,
+        totalImpressions,
+        totalClicks,
+        totalBudget,
+        averageCTR: Number(averageCTR.toFixed(2)),
+        byStatus: {
+          active: campaigns.filter(c => c.status === 'ACTIVE').length,
+          inactive: campaigns.filter(c => c.status === 'INACTIVE').length,
+          expired: campaigns.filter(c => c.status === 'EXPIRED').length
+        }
+      },
+      campaigns: campaigns.map(c => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        status: c.status,
+        startDate: c.startDate,
+        endDate: c.endDate,
+        estimatedBudget: c.estimatedBudget,
+        totalImpressions: c.totalImpressions,
+        totalClicks: c.totalClicks,
+        ctr: c.ctr,
+        createdAt: c.createdAt,
+        updatedAt: c.updatedAt
+      }))
+    };
+  }
 
   get jsonData(): string {
-    return JSON.stringify(this.campaignService.getCurrentCampaigns(), null, 2);
+    return JSON.stringify(this.reportData, null, 2);
+  }
+
+  get csvData(): string {
+    const campaigns = this.filteredCampaigns;
+    const headers = ['ID', 'Nombre', 'Estado', 'Fecha Inicio', 'Fecha Fin', 'Presupuesto', 'Impresiones', 'Clicks', 'CTR (%)'];
+    const rows = campaigns.map(c => [
+      c.id,
+      c.name,
+      c.status,
+      c.startDate,
+      c.endDate,
+      c.estimatedBudget,
+      c.totalImpressions,
+      c.totalClicks,
+      c.ctr
+    ]);
+
+    return [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
   }
 
   exportReport(): void {
-    const blob = new Blob([this.jsonData], { type: 'application/json' });
+    const timestamp = new Date().getTime();
+    const filename = `campaign-report-${timestamp}`;
+
+    if (this.reportFormat === 'json') {
+      this.downloadFile(this.jsonData, `${filename}.json`, 'application/json');
+    } else {
+      this.downloadFile(this.csvData, `${filename}.csv`, 'text/csv');
+    }
+  }
+
+  private downloadFile(content: string, filename: string, mimeType: string): void {
+    const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `campaign-report-${new Date().getTime()}.json`;
+    a.download = filename;
     a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  printReport(): void {
+    window.print();
   }
 }

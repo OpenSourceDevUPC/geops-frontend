@@ -1,6 +1,6 @@
 /**
  * Campaign API Response Types
- * 
+ *
  * Defines the structure of responses from the Campaign API endpoints.
  * These mirror the backend CampaignResource structure.
  */

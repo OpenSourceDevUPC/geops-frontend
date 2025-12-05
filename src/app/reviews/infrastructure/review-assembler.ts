@@ -9,12 +9,12 @@ import {
 
 /**
  * Review Assembler
- * 
+ *
  * Converts between Review entities and API resources.
  * Implements the BaseAssembler interface for type safety.
  */
 export class ReviewAssembler implements BaseAssembler<Review, ReviewResource, ReviewResponse> {
-  
+
   /**
    * Converts API resource to domain entity
    */
@@ -77,10 +77,10 @@ export class ReviewAssembler implements BaseAssembler<Review, ReviewResource, Re
    */
   toUpdateResource(entity: Partial<Review>): UpdateReviewResource {
     const resource: UpdateReviewResource = {};
-    
+
     if (entity.rating !== undefined) resource.rating = entity.rating;
     if (entity.text !== undefined) resource.text = entity.text;
-    
+
     return resource;
   }
 }

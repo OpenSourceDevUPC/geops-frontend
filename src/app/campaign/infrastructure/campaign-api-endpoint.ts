@@ -59,12 +59,12 @@ export class CampaignApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Update an existing campaign
+   * Update an existing campaign (PATCH)
    */
   updateCampaign(id: number, campaign: Partial<Campaign>): Observable<Campaign> {
     const resource = this.assembler.toUpdateResource(campaign);
     return this.http
-      .put<CampaignResource>(`${this.endpointUrl}/${id}`, resource)
+      .patch<CampaignResource>(`${this.endpointUrl}/${id}`, resource)
       .pipe(map((r) => this.assembler.toEntityFromResource(r)));
   }
 

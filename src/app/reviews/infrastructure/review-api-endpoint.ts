@@ -15,7 +15,7 @@ import { environment } from '../../../environments/environment';
 
 /**
  * Review API Endpoint
- * 
+ *
  * Handles HTTP requests to the Reviews API.
  * Provides methods for CRUD operations on reviews.
  */
@@ -28,7 +28,7 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
   ReviewResponse,
   ReviewAssembler
 > {
-  
+
   constructor(http: HttpClient) {
     super(
       http,

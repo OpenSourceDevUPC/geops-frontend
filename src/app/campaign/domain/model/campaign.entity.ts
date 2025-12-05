@@ -2,11 +2,11 @@ import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 
 /**
  * Campaign Domain Entity
- * 
+ *
  * Represents a marketing campaign in the GeoPs platform.
  * Campaigns are owned by users (Owner role) and contain multiple offers.
  * Tracks campaign performance metrics like impressions, clicks, and CTR.
- * 
+ *
  * @property userId - ID of the user (Owner) who created the campaign
  * @property name - Name of the campaign
  * @property description - Description of the campaign
