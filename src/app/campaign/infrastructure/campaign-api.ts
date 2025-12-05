@@ -128,6 +128,8 @@ export class CampaignApi {
       tap(offers => this.campaignOffersSubject.next(offers)),
       catchError(error => {
         console.error('Error fetching offers:', error);
+        // Reset offers list to empty array on any error (including 404)
+        this.campaignOffersSubject.next([]);
         return of([]);
       })
     );
