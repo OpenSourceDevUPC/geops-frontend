@@ -15,7 +15,7 @@ type Offer = {
   partner: string;
   price: number;
   codePrefix: string;
-  validTo: string;
+  validUntil: string;
   rating: number;
   location: string;
   category: string;
@@ -316,7 +316,7 @@ export class OfertasComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const clickedInsideDropdown = target.closest('.custom-select-wrapper');
-    
+
     if (!clickedInsideDropdown) {
       this.categoryOpen = false;
       this.sortOpen = false;

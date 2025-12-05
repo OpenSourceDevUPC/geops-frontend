@@ -81,6 +81,7 @@ export interface OfferResource {
   codePrefix?: string;
   createdAt: string;
   updatedAt: string;
+  rating: number;
 }
 
 /**
@@ -100,6 +101,7 @@ export interface CreateOfferResource {
   imageUrl?: string;
   validUntil?: string;
   codePrefix?: string;
+  rating?: number;
 }
 
 /**

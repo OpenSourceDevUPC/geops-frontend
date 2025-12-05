@@ -134,7 +134,8 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
       validUntil: resource.validUntil,
       codePrefix: resource.codePrefix,
       createdAt: resource.createdAt,
-      updatedAt: resource.updatedAt
+      updatedAt: resource.updatedAt,
+      rating: resource.rating,
     };
   }
 
@@ -158,7 +159,8 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
       validUntil: entity.validUntil,
       codePrefix: entity.codePrefix,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      updatedAt: entity.updatedAt,
+      rating: entity.rating,
     };
   }
 
@@ -189,7 +191,8 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
       longitude: entity.longitude,
       imageUrl: entity.imageUrl,
       validUntil: entity.validUntil,
-      codePrefix: entity.codePrefix
+      codePrefix: entity.codePrefix,
+      rating: entity.rating || 0,
     };
   }
 

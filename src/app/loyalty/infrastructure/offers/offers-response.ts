@@ -8,7 +8,7 @@ export interface OfferResource {
   partner: string;
   price: number;
   codePrefix: string;
-  validTo: string;
+  validUntil: string;
   rating: number;
   location: string;
   category: string;

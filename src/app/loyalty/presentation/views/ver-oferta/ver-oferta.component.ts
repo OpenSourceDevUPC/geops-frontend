@@ -16,7 +16,7 @@ import { CartUiService } from '../../../../cart/presentation/services/cart-ui.se
 
 type Offer = {
   id: number; title: string; partner: string; price: number;
-  codePrefix: string; validTo: string; rating: number;
+  codePrefix: string; validUntil: string; rating: number;
   location: string; category: string; imageUrl?: string;
 };
 

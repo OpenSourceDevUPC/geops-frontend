@@ -38,4 +38,5 @@ export interface CampaignOffer extends BaseEntity {
   codePrefix?: string;
   createdAt: string;
   updatedAt: string;
+  rating: number;
 }

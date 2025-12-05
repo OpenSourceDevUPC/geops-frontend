@@ -8,7 +8,7 @@ export interface Offer extends BaseEntity {
   partner: string;
   price: number;
   codePrefix: string;
-  validTo: string;
+  validUntil: string;
   rating: number;
   location: string;
   category: string;
