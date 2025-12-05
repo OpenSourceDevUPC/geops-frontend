@@ -79,7 +79,7 @@ export interface OfferResource {
   latitude?: number;
   longitude?: number;
   imageUrl?: string;
-  validUntil?: string;
+  validTo?: string;
   codePrefix?: string;
   createdAt: string;
   updatedAt: string;
@@ -101,7 +101,7 @@ export interface CreateOfferResource {
   latitude?: number;
   longitude?: number;
   imageUrl?: string;
-  validUntil?: string;
+  validTo?: string;
   codePrefix?: string;
   rating?: number;
 }
@@ -120,7 +120,7 @@ export interface UpdateOfferResource {
   latitude?: number;
   longitude?: number;
   imageUrl?: string;
-  validUntil?: string;
+  validTo?: string;
   codePrefix?: string;
 }
 

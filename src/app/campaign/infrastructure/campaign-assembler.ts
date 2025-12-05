@@ -115,6 +115,14 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
  */
 export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResource, OfferResponse> {
 
+  private normalizeDate(value?: string | Date | null): string | undefined {
+    if (!value) return undefined;
+    if (value instanceof Date) {
+      return value.toISOString().split('T')[0];
+    }
+    return value;
+  }
+
   /**
    * Converts API resource to domain entity
    */
@@ -132,7 +140,7 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
       latitude: resource.latitude,
       longitude: resource.longitude,
       imageUrl: resource.imageUrl,
-      validUntil: resource.validUntil,
+      validUntil: resource.validTo,
       codePrefix: resource.codePrefix,
       createdAt: resource.createdAt,
       updatedAt: resource.updatedAt,
@@ -157,7 +165,7 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
       latitude: entity.latitude,
       longitude: entity.longitude,
       imageUrl: entity.imageUrl,
-      validUntil: entity.validUntil,
+      validTo: this.normalizeDate(entity.validUntil),
       codePrefix: entity.codePrefix,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -191,7 +199,7 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
       latitude: entity.latitude,
       longitude: entity.longitude,
       imageUrl: entity.imageUrl,
-      validUntil: entity.validUntil,
+      validTo: this.normalizeDate(entity.validUntil),
       codePrefix: entity.codePrefix,
       rating: entity.rating || 0,
     };
@@ -213,7 +221,7 @@ export class OfferAssembler implements BaseAssembler<CampaignOffer, OfferResourc
     if (entity.latitude !== undefined) resource.latitude = entity.latitude;
     if (entity.longitude !== undefined) resource.longitude = entity.longitude;
     if (entity.imageUrl !== undefined) resource.imageUrl = entity.imageUrl;
-    if (entity.validUntil !== undefined) resource.validUntil = entity.validUntil;
+    if (entity.validUntil !== undefined) resource.validTo = this.normalizeDate(entity.validUntil);
     if (entity.codePrefix !== undefined) resource.codePrefix = entity.codePrefix;
 
     return resource;
