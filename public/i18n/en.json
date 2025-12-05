@@ -477,7 +477,10 @@
     "latestCampaigns": "Latest campaigns"
   },
   "coupons": {
-    "title": "My Coupons"
+    "title": "My Coupons",
+    "loading": "Loading coupons...",
+    "empty": "You don't have any coupons yet. Buy an offer to get your first coupon!",
+    "error": "Error loading coupons. Please try again."
   },
   "footer": {
     "tagline": "Offers and coupons near you",

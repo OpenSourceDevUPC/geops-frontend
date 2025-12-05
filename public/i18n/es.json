@@ -469,7 +469,10 @@
     "latestCampaigns": "Últimas campañas"
   },
   "coupons": {
-    "title": "Mis Cupones"
+    "title": "Mis Cupones",
+    "loading": "Cargando cupones...",
+    "empty": "Aún no tienes cupones. ¡Compra una oferta para obtener tu primer cupón!",
+    "error": "Error al cargar los cupones. Por favor, intenta de nuevo."
   },
   "footer": {
     "tagline": "Ofertas y cupones cerca de ti",
