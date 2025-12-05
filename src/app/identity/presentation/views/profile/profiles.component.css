@@ -135,6 +135,15 @@
 }
 .dot.yellow {
   background: #ffd500;
+  box-shadow: 0 0 8px rgba(255, 213, 0, 0.4);
+}
+.dot.green {
+  background: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+.dot.red {
+  background: #f44336;
+  box-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
 }
 
 /* Styling for places (home, work, university) */

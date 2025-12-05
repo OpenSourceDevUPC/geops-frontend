@@ -24,6 +24,7 @@ export class ProfilesComponent implements OnInit {
   user: User | null = null;
   consumerDetails: DetailsConsumer | null = null;
   favoriteCount: number = 0;
+  browserLocationPermission: string = 'ASK'; // Track browser permission state
 
   /**
    * Initializes ProfilesComponent with AuthService and FavoritesApiEndpoint.
@@ -63,6 +64,8 @@ export class ProfilesComponent implements OnInit {
           next: (details) => {
             this.consumerDetails = details;
             console.log('[ProfileComponent] Consumer details loaded:', details);
+            // Check browser location permission after loading details
+            this.checkBrowserLocationPermission();
           },
           error: (err) => {
             console.error('Error fetching consumer details:', err);
@@ -74,6 +77,55 @@ export class ProfilesComponent implements OnInit {
   }
 
   /**
+   * Checks the current browser geolocation permission status
+   * and updates the browserLocationPermission property
+   */
+  private async checkBrowserLocationPermission(): Promise<void> {
+    if ('permissions' in navigator) {
+      try {
+        const permission = await navigator.permissions.query({ name: 'geolocation' });
+        console.log('[ProfileComponent] Browser location permission state:', permission.state);
+
+        switch (permission.state) {
+          case 'granted':
+            this.browserLocationPermission = 'ALWAYS';
+            break;
+          case 'denied':
+            this.browserLocationPermission = 'DENIED';
+            break;
+          case 'prompt':
+          default:
+            this.browserLocationPermission = 'ASK';
+            break;
+        }
+
+        // Listen for permission changes
+        permission.addEventListener('change', () => {
+          console.log('[ProfileComponent] Location permission changed to:', permission.state);
+          switch (permission.state) {
+            case 'granted':
+              this.browserLocationPermission = 'ALWAYS';
+              break;
+            case 'denied':
+              this.browserLocationPermission = 'DENIED';
+              break;
+            case 'prompt':
+            default:
+              this.browserLocationPermission = 'ASK';
+              break;
+          }
+        });
+      } catch (error) {
+        console.warn('[ProfileComponent] Could not check geolocation permission:', error);
+        this.browserLocationPermission = 'ASK';
+      }
+    } else {
+      console.warn('[ProfileComponent] Permissions API not supported');
+      this.browserLocationPermission = 'ASK';
+    }
+  }
+
+  /**
    * Returns the first letter of the user's name in uppercase for avatar display.
    */
   get avatar(): string {
@@ -81,12 +133,11 @@ export class ProfilesComponent implements OnInit {
   }
 
   /**
-   * Returns the location permission status.
+   * Returns the location permission status from browser.
    * This getter is used in the component template (profiles.component.html).
    */
   get locationPermission(): string {
-    if (!this.consumerDetails) return 'ASK';
-    return this.consumerDetails.permisoUbicacion ? 'ALWAYS' : 'ASK';
+    return this.browserLocationPermission;
   }
 
   /**

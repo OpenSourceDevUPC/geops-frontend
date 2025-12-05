@@ -68,7 +68,7 @@
 
       <div class="settings-row">
         <label>{{ 'settings.plan.label' | translate }}</label>
-        <select class="settings-input" [(ngModel)]="user.plan" name="plan">
+        <select class="settings-input" [(ngModel)]="user.plan" name="plan" disabled>
           <option value="BASIC">{{ 'settings.plan.BASIC' | translate }}</option>
           <option value="PREMIUM">{{ 'settings.plan.PREMIUM' | translate }}</option>
         </select>
@@ -78,18 +78,50 @@
       <div *ngIf="isConsumer && consumerDetails">
         <h3>{{ 'settings.consumer.title' | translate }}</h3>
 
-        <div class="settings-row">
-          <label>{{ 'settings.consumer.notifications' | translate }}</label>
-          <input type="checkbox" [(ngModel)]="consumerDetails.recibirNotificaciones" name="notifications">
+        <!-- Preferences Section -->
+        <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 16px; color: #666;">
+          {{ 'settings.preferences.title' | translate }}
+        </h4>
+
+        <div class="settings-row preference-row">
+          <div class="preference-label-container">
+            <mat-icon class="preference-icon">notifications</mat-icon>
+            <div class="preference-text">
+              <label class="preference-label">{{ 'settings.preferences.notifications' | translate }}</label>
+              <small class="preference-help">{{ 'settings.preferences.notificationsHelp' | translate }}</small>
+            </div>
+          </div>
+          <mat-slide-toggle
+            [(ngModel)]="consumerDetails.recibirNotificaciones"
+            (change)="onNotificationsToggle($event)"
+            name="notifications"
+            color="primary">
+          </mat-slide-toggle>
         </div>
 
-        <div class="settings-row">
-          <label>{{ 'settings.consumer.locationPermission' | translate }}</label>
-          <input type="checkbox" [(ngModel)]="consumerDetails.permisoUbicacion" name="locationPermission">
+        <div class="settings-row preference-row">
+          <div class="preference-label-container">
+            <mat-icon class="preference-icon">location_on</mat-icon>
+            <div class="preference-text">
+              <label class="preference-label">{{ 'settings.preferences.locationPermission' | translate }}</label>
+              <small class="preference-help">{{ 'settings.preferences.locationPermissionHelp' | translate }}</small>
+            </div>
+          </div>
+          <mat-slide-toggle
+            [(ngModel)]="consumerDetails.permisoUbicacion"
+            (change)="onLocationToggle($event)"
+            name="locationPermission"
+            color="primary">
+          </mat-slide-toggle>
         </div>
 
+        <!-- Saved Addresses Section -->
+        <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 16px; color: #666;">
+          {{ 'settings.savedAddresses.title' | translate }}
+        </h4>
+
         <div class="settings-row">
-          <label>{{ 'settings.consumer.homeAddress' | translate }}</label>
+          <label>{{ 'settings.savedAddresses.homeAddress' | translate }}</label>
           <div class="input-edit-group">
             <input class="settings-input" type="text"
                    [(ngModel)]="consumerDetails.direccionCasa"
@@ -102,7 +134,7 @@
         </div>
 
         <div class="settings-row">
-          <label>{{ 'settings.consumer.workAddress' | translate }}</label>
+          <label>{{ 'settings.savedAddresses.workAddress' | translate }}</label>
           <div class="input-edit-group">
             <input class="settings-input" type="text"
                    [(ngModel)]="consumerDetails.direccionTrabajo"
@@ -115,7 +147,7 @@
         </div>
 
         <div class="settings-row">
-          <label>{{ 'settings.consumer.universityAddress' | translate }}</label>
+          <label>{{ 'settings.savedAddresses.universityAddress' | translate }}</label>
           <div class="input-edit-group">
             <input class="settings-input" type="text"
                    [(ngModel)]="consumerDetails.direccionUniversidad"
@@ -127,17 +159,25 @@
           </div>
         </div>
 
-        <div class="settings-row">
-          <label>{{ 'settings.consumer.favorites' | translate }}</label>
-          <div class="settings-checkbox-group">
-            <label *ngFor="let cat of ALL_CATEGORIES" class="category-checkbox">
-              <input type="checkbox"
-                     [value]="cat"
-                     [checked]="isCategoryFavorite(cat)"
-                     (change)="onCategoryChange($event, cat)">
-              {{ cat }}
-            </label>
-          </div>
+        <!-- Favorite Categories Section -->
+        <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 16px; color: #666;">
+          {{ 'settings.consumer.favorites' | translate }}
+        </h4>
+
+        <div class="categories-grid">
+          <label *ngFor="let cat of ALL_CATEGORIES" class="category-chip"
+                 [class.selected]="isCategoryFavorite(cat)">
+            <input type="checkbox"
+                   [value]="cat"
+                   [checked]="isCategoryFavorite(cat)"
+                   (change)="onCategoryChange($event, cat)"
+                   class="category-checkbox-input">
+            <div class="category-content">
+              <mat-icon class="category-icon">{{ getCategoryIcon(cat) }}</mat-icon>
+              <span class="category-name">{{ cat }}</span>
+              <mat-icon class="check-icon">check_circle</mat-icon>
+            </div>
+          </label>
         </div>
       </div>
 
