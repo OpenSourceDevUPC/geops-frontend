@@ -224,12 +224,19 @@
   width:532px;
   height:492px;
   background:#fff;
-  border:1px solid #ACA6A6;
+  border:1px solid #e5e7eb;
   border-radius:20px;
   overflow:hidden;
-  box-shadow:0 4px 4px rgba(0,0,0,.25);
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
   display:flex;
   flex-direction:column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.offer-card:hover {
+  box-shadow: 0 12px 32px rgba(167, 81, 212, 0.2);
+  transform: translateY(-8px);
+  border-color: var(--purple);
 }
 
 .offer-card .img-box{
@@ -267,19 +274,20 @@
   top:14px;
   width:50px;
   height:50px;
+  display:grid;
+  place-items:center;
   border-radius:50%;
   border:1px solid rgba(0,0,0,.08);
   background:rgba(255,255,255,.71);
-  display:grid;
-  place-items:center;
   cursor:pointer;
-  transition:background .15s ease, box-shadow .15s ease;
   box-shadow:0 2px 4px rgba(0,0,0,.12);
-  z-index:3;
+  transition:background .15s ease, box-shadow .15s ease, transform .12s ease;
+  z-index: 4;
 }
 
 .offer-card .img-box .fav:hover{
   background:rgba(255,255,255,.62);
+  transform:translateY(-1px);
 }
 
 .offer-card .img-box .fav.active{
@@ -289,6 +297,12 @@
 .offer-card .img-box .fav .heart{
   font-size:22px;
   line-height:1;
+  user-select:none;
+  pointer-events:none;
+}
+
+.view-offer {
+  cursor: pointer;
 }
 
 .offer-card .img-box .view-offer{
@@ -328,6 +342,11 @@
 
 .offer-card .img-box .view-offer:hover{
   filter:brightness(.96);
+}
+
+.offer-card .img-box .view-offer:focus-visible{
+  outline:3px solid rgba(167,81,212,.45);
+  outline-offset:2px;
 }
 
 .offer-card .img-box .view-offer:focus-visible{
