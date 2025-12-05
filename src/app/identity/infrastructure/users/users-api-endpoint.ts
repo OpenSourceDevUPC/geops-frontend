@@ -48,17 +48,16 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Login user with email and password using POST request.
+   * Login user with email and password using GET request with filters.
    * @param email User's email
    * @param password User's password
    * @returns Observable with the found UserResource or undefined if not found
    */
   login(email: string, password: string): Observable<UserResource | undefined> {
-    const loginBody = { email, password };
     return this.http
-      .post<UserResource>(`${environment.platformProviderApiBaseUrl}/authentication/sign-in`, loginBody)
+      .get<UserResource[]>(`${this.endpointUrl}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
       .pipe(
-        map(user => user || undefined)
+        map(users => users && users.length > 0 ? users[0] : undefined)
       );
   }
 

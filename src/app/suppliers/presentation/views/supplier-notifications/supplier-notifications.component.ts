@@ -1,0 +1,1 @@
+﻿import { Component } from '@angular/core'; import { CommonModule } from '@angular/common'; @Component({ selector: 'app-supplier-notifications', standalone: true, imports: [CommonModule], template: '<div><h1>Notificaciones</h1></div>', styles: [] }) export class SupplierNotificationsComponent {}

@@ -17,6 +17,20 @@
       "phone": "999999999",
       "role": "CONSUMER",
       "plan": "PREMIUM"
+    },
+    {
+      "id": 3,
+      "name": "Restaurante El Buen Sabor",
+      "email": "proveedor@geops.com",
+      "password": "123456",
+      "phone": "987654321",
+      "role": "OWNER",
+      "plan": "PREMIUM",
+      "business": {
+        "businessName": "Restaurante El Buen Sabor",
+        "businessType": "Restaurante",
+        "taxId": "20123456789"
+      }
     }
   ],
   "offers": [

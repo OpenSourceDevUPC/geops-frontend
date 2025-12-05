@@ -1,3 +1,6 @@
 {
-  "/api/v1/*" : "/$1"
+  "/api/v1/users": "/users",
+  "/api/v1/offers": "/offers",
+  "/api/v1/login": "/login",
+  "/api/v1/register": "/register"
 }

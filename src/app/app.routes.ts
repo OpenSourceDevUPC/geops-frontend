@@ -80,5 +80,13 @@ export const routes: Routes = [
     ]
   },
 
+  {
+    path: 'suppliers',
+    loadChildren: () =>
+      import('./suppliers/suppliers.routes')
+        .then(m => m.supplierRoutes),
+    title: 'GeoPs - Supplier Portal'
+  },
+
   { path: '**', redirectTo: '/login' } // cualquier otra ruta, manda a login
 ];
