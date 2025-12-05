@@ -1,0 +1,200 @@
+<div class="profile-wrapper">
+  <!-- Header Principal -->
+  <header class="main-header">
+    <div class="logo">GeoPs</div>
+    <div class="header-actions">
+      <button class="btn-logout">Cerrar Sesión</button>
+      <div class="user-profile">
+        <span class="user-avatar">A</span>
+        <span class="user-name">{{ businessName }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="profile-container">
+    <!-- Card de Perfil -->
+    <div class="profile-card">
+      <!-- Header del Perfil -->
+      <div class="profile-header">
+        <div class="profile-info">
+          <div class="avatar-large">A</div>
+          <div class="profile-details">
+            <h2 class="profile-name">{{ profile.businessName }}</h2>
+            <p class="profile-plan">{{ profile.plan }}</p>
+          </div>
+        </div>
+        @if (!isEditMode) {
+          <button class="btn-edit" (click)="toggleEditMode()">
+            Editar
+          </button>
+        } @else {
+          <div class="edit-actions">
+            <button class="btn-save" (click)="saveProfile()">
+              Guardar
+            </button>
+            <button class="btn-cancel" (click)="cancelEdit()">
+              Cancelar
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Modo Visualización -->
+      @if (!isEditMode) {
+        <div class="profile-content">
+          <div class="info-row">
+            <span class="info-label">Correo</span>
+            <span class="info-value">{{ profile.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Teléfono</span>
+            <span class="info-value">{{ profile.phone }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Dirección</span>
+            <span class="info-value">{{ profile.address }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Horario</span>
+            <span class="info-value">{{ profile.schedule }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Sitio web</span>
+            <span class="info-value">{{ profile.website }}</span>
+          </div>
+          <div class="info-row info-row-description">
+            <span class="info-label">Descripción</span>
+            <span class="info-value">{{ profile.description }}</span>
+          </div>
+        </div>
+      }
+
+      <!-- Modo Edición -->
+      @if (isEditMode) {
+        <div class="profile-form">
+          <div class="form-group">
+            <label class="form-label">Nombre del negocio</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="profileCopy.businessName"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Plan</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="profileCopy.plan"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Correo</label>
+            <input
+              type="email"
+              class="form-input"
+              [(ngModel)]="profileCopy.email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input
+              type="tel"
+              class="form-input"
+              [(ngModel)]="profileCopy.phone"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Dirección</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="profileCopy.address"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Horario</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="profileCopy.schedule"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Sitio web</label>
+            <input
+              type="url"
+              class="form-input"
+              [(ngModel)]="profileCopy.website"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea
+              class="form-textarea"
+              rows="3"
+              [(ngModel)]="profileCopy.description"
+            ></textarea>
+          </div>
+
+          <!-- Sección de Seguridad -->
+          <div class="security-section">
+            <h3 class="section-title">Seguridad</h3>
+
+            <div class="form-group">
+              <label class="form-label">Contraseña actual</label>
+              <input
+                type="password"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="profileCopy.currentPassword"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nueva contraseña</label>
+              <input
+                type="password"
+                class="form-input"
+                [(ngModel)]="profileCopy.newPassword"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirmar nueva contraseña</label>
+              <input
+                type="password"
+                class="form-input"
+                [(ngModel)]="profileCopy.confirmPassword"
+              />
+            </div>
+          </div>
+
+          <!-- Botones de Acción en el Footer -->
+          <div class="form-footer">
+            <button class="btn-clear" (click)="cancelEdit()">
+              Limpiar
+            </button>
+            <button class="btn-update" (click)="saveProfile()">
+              Actualizar contraseña
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </footer>
+</div>
+

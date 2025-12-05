@@ -16,3 +16,17 @@ html, body { font-family:
   sans-serif;
 }
 
+// Paleta de Colores GeoPS (Manual de Marca)
+:root {
+  --color-primary: #4A0072;      // Índigo - Sidebar, Títulos principales
+  --color-secondary: #741FA2;    // Uva - Botones de acción, Cards activas
+  --color-accent: #9246DC;       // Verónica - Detalles, Hovers
+  --color-text-main: #000000;    // Negro - Texto principal
+  --color-bg-light: #F5F5F5;     // Gris claro - Fondo del dashboard
+  --color-white: #FFFFFF;        // Blanco - Fondo de cards/sidebar texto
+
+  // Tipografía
+  --font-family-base: 'Poppins', sans-serif;
+  --font-family-display: 'Lobster', cursive;  // Solo para Logotipo
+}
+

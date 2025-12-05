@@ -1,83 +1,67 @@
-﻿import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { SuppliersService } from '../../../infrastructure/suppliers.service';
-import { SupplierStats, Campaign, Supplier } from '../../../domain/model/supplier-stats.entity';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { PlansModalComponent } from '../../components/plans-modal/plans-modal.component';
+
 @Component({
   selector: 'app-supplier-dashboard',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTableModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, PlansModalComponent],
   templateUrl: './supplier-dashboard.component.html',
   styleUrls: ['./supplier-dashboard.component.css']
 })
-export class SupplierDashboardComponent implements OnInit {
-  private readonly suppliersService = inject(SuppliersService);
-  private readonly router = inject(Router);
-  stats = signal<SupplierStats | null>(null);
-  recentCampaigns = signal<Campaign[]>([]);
-  supplier = signal<Supplier | null>(null);
-  isLoading = signal(true);
-  displayedColumns: string[] = ['name', 'status', 'views', 'clicks', 'conversions', 'budget', 'actions'];
-  ngOnInit() {
-    this.loadDashboardData();
+export class SupplierDashboardComponent {
+  businessName = 'Aruma';
+  activeCampaigns = '1';
+  totalImpressions = '12,045';
+  avgCTR = '6.5%';
+  showPlansModal = false;
+
+  openPlansModal() {
+    this.showPlansModal = true;
   }
-  private loadDashboardData() {
-    this.isLoading.set(true);
-    const supplierId = 'supplier-123';
-    this.suppliersService.getCurrentSupplier().subscribe({
-      next: (supplier) => {
-        this.supplier.set(supplier);
-      }
-    });
-    this.suppliersService.getSupplierStats(supplierId).subscribe({
-      next: (stats) => {
-        this.stats.set(stats);
-      }
-    });
-    this.suppliersService.getRecentCampaigns(supplierId, 5).subscribe({
-      next: (campaigns) => {
-        this.recentCampaigns.set(campaigns);
-        this.isLoading.set(false);
-      }
-    });
+
+  closePlansModal() {
+    this.showPlansModal = false;
   }
-  onCreateCampaign() {
-    this.router.navigate(['/suppliers/campaigns/new']);
-  }
-  onViewCampaign(campaign: Campaign) {
-    this.router.navigate(['/suppliers/campaigns', campaign.id]);
-  }
-  getStatusClass(status: string): string {
-    const statusClasses: { [key: string]: string } = {
-      'active': 'status-active',
-      'paused': 'status-paused',
-      'completed': 'status-completed',
-      'draft': 'status-draft'
-    };
-    return statusClasses[status] || '';
-  }
-  getStatusLabel(status: string): string {
-    const statusLabels: { [key: string]: string } = {
-      'active': 'Activa',
-      'paused': 'Pausada',
-      'completed': 'Completada',
-      'draft': 'Borrador'
-    };
-    return statusLabels[status] || status;
-  }
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(amount);
-  }
-  formatNumber(num: number): string {
-    return new Intl.NumberFormat('es-ES').format(num);
-  }
-  formatPercentage(num: number): string {
-    return `${num.toFixed(1)}%`;
-  }
+
+  recentCampaigns = [
+    {
+      id: 1,
+      title: 'ARUMA: Gift Card S/ 40 por S/ 29.90',
+      status: 'activa',
+      statusLabel: 'Activa',
+      impressions: '15420',
+      clicks: '1210',
+      ctr: '7.8%',
+      dates: '2025-09-20 → 2025-16-31',
+      budget: 'Presupuesto: S/ 6000',
+      audience: 'Audiencia: Ciudades: Online, Tiendas Aruma, Lima'
+    },
+    {
+      id: 2,
+      title: 'Skincare Weekend -15%',
+      status: 'pausada',
+      statusLabel: 'Pausada',
+      impressions: '80200',
+      clicks: '430',
+      ctr: '5.2%',
+      dates: '2025-09-10 → 2025-09-30',
+      budget: 'Presupuesto: S/ 4500',
+      audience: 'Audiencia: Ciudades: Lima, San Isidro, Miraflores'
+    },
+    {
+      id: 3,
+      title: 'Back to School Fragancias -20%',
+      status: 'finalizada',
+      statusLabel: 'Finalizada',
+      impressions: '80200',
+      clicks: '430',
+      ctr: '5.2%',
+      dates: '2025-08-01 → 2025-08-30',
+      budget: 'Presupuesto: S/ 3000',
+      audience: 'Audiencia: Ciudades: Miraflores'
+    }
+  ];
 }
+

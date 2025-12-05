@@ -1,0 +1,421 @@
+/* Vista de Perfil del Proveedor - GeoPS */
+
+.profile-wrapper {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER PRINCIPAL ===== */
+.main-header {
+  background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+  padding: 1.25rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-family: 'Lobster', cursive;
+  font-size: 2.5rem;
+  color: white;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-logout {
+  background-color: white;
+  color: #000;
+  border: none;
+  padding: 0.625rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: white;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #000;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.profile-container {
+  flex: 1;
+  padding: 2.5rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ===== CARD DE PERFIL ===== */
+.profile-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== HEADER DEL PERFIL ===== */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #E0E0E0;
+  margin-bottom: 2rem;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatar-large {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+}
+
+.profile-plan {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+}
+
+.btn-edit {
+  padding: 0.625rem 1.5rem;
+  background-color: white;
+  color: #000;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-edit:hover {
+  background-color: #F5F5F5;
+  border-color: #999;
+  transform: translateY(-1px);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-save {
+  padding: 0.625rem 1.5rem;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-save:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel {
+  padding: 0.625rem 1.5rem;
+  background-color: white;
+  color: #000;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-cancel:hover {
+  background-color: #F5F5F5;
+  border-color: #999;
+}
+
+/* ===== CONTENIDO DEL PERFIL (Modo Visualización) ===== */
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.info-row-description {
+  align-items: start;
+}
+
+.info-label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  color: #000;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+/* ===== FORMULARIO (Modo Edición) ===== */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #9D4EDD;
+  box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  background-color: white;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #9D4EDD;
+  box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
+}
+
+/* ===== SECCIÓN DE SEGURIDAD ===== */
+.security-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E0E0E0;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 1.25rem 0;
+}
+
+/* ===== FOOTER DEL FORMULARIO ===== */
+.form-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E0E0E0;
+}
+
+.btn-clear {
+  padding: 0.625rem 1.5rem;
+  background-color: white;
+  color: #000;
+  border: 1px solid #D0D0D0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-clear:hover {
+  background-color: #F5F5F5;
+  border-color: #999;
+}
+
+.btn-update {
+  padding: 0.625rem 1.5rem;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-update:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== FOOTER ===== */
+.main-footer {
+  background-color: white;
+  padding: 1.5rem 3rem;
+  text-align: center;
+  border-top: 1px solid #E0E0E0;
+  margin-top: auto;
+}
+
+.main-footer p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .main-header,
+  .profile-container,
+  .main-footer {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 1.5rem;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .edit-actions {
+    width: 100%;
+  }
+
+  .btn-save,
+  .btn-cancel {
+    flex: 1;
+  }
+
+  .info-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .form-footer {
+    flex-direction: column-reverse;
+  }
+
+  .btn-clear,
+  .btn-update {
+    width: 100%;
+  }
+
+  .profile-name {
+    font-size: 1.25rem;
+  }
+}
+

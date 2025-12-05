@@ -1,0 +1,81 @@
+<div class="notifications-wrapper">
+  <!-- Header Principal -->
+  <header class="main-header">
+    <div class="logo">GeoPs</div>
+    <div class="header-actions">
+      <button class="btn-ayuda" routerLink="/suppliers/help">Ayuda</button>
+      <button class="btn-notification" routerLink="/suppliers/notifications">
+        <span class="notification-icon">🔔</span>
+      </button>
+      <div class="user-profile" routerLink="/suppliers/profile">
+        <span class="user-avatar">A</span>
+        <span class="user-name">{{ businessName }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <nav class="main-nav">
+    <a routerLink="/suppliers/dashboard" routerLinkActive="active" class="nav-item">Resumen</a>
+    <a routerLink="/suppliers/campaigns" routerLinkActive="active" class="nav-item">Campañas</a>
+    <a routerLink="/suppliers/create" routerLinkActive="active" class="nav-item">Crear</a>
+    <a routerLink="/suppliers/reports" routerLinkActive="active" class="nav-item">Reportes</a>
+    <a routerLink="/suppliers/reviews" routerLinkActive="active" class="nav-item">Comentarios</a>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="notifications-container">
+    <!-- Header de Notificaciones -->
+    <div class="notifications-header">
+      <div class="header-left">
+        <h1 class="notifications-title">Notificaciones</h1>
+        @if (unreadCount > 0) {
+          <span class="unread-badge">{{ unreadCount }} sin leer</span>
+        }
+      </div>
+      <div class="header-actions">
+        <button class="btn-action" (click)="markAllAsRead()">
+          Marcar como leídas
+        </button>
+        <button class="btn-action" (click)="clearAll()">
+          Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista de Notificaciones -->
+    @if (hasNotifications) {
+      <div class="notifications-list">
+        @for (notification of notifications; track notification.id) {
+          <div
+            class="notification-card"
+            [class.unread]="!notification.isRead"
+            [class.new]="notification.isNew"
+          >
+            <div class="notification-content">
+              <div class="notification-header">
+                <h3 class="notification-title">{{ notification.title }}</h3>
+                @if (notification.isNew) {
+                  <span class="badge-new">Nueva</span>
+                }
+              </div>
+              <p class="notification-description">{{ notification.description }}</p>
+              <span class="notification-date">{{ notification.date }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Estado Vacío -->
+      <div class="empty-state">
+        <p class="empty-message">No cuenta con notificaciones!!</p>
+      </div>
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </footer>
+</div>
+

@@ -1,0 +1,265 @@
+/* Vista de Reportes - GeoPS */
+
+.reports-wrapper {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER PRINCIPAL ===== */
+.main-header {
+  background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+  padding: 1.25rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-family: 'Lobster', cursive;
+  font-size: 2.5rem;
+  color: white;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-ayuda {
+  background-color: white;
+  color: #000;
+  border: none;
+  padding: 0.625rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-ayuda:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-notification {
+  background-color: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.btn-notification:hover {
+  transform: scale(1.1);
+}
+
+.notification-icon {
+  font-size: 1.25rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: white;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #000;
+}
+
+/* ===== NAVEGACIÓN ===== */
+.main-nav {
+  background-color: white;
+  padding: 0 3rem;
+  display: flex;
+  gap: 3rem;
+  border-bottom: 1px solid #E0E0E0;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.nav-item {
+  padding: 1.25rem 0;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  font-size: 1rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #741FA2;
+}
+
+.nav-item.active {
+  color: #4A0072;
+  border-bottom-color: #4A0072;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.reports-container {
+  flex: 1;
+  padding: 2.5rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ===== HEADER DE REPORTES ===== */
+.reports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.reports-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+}
+
+.btn-export {
+  background-color: white;
+  color: #000;
+  border: 2px solid #000;
+  padding: 0.625rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-export:hover {
+  background-color: #000;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== CONTENEDOR JSON ===== */
+.json-container {
+  background-color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.json-content {
+  margin: 0;
+  padding: 1.5rem;
+  background-color: #F8F9FA;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.json-content code {
+  font-family: 'Courier New', Courier, monospace;
+  color: #333;
+}
+
+/* ===== FOOTER ===== */
+.main-footer {
+  background-color: white;
+  padding: 1.5rem 3rem;
+  text-align: center;
+  border-top: 1px solid #E0E0E0;
+  margin-top: auto;
+}
+
+.main-footer p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .main-header,
+  .main-nav,
+  .reports-container,
+  .main-footer {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-nav {
+    overflow-x: auto;
+    gap: 2rem;
+  }
+
+  .reports-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .reports-title {
+    font-size: 1.25rem;
+  }
+
+  .btn-export {
+    width: 100%;
+  }
+
+  .json-container {
+    padding: 1rem;
+  }
+
+  .json-content {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}
+

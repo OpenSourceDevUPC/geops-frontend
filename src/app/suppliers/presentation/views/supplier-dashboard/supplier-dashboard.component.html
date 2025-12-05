@@ -1,1 +1,105 @@
-﻿<div class="dashboard-container"><h1>Dashboard de Proveedores</h1><p>Bienvenido al panel de control</p></div>
+﻿<div class="dashboard-wrapper">
+  <!-- Header Principal -->
+  <header class="main-header">
+    <div class="logo">GeoPs</div>
+    <div class="header-actions">
+      <button class="btn-ayuda" routerLink="/suppliers/help">Ayuda</button>
+      <button class="btn-notification" routerLink="/suppliers/notifications">
+        <span class="notification-icon">🔔</span>
+      </button>
+      <div class="user-profile" routerLink="/suppliers/profile">
+        <span class="user-avatar">A</span>
+        <span class="user-name">{{ businessName }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <nav class="main-nav">
+    <a routerLink="/suppliers/dashboard" routerLinkActive="active" class="nav-item">Resumen</a>
+    <a routerLink="/suppliers/campaigns" routerLinkActive="active" class="nav-item">Campañas</a>
+    <a routerLink="/suppliers/create" routerLinkActive="active" class="nav-item">Crear</a>
+    <a routerLink="/suppliers/reports" routerLinkActive="active" class="nav-item">Reportes</a>
+    <a routerLink="/suppliers/reviews" routerLinkActive="active" class="nav-item">Comentarios</a>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="dashboard-container">
+    <!-- Panel de Bienvenida -->
+    <section class="welcome-panel">
+      <div class="welcome-content">
+        <p class="panel-title">Panel de Proveedor</p>
+        <h1 class="greeting">Hola, {{ businessName }} 👋</h1>
+      </div>
+      <div class="welcome-actions">
+        <button class="btn-premium" (click)="openPlansModal()">Plan Premium</button>
+        <a href="#" class="link-ver-mas">Ver Más</a>
+      </div>
+    </section>
+
+    <!-- Métricas -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-label">Campañas activas</p>
+        <p class="stat-value">{{ activeCampaigns }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Impresiones totales</p>
+        <p class="stat-value">{{ totalImpressions }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">CTR promedio</p>
+        <p class="stat-value">{{ avgCTR }}</p>
+      </div>
+    </section>
+
+    <!-- Últimas Campañas -->
+    <section class="campaigns-section">
+      <h2 class="section-title">Últimas campañas</h2>
+
+      <div class="campaign-list">
+        @for (campaign of recentCampaigns; track campaign.id) {
+          <div class="campaign-card">
+            <div class="campaign-header">
+              <div class="campaign-info">
+                <h3 class="campaign-title">{{ campaign.title }}</h3>
+                <span class="campaign-status" [class]="'status-' + campaign.status">{{ campaign.statusLabel }}</span>
+              </div>
+              <div class="campaign-metrics">
+                <span class="metric">Imp: <strong>{{ campaign.impressions }}</strong></span>
+                <span class="metric">Clics: <strong>{{ campaign.clicks }}</strong></span>
+                <span class="metric">CTR: <strong>{{ campaign.ctr }}</strong></span>
+              </div>
+            </div>
+            <div class="campaign-details">
+              <p class="campaign-dates">{{ campaign.dates }}</p>
+              <p class="campaign-budget">Presupuesto: {{ campaign.budget }}</p>
+              <p class="campaign-audience">Audiencia: {{ campaign.audience }}</p>
+            </div>
+            <div class="campaign-actions">
+              @if (campaign.status === 'pausada') {
+                <button class="btn-action">Reanudar</button>
+              }
+              @if (campaign.status === 'activa') {
+                <button class="btn-action">Pausar</button>
+              }
+              <button class="btn-action">Editar</button>
+              <button class="btn-action btn-danger">Eliminar</button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </footer>
+
+  <!-- Modal de Planes -->
+  @if (showPlansModal) {
+    <app-plans-modal (closeModal)="closePlansModal()"></app-plans-modal>
+  }
+</div>
+

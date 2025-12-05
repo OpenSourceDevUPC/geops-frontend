@@ -1,0 +1,59 @@
+<div class="help-wrapper">
+  <!-- Header Principal -->
+  <header class="main-header">
+    <div class="logo">GeoPs</div>
+    <div class="header-actions">
+      <button class="btn-ayuda" routerLink="/suppliers/help">Ayuda</button>
+      <button class="btn-notification" routerLink="/suppliers/notifications">
+        <span class="notification-icon">🔔</span>
+      </button>
+      <div class="user-profile" routerLink="/suppliers/profile">
+        <span class="user-avatar">A</span>
+        <span class="user-name">{{ businessName }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <nav class="main-nav">
+    <a routerLink="/suppliers/dashboard" routerLinkActive="active" class="nav-item">Resumen</a>
+    <a routerLink="/suppliers/campaigns" routerLinkActive="active" class="nav-item">Campañas</a>
+    <a routerLink="/suppliers/create" routerLinkActive="active" class="nav-item">Crear</a>
+    <a routerLink="/suppliers/reports" routerLinkActive="active" class="nav-item">Reportes</a>
+    <a routerLink="/suppliers/reviews" routerLinkActive="active" class="nav-item">Comentarios</a>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="help-container">
+    <!-- Título -->
+    <h1 class="help-title">Centro de Ayuda</h1>
+
+    <!-- FAQ Accordion -->
+    <div class="faq-list">
+      @for (item of faqItems; track item.id) {
+        <div class="faq-item">
+          <button
+            class="faq-question"
+            (click)="toggleFaq(item)"
+            [class.active]="item.isOpen"
+          >
+            <span>{{ item.question }}</span>
+            <span class="faq-icon">{{ item.isOpen ? '▲' : '▼' }}</span>
+          </button>
+
+          @if (item.isOpen) {
+            <div class="faq-answer">
+              <p>{{ item.answer }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </footer>
+</div>
+

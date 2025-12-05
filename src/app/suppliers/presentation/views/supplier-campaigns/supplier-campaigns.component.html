@@ -1,0 +1,132 @@
+<div class="campaigns-wrapper">
+  <!-- Header Principal -->
+  <header class="main-header">
+    <div class="logo">GeoPs</div>
+    <div class="header-actions">
+      <button class="btn-ayuda" routerLink="/suppliers/help">Ayuda</button>
+      <button class="btn-notification" routerLink="/suppliers/notifications">
+        <span class="notification-icon">🔔</span>
+      </button>
+      <div class="user-profile" routerLink="/suppliers/profile">
+        <span class="user-avatar">A</span>
+        <span class="user-name">{{ businessName }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <nav class="main-nav">
+    <a routerLink="/suppliers/dashboard" routerLinkActive="active" class="nav-item">Resumen</a>
+    <a routerLink="/suppliers/campaigns" routerLinkActive="active" class="nav-item">Campañas</a>
+    <a routerLink="/suppliers/create" routerLinkActive="active" class="nav-item">Crear</a>
+    <a routerLink="/suppliers/reports" routerLinkActive="active" class="nav-item">Reportes</a>
+    <a routerLink="/suppliers/reviews" routerLinkActive="active" class="nav-item">Comentarios</a>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="campaigns-container">
+    <!-- Campañas Activas -->
+    <section class="campaigns-section">
+      <h2 class="section-title">Activas</h2>
+
+      <div class="campaign-list">
+        @for (campaign of activeCampaigns; track campaign.id) {
+          <div class="campaign-card">
+            <div class="campaign-main">
+              <div class="campaign-left">
+                <h3 class="campaign-title">{{ campaign.title }}</h3>
+                <span class="campaign-status status-activa">{{ campaign.statusLabel }}</span>
+                <p class="campaign-dates">{{ campaign.dates }}</p>
+                <p class="campaign-budget">{{ campaign.budget }}</p>
+                <p class="campaign-audience">{{ campaign.audience }}</p>
+              </div>
+              <div class="campaign-right">
+                <div class="campaign-metrics">
+                  <span class="metric-item">Imp: <strong>{{ campaign.impressions }}</strong></span>
+                  <span class="metric-item">Clics: <strong>{{ campaign.clicks }}</strong></span>
+                  <span class="metric-item">CTR: <strong>{{ campaign.ctr }}</strong></span>
+                </div>
+                <div class="campaign-actions">
+                  <button class="btn-action">Pausar</button>
+                  <button class="btn-action">Editar</button>
+                  <button class="btn-action btn-danger">Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Campañas Pausadas -->
+    <section class="campaigns-section">
+      <h2 class="section-title">Pausadas</h2>
+
+      <div class="campaign-list">
+        @for (campaign of pausedCampaigns; track campaign.id) {
+          <div class="campaign-card">
+            <div class="campaign-main">
+              <div class="campaign-left">
+                <h3 class="campaign-title">{{ campaign.title }}</h3>
+                <span class="campaign-status status-pausada">{{ campaign.statusLabel }}</span>
+                <p class="campaign-dates">{{ campaign.dates }}</p>
+                <p class="campaign-budget">{{ campaign.budget }}</p>
+                <p class="campaign-audience">{{ campaign.audience }}</p>
+              </div>
+              <div class="campaign-right">
+                <div class="campaign-metrics">
+                  <span class="metric-item">Imp: <strong>{{ campaign.impressions }}</strong></span>
+                  <span class="metric-item">Clics: <strong>{{ campaign.clicks }}</strong></span>
+                  <span class="metric-item">CTR: <strong>{{ campaign.ctr }}</strong></span>
+                </div>
+                <div class="campaign-actions">
+                  <button class="btn-action">Reanudar</button>
+                  <button class="btn-action">Editar</button>
+                  <button class="btn-action btn-danger">Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Campañas Finalizadas -->
+    <section class="campaigns-section">
+      <h2 class="section-title">Finalizadas</h2>
+
+      <div class="campaign-list">
+        @for (campaign of finishedCampaigns; track campaign.id) {
+          <div class="campaign-card">
+            <div class="campaign-main">
+              <div class="campaign-left">
+                <h3 class="campaign-title">{{ campaign.title }}</h3>
+                <span class="campaign-status status-finalizada">{{ campaign.statusLabel }}</span>
+                <p class="campaign-dates">{{ campaign.dates }}</p>
+                <p class="campaign-budget">{{ campaign.budget }}</p>
+                <p class="campaign-audience">{{ campaign.audience }}</p>
+              </div>
+              <div class="campaign-right">
+                <div class="campaign-metrics">
+                  <span class="metric-item">Imp: <strong>{{ campaign.impressions }}</strong></span>
+                  <span class="metric-item">Clics: <strong>{{ campaign.clicks }}</strong></span>
+                  <span class="metric-item">CTR: <strong>{{ campaign.ctr }}</strong></span>
+                </div>
+                <div class="campaign-actions">
+                  <button class="btn-action">Editar</button>
+                  <button class="btn-action btn-danger">Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </footer>
+</div>
+

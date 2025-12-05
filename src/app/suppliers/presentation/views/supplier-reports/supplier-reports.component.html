@@ -1,0 +1,47 @@
+<div class="reports-wrapper">
+  <!-- Header Principal -->
+  <header class="main-header">
+    <div class="logo">GeoPs</div>
+    <div class="header-actions">
+      <button class="btn-ayuda" routerLink="/suppliers/help">Ayuda</button>
+      <button class="btn-notification" routerLink="/suppliers/notifications">
+        <span class="notification-icon">🔔</span>
+      </button>
+      <div class="user-profile" routerLink="/suppliers/profile">
+        <span class="user-avatar">A</span>
+        <span class="user-name">{{ businessName }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <nav class="main-nav">
+    <a routerLink="/suppliers/dashboard" routerLinkActive="active" class="nav-item">Resumen</a>
+    <a routerLink="/suppliers/campaigns" routerLinkActive="active" class="nav-item">Campañas</a>
+    <a routerLink="/suppliers/create" routerLinkActive="active" class="nav-item">Crear</a>
+    <a routerLink="/suppliers/reports" routerLinkActive="active" class="nav-item">Reportes</a>
+    <a routerLink="/suppliers/reviews" routerLinkActive="active" class="nav-item">Comentarios</a>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="reports-container">
+    <!-- Header de Reportes -->
+    <div class="reports-header">
+      <h1 class="reports-title">Exporta las métricas de tus campañas</h1>
+      <button class="btn-export" (click)="exportToCSV()">
+        Exportar CSV
+      </button>
+    </div>
+
+    <!-- Área de JSON -->
+    <div class="json-container">
+      <pre class="json-content"><code>{{ jsonData }}</code></pre>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>© 2025 Todos los derechos reservados</p>
+  </footer>
+</div>
+

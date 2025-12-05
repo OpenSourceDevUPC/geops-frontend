@@ -1,0 +1,100 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <h2 class="modal-title">Nueva campaña</h2>
+    </div>
+
+    <!-- Cuerpo del Modal -->
+    <div class="modal-body">
+      <!-- Campo Nombre -->
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <input
+          type="text"
+          class="form-input"
+          placeholder="Ej. Promoción 2x1"
+          [(ngModel)]="campaignName"
+        />
+      </div>
+
+      <!-- Segmentación -->
+      <div class="form-group">
+        <label class="form-label">Segmentación:</label>
+        <div class="segmentation-tabs">
+          <button
+            type="button"
+            class="tab-button"
+            [class.active]="segmentationType === 'ciudades'"
+            (click)="selectSegmentation('ciudades')"
+          >
+            Ciudades/Regiones
+          </button>
+          <button
+            type="button"
+            class="tab-button"
+            [class.active]="segmentationType === 'radio'"
+            (click)="selectSegmentation('radio')"
+          >
+            Radio
+          </button>
+        </div>
+      </div>
+
+      <!-- Campo Ciudades (solo si está seleccionado) -->
+      @if (segmentationType === 'ciudades') {
+        <div class="form-group">
+          <label class="form-label">Ciudades (separadas por coma)</label>
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Lima, San Isidro"
+            [(ngModel)]="cities"
+          />
+        </div>
+      }
+
+      <!-- Fechas -->
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label class="form-label">Inicio</label>
+          <input
+            type="date"
+            class="form-input form-input-date"
+            [(ngModel)]="startDate"
+          />
+        </div>
+        <div class="form-group form-group-half">
+          <label class="form-label">Fin</label>
+          <input
+            type="date"
+            class="form-input form-input-date"
+            [(ngModel)]="endDate"
+          />
+        </div>
+      </div>
+
+      <!-- Presupuesto -->
+      <div class="form-group">
+        <label class="form-label">Presupuesto</label>
+        <input
+          type="number"
+          class="form-input form-input-budget"
+          placeholder="0"
+          [(ngModel)]="budget"
+        />
+      </div>
+    </div>
+
+    <!-- Footer del Modal -->
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button class="btn-primary" (click)="onSave()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,60 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <div class="modal-title-section">
+        <h2 class="modal-title">Planes</h2>
+        <p class="modal-subtitle">Elige el plan que se ajusta a ti. Puedes cambiar cuando quieras.</p>
+      </div>
+      <button class="btn-close" (click)="onClose()">
+        <span>✕</span>
+      </button>
+    </div>
+
+    <!-- Contenido del Modal -->
+    <div class="modal-body">
+      <!-- Plan Básico -->
+      <div class="plan-card plan-basic">
+        <h3 class="plan-name">Básico</h3>
+        <div class="plan-price">
+          <span class="currency">s/</span>
+          <span class="amount">0</span>
+        </div>
+
+        <ul class="plan-features">
+          <li>• Crear campañas básicas</li>
+          <li>• Segmentación por radio/ciudad</li>
+          <li>• Reporte CSV</li>
+        </ul>
+
+        <button class="btn-plan btn-basic" (click)="onStartBasic()">
+          Empezar
+        </button>
+      </div>
+
+      <!-- Plan Premium -->
+      <div class="plan-card plan-premium">
+        <div class="badge-recommended">Premium Recomendado</div>
+
+        <h3 class="plan-name">Premium</h3>
+        <div class="plan-price">
+          <span class="currency">s/</span>
+          <span class="amount">19</span>
+          <span class="period">/mes</span>
+        </div>
+
+        <ul class="plan-features">
+          <li>• Métricas avanzadas (CTR, conversiones)</li>
+          <li>• Exportar PDF/Excel</li>
+          <li>• Segmentación detallada</li>
+          <li>• Soporte prioritario</li>
+        </ul>
+
+        <button class="btn-plan btn-premium" (click)="onTryPremium()">
+          Probar Premium
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
