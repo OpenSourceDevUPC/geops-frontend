@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, forkJoin, of, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { Review } from '../domain/model/review.entity';
@@ -12,6 +12,7 @@ import {
 } from './review-response';
 import { ReviewAssembler } from './review-assembler';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../identity/infrastructure/auth/auth.service';
 
 /**
  * Review API Endpoint
@@ -28,6 +29,7 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
   ReviewResponse,
   ReviewAssembler
 > {
+  private readonly authService = inject(AuthService);
 
   constructor(http: HttpClient) {
     super(
@@ -38,31 +40,104 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Get all reviews (to be filtered client-side)
+   * Override getAll() to use the filtered getAllOffers() method
+   */
+  override getAll(): Observable<Review[]> {
+    return this.getAllOffers();
+  }
+
+  /**
+   * Get all reviews filtered by user's campaigns.
+   *
+   * This method performs cross-bounded-context filtering:
+   * 1. Gets the current logged-in user ID
+   * 2. Gets all campaigns owned by the user
+   * 3. Gets all offers from those campaigns
+   * 4. Gets all reviews and filters by the offer IDs
+   *
    * Backend returns array directly, not wrapped in response object
    */
   getAllOffers(): Observable<Review[]> {
-    return this.http
-      .get<ReviewResource[]>(this.endpointUrl)
-      .pipe(
-        map(resources => {
-          // Handle both array and wrapped responses
-          if (!resources) return [];
-          if (Array.isArray(resources)) {
-            return resources.map(r => this.assembler.toEntityFromResource(r));
-          }
-          // If wrapped in data property (fallback)
-          const wrapped = resources as any;
-          if (wrapped.data && Array.isArray(wrapped.data)) {
-            return wrapped.data.map((r: ReviewResource) => this.assembler.toEntityFromResource(r));
-          }
-          return [];
-        }),
-        catchError(error => {
-          console.error('[ReviewApiEndpoint] Error fetching all reviews:', error);
-          throw error;
-        })
-      );
+    // Get current user ID
+    const userId = this.authService.getCurrentUserId();
+
+    if (!userId) {
+      console.warn('[ReviewApiEndpoint] No user logged in, returning empty reviews');
+      return of([]);
+    }
+
+    // Step 1: Get user's campaigns
+    const campaignsUrl = `${
+      environment.platformProviderApiBaseUrl
+    }/campaigns/user/${encodeURIComponent(userId)}/campaigns`;
+
+    return this.http.get<any[]>(campaignsUrl).pipe(
+      switchMap((campaigns) => {
+        if (!campaigns || campaigns.length === 0) {
+          console.log('[ReviewApiEndpoint] No campaigns found for user:', userId);
+          return of([]);
+        }
+
+        console.log('[ReviewApiEndpoint] Found campaigns:', campaigns.length);
+
+        // Step 2: Get all offers for each campaign
+        const offerRequests = campaigns.map((campaign) =>
+          this.http.get<any[]>(
+            `${environment.platformProviderApiBaseUrl}/offers/campaign/${campaign.id}`
+          ).pipe(
+            catchError(err => {
+              console.warn('[ReviewApiEndpoint] Error fetching offers for campaign:', campaign.id, err);
+              return of([]);
+            })
+          )
+        );
+
+        return forkJoin(offerRequests).pipe(
+          map((offersArrays) => {
+            // Flatten the arrays of offers
+            const allOffers = offersArrays.flat();
+            console.log('[ReviewApiEndpoint] Found offers:', allOffers.length);
+            return allOffers.map((offer) => offer.id);
+          })
+        );
+      }),
+      switchMap((offerIds) => {
+        if (!offerIds || offerIds.length === 0) {
+          console.log('[ReviewApiEndpoint] No offers found for user campaigns');
+          return of([]);
+        }
+
+        // Step 3: Get all reviews and filter by offer IDs
+        return this.http.get<ReviewResource[]>(this.endpointUrl).pipe(
+          map(resources => {
+            if (!resources) return [];
+
+            let allReviews: Review[] = [];
+
+            // Handle both array and wrapped responses
+            if (Array.isArray(resources)) {
+              allReviews = resources.map(r => this.assembler.toEntityFromResource(r));
+            } else {
+              // If wrapped in data property (fallback)
+              const wrapped = resources as any;
+              if (wrapped.data && Array.isArray(wrapped.data)) {
+                allReviews = wrapped.data.map((r: ReviewResource) => this.assembler.toEntityFromResource(r));
+              }
+            }
+
+            // Filter reviews by offer IDs
+            const filtered = allReviews.filter(review => offerIds.includes(review.offerId));
+            console.log('[ReviewApiEndpoint] Filtered reviews:', filtered.length, 'from', allReviews.length);
+
+            return filtered;
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('[ReviewApiEndpoint] Error fetching reviews by user campaigns:', error);
+        return of([]);
+      })
+    );
   }
 
   /**

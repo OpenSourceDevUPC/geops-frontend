@@ -40,19 +40,6 @@ export class ReviewService {
   }
 
   /**
-   * Load reviews filtered by user's campaigns
-   *
-   * This loads only reviews that belong to offers from campaigns owned by the user.
-   * Uses cross-bounded-context filtering:
-   * 1. Gets user's campaigns
-   * 2. Gets offers from those campaigns
-   * 3. Filters reviews by those offer IDs
-   */
-  loadReviewsByUserCampaigns(userId: number): void {
-    this.api.getReviewsByUserCampaigns(userId).subscribe();
-  }
-
-  /**
    * Create a new review
    */
   createReview(review: Omit<Review, 'id'>): Observable<Review> {

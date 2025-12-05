@@ -102,14 +102,9 @@ export class ReviewsListComponent implements OnInit, OnDestroy {
     if (this.offerId) {
       // Load reviews for specific offer
       this.reviewService.loadReviewsByOfferId(this.offerId);
-    } else if (this.userId) {
-      // Load reviews filtered by user's campaigns
-      // This shows only reviews for offers that belong to campaigns owned by the user
-      console.log('[ReviewsListComponent] Loading reviews for user campaigns:', this.userId);
-      this.reviewService.loadReviewsByUserCampaigns(this.userId);
     } else {
-      // Fallback: Load all reviews (should not happen if user is logged in)
-      console.warn('[ReviewsListComponent] No userId found, loading all reviews');
+      // Load all reviews (already filtered by user's campaigns in the API)
+      console.log('[ReviewsListComponent] Loading reviews filtered by user campaigns');
       this.reviewService.loadAllReviews();
     }
   }
