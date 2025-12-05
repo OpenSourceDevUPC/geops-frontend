@@ -58,7 +58,6 @@ export class CartApi extends BaseApi {
       }),
       catchError((error) => {
         // If cart doesn't exist (404 or any error), return empty cart
-        console.log('Cart not found for user, returning empty cart', userId);
         return of({
           id: 0,
           userId,
@@ -149,7 +148,6 @@ export class CartApi extends BaseApi {
           quantity,
           total: quantity * offerPrice,
         };
-        console.log('Adding', userId, itemResource)
         return this.cartEndpoint
           .addItemToUser(userId, itemResource)
           .pipe(tap((c) => this.cartSubject.next(c)));

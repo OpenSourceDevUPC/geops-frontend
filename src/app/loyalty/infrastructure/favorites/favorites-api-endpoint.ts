@@ -91,7 +91,6 @@ export class FavoritesApiEndpoint extends BaseApiEndpoint<
             return this.findRow(userId, offerId).pipe(
               map(rows => {
                 if (rows.length > 0) {
-                  console.log('[FavoritesAPI] Returning existing favorite');
                   return rows[0];
                 }
                 throw error;

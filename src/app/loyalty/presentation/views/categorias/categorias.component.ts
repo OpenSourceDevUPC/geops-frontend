@@ -86,7 +86,6 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     }
 
     this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
 
     if (!this.currentUserId) {
       console.warn('[Ofertas] No hay usuario autenticado');
@@ -234,7 +233,6 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     this.favoritesApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
         this.favSet = new Set(rows.map((r) => r.offerId));
-        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
       },
       error: () => this.favSet.clear(),
     });
@@ -263,7 +261,6 @@ export class CategoriasComponent implements OnInit, OnDestroy {
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
           this.favSet.delete((o.id));
-          console.log('[Ofertas] Favorito eliminado:', o.id);
         },
         error: (err) => {
           console.error('[Ofertas] Error al eliminar favorito:', err);
@@ -273,7 +270,6 @@ export class CategoriasComponent implements OnInit, OnDestroy {
       // ADD favorite
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
         this.favSet.add((o.id));
-        console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
   }

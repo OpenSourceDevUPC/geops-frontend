@@ -102,7 +102,6 @@ export class SettingsComponent implements OnInit {
       // Check notification permission
       if ('Notification' in window) {
         const notificationPermission = Notification.permission;
-        console.log('[SettingsComponent] Current notification permission:', notificationPermission);
 
         if (notificationPermission === 'granted') {
           this.consumerDetails.recibirNotificaciones = true;
@@ -115,7 +114,6 @@ export class SettingsComponent implements OnInit {
       if ('permissions' in navigator) {
         try {
           const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
-          console.log('[SettingsComponent] Current location permission:', locationPermission.state);
 
           if (locationPermission.state === 'granted') {
             this.consumerDetails.permisoUbicacion = true;
@@ -143,7 +141,6 @@ export class SettingsComponent implements OnInit {
           // If details is null (404 from service), create empty details
           this.consumerDetails = details || this.createEmptyConsumerDetails();
           this.cargando = false;
-          console.log('[SettingsComponent] Consumer details loaded:', this.consumerDetails);
         },
         error: (error) => {
           console.error('[SettingsComponent] Error loading consumer details:', error);
@@ -158,7 +155,6 @@ export class SettingsComponent implements OnInit {
           // If details is null (404 from service), create empty details
           this.ownerDetails = details || this.createEmptyOwnerDetails();
           this.cargando = false;
-          console.log('[SettingsComponent] Owner details loaded:', this.ownerDetails);
         },
         error: (error) => {
           console.error('[SettingsComponent] Error loading owner details:', error);
@@ -299,7 +295,6 @@ export class SettingsComponent implements OnInit {
           // Check if already granted
           if (Notification.permission === 'granted') {
             this.consumerDetails.recibirNotificaciones = true;
-            console.log('[SettingsComponent] ✅ Notification permission already granted');
 
             // Show a test notification
             new Notification('GeOps', {
@@ -317,7 +312,6 @@ export class SettingsComponent implements OnInit {
 
           if (permission === 'granted') {
             this.consumerDetails.recibirNotificaciones = true;
-            console.log('[SettingsComponent] ✅ Notification permission granted');
 
             // Show a test notification
             new Notification('GeOps', {
@@ -332,7 +326,6 @@ export class SettingsComponent implements OnInit {
             this.consumerDetails.recibirNotificaciones = false;
             this.mensaje = 'Permiso de notificaciones denegado. Por favor, activa los permisos en tu navegador.';
             setTimeout(() => (this.mensaje = ''), 4000);
-            console.log('[SettingsComponent] ❌ Notification permission denied');
           }
         } catch (error) {
           console.error('[SettingsComponent] Error requesting notification permission:', error);
@@ -352,7 +345,6 @@ export class SettingsComponent implements OnInit {
       this.consumerDetails.recibirNotificaciones = false;
       this.mensaje = 'Notificaciones desactivadas';
       setTimeout(() => (this.mensaje = ''), 2000);
-      console.log('[SettingsComponent] Notifications disabled by user');
     }
   }
 
@@ -384,7 +376,6 @@ export class SettingsComponent implements OnInit {
             (error) => {
               // Permission denied or error
               this.consumerDetails!.permisoUbicacion = false;
-              console.error('[SettingsComponent] ❌ Location permission denied:', error);
 
               let errorMsg = 'Permiso de ubicación denegado';
               switch (error.code) {
@@ -426,7 +417,6 @@ export class SettingsComponent implements OnInit {
       this.consumerDetails.permisoUbicacion = false;
       this.mensaje = 'Ubicación desactivada';
       setTimeout(() => (this.mensaje = ''), 2000);
-      console.log('[SettingsComponent] Location disabled by user');
     }
   }
 

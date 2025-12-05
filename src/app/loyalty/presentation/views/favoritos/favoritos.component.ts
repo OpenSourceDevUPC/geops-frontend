@@ -57,7 +57,6 @@ export class FavoritosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Favoritos] Usuario actual ID:', this.currentUserId);
     if (!this.currentUserId) {
       console.warn('[Favoritos] No hay usuario autenticado');
       return;
@@ -134,7 +133,6 @@ export class FavoritosComponent implements OnInit {
     this.favsApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
       next: () => {
         this.offers = this.offers.filter((x) => x.id !== o.id);
-        console.log('[Favoritos] Favorito eliminado:', o.id);
       },
       error: (err) => {
         console.error('[Favoritos] Error al eliminar favorito:', err);

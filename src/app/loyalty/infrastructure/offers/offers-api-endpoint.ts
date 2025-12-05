@@ -58,8 +58,6 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
               .filter(offer => activeCampaignIds.includes(offer.campaignId))
               .map(r => this.assembler.toEntityFromResource(r));
 
-            console.log(`[OffersApiEndpoint] Filtered ${filteredOffers.length} offers from ${offers.length} total (${activeCampaignIds.length} active campaigns)`);
-
             return filteredOffers;
           })
         );
@@ -112,7 +110,6 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
                 .filter(offer => activeCampaignIds.includes(offer.campaignId))
                 .map(r => this.assembler.toEntityFromResource(r));
 
-              console.log(`[OffersApiEndpoint] getByIds: Filtered ${filteredOffers.length} offers from ${offers.length} total`);
 
               return filteredOffers;
             })

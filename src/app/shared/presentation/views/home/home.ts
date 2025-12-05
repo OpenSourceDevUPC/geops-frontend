@@ -225,7 +225,6 @@ export class Home implements OnInit {
     }
 
     this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Home] Usuario actual ID:', this.currentUserId);
 
     if (!this.currentUserId) {
       console.warn('[Home] No hay usuario autenticado');
@@ -356,7 +355,6 @@ export class Home implements OnInit {
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
           this.favSet.delete(o.id);
-          console.log('[Ofertas] Favorito eliminado:', o.id);
         },
         error: (err) => {
           console.error('[Ofertas] Error al eliminar favorito:', err);
@@ -365,7 +363,6 @@ export class Home implements OnInit {
     } else {
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
         this.favSet.add(o.id);
-        console.log('[Ofertas] Favorito agregado:', o.id);
       });
     }
   }
@@ -378,7 +375,6 @@ export class Home implements OnInit {
     this.favoritesApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
         this.favSet = new Set<number>(rows.map((r) => r.offerId));
-        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
       },
       error: () => this.favSet.clear(),
     });
@@ -412,9 +408,6 @@ export class Home implements OnInit {
         this.latitude.set(position.coords.latitude);
         this.longitude.set(position.coords.longitude);
         this.center.set({lat: this.latitude(), lng: this.longitude()});
-        console.log('[Home] Latitude:', this.latitude());
-        console.log('[Home] Longitude:', this.longitude());
-        console.log('[Home] Center:', this.center().lat, " ",this.center().lng);
         this.locationAllowed.set(true);
 
         if(isLocationAllowed) {
@@ -444,7 +437,6 @@ export class Home implements OnInit {
       const permission = await navigator.permissions.query({name: 'geolocation'});
 
       if(permission.state === 'granted' && wasAllowed) {
-        console.log('[Home] Geolocation permission previously allowed');
         this.getLocation();
       }
     } catch (error) {
@@ -489,7 +481,6 @@ export class Home implements OnInit {
   }
 
   openInfoWindow(location: OfferLocation, marker: MapAdvancedMarker) {
-    console.log('[Home] Offer title:', location.offer.title, 'Partner:', location.offer.partner);
     const content = `
       <div style="padding: 8px; max-width: 250px;">
         <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #000;">${location.offer.title}</h3>
@@ -508,7 +499,6 @@ export class Home implements OnInit {
     this.offersApi.getAll().subscribe({
       next: (offers) => {
         this.allOffers.set(offers);
-        console.log('[Home] Loaded', offers.length, 'offers');
 
         // Si la ubicación ya está permitida, generar ubicaciones
         if (this.locationAllowed()) {
@@ -540,7 +530,6 @@ export class Home implements OnInit {
     });
 
     this.offerLocations.set(locations);
-    console.log('[Home] Generated', locations.length, 'offer locations within', maxDist, 'km');
   }
 
   /**

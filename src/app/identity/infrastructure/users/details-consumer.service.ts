@@ -87,7 +87,6 @@ export class DetailsConsumerService {
         next: (existingDetails) => {
           if (existingDetails) {
             // Details exist, update them
-            console.log('[DetailsConsumerService] Updating existing consumer details for user:', userId);
             this.update(userId, details).subscribe({
               next: (updated) => {
                 subscriber.next(updated);
@@ -99,7 +98,6 @@ export class DetailsConsumerService {
             });
           } else {
             // Details don't exist, create them
-            console.log('[DetailsConsumerService] Creating new consumer details for user:', userId);
             this.create(userId, details).subscribe({
               next: (created) => {
                 subscriber.next(created);

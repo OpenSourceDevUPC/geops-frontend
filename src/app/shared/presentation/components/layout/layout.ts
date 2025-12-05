@@ -96,7 +96,6 @@ export class Layout implements OnInit {
       this.userName = user.name;
       this.userEmail = user.email || 'usuario@geops.com';
       this.isOwner.set(user.role === 'OWNER');
-      console.log('[Layout] Usuario actual:', this.userName, 'Rol:', user.role, 'IsOwner:', this.isOwner());
 
       // Load notifications for authenticated user
       this.notificationsStore.loadNotifications(user.id);
@@ -114,7 +113,6 @@ export class Layout implements OnInit {
   doSearch() {
     const term = this.q.trim();
     if (term) {
-      console.log('[Layout] Buscar:', term);
       this.router.navigate(['/ofertas'], { queryParams: { q: term } });
       this.isSearchFocused.set(false);
       this.closeMobileMenu();
@@ -143,7 +141,6 @@ export class Layout implements OnInit {
   }
 
   onLogout() {
-    console.log('[Layout] Cerrando sesión');
     this.authService.logout();
     this.router.navigate(['/login']);
   }

@@ -122,14 +122,6 @@ export class SubscriptionPlansModalComponent implements OnInit {
     const planType = plan.type.toLowerCase();
     const planKey = `subscriptions.${roleKey}.plans.${planType}`;
 
-    console.log('[SubscriptionPlansModal] ==================');
-    console.log('[SubscriptionPlansModal] User Role:', this.userRole());
-    console.log('[SubscriptionPlansModal] Plan Type:', plan.type);
-    console.log('[SubscriptionPlansModal] Plan Type (lowercase):', planType);
-    console.log('[SubscriptionPlansModal] Role Key:', roleKey);
-    console.log('[SubscriptionPlansModal] Full Translation Key:', planKey);
-    console.log('[SubscriptionPlansModal] ==================');
-
     // Get translations
     const nameKey = `${planKey}.name`;
     const descriptionKey = `${planKey}.description`;
@@ -143,11 +135,6 @@ export class SubscriptionPlansModalComponent implements OnInit {
     const currency = this.translateService.instant('subscriptions.currency');
     const interval = this.translateService.instant('subscriptions.interval');
 
-    console.log('[SubscriptionPlansModal] Name Key:', nameKey, '→', name);
-    console.log('[SubscriptionPlansModal] Features Key:', featuresKey, '→', features);
-    console.log('[SubscriptionPlansModal] Button Key:', buttonTextKey, '→', buttonText);
-    console.log('[SubscriptionPlansModal] Currency:', currency);
-    console.log('[SubscriptionPlansModal] Is Features Array?', Array.isArray(features));
 
     // Check if translation failed (returns the key itself)
     const translationFailed = name === nameKey;
@@ -184,12 +171,9 @@ export class SubscriptionPlansModalComponent implements OnInit {
 
     this.usersApi.updateUserPlan(this.userId, plan.type).subscribe({
       next: (updatedUser) => {
-        console.log('User plan updated successfully:', updatedUser);
-
         // Refresh the current user data to reflect the plan change
         this.authService.refreshCurrentUser().subscribe({
           next: (refreshedUser) => {
-            console.log('User data refreshed successfully:', refreshedUser);
             this.updating.set(false);
 
             // Emit the plan selection event
