@@ -11,6 +11,7 @@ import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign, CampaignStatus } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
+import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 
 /**
  * ResumenComponent
@@ -21,7 +22,16 @@ import { ConfirmDialogComponent } from '../../../../shared/presentation/componen
 @Component({
   selector: 'app-resumen',
   standalone: true,
-  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    WelcomeBannerComponent
+  ],
   templateUrl: './resumen.component.html',
   styleUrls: ['./resumen.component.css']
 })
