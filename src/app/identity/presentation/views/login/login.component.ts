@@ -38,36 +38,69 @@ export class LoginComponent {
   ) {}
 
   /**
+   * Validates email format
+   * @param email Email to validate
+   * @returns true if email is valid, false otherwise
+   */
+  private isValidEmail(email: string): boolean {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  /**
    * Handles login form submission.
-   * Validates input, performs login, and navigates on success.
+   * Validates input, performs login, and navigates based on user role.
    */
   onSubmit() {
+    // Validación de campos vacíos
     if (!this.model.email || !this.model.password) {
-      this.errorMessage = 'Please complete all fields to log in';
+      this.errorMessage = 'Por favor completa email y contraseña';
+      return;
+    }
+
+    // Validación de formato de email
+    if (!this.isValidEmail(this.model.email)) {
+      this.errorMessage = 'Email inválido. Por favor verifica el formato';
       return;
     }
 
     this.loading = true;
     this.errorMessage = '';
 
+    console.log('[Login] Intentando login con email:', this.model.email);
+
     this.authService.login(this.model.email, this.model.password).subscribe({
       next: (user) => {
         if (user) {
-          console.log('[Login] Authenticated user with ID:', user.id);
+          console.log('[Login] ✅ Autenticado. User ID:', user.id, 'Role:', user.role);
+
           // Redirigir según el rol del usuario
           if (user.role === 'OWNER') {
-            this.router.navigate(['/suppliers']);
+            console.log('[Login] Navegando a /resumen');
+            this.router.navigate(['/resumen']);
           } else {
+            console.log('[Login] Navegando a /home');
             this.router.navigate(['/home']);
           }
         } else {
-          this.errorMessage = 'Incorrect email or password';
+          this.errorMessage = 'Email o contraseña incorrectos';
         }
         this.loading = false;
       },
-      error: (err) => {
-        console.error('[Login] Error:', err);
-        this.errorMessage = 'Login error';
+      error: (err: any) => {
+        console.error('[Login] ❌ Error:', err);
+
+        // Mensajes específicos según el código de error
+        if (err?.status === 401) {
+          this.errorMessage = 'Email o contraseña incorrectos';
+        } else if (err?.status === 400) {
+          this.errorMessage = 'Datos inválidos. Por favor verifica email y contraseña';
+        } else if (err?.status === 0) {
+          this.errorMessage = 'No se puede conectar al servidor. ¿Está ejecutándose el backend?';
+        } else {
+          this.errorMessage = 'Error al iniciar sesión. Intenta nuevamente';
+        }
+
         this.loading = false;
       }
     });

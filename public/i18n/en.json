@@ -104,9 +104,11 @@
     "map": {
       "places": "Places",
       "use-my-location": "Use my location",
+      "location-active": "Location active",
       "example": "e.g.: cine, buffet",
       "search": "Search",
       "radius": "Radius",
+      "zoom": "Zoom",
       "all": "All",
       "cinemas": "Cinemas",
       "buffets": "Buffets",
@@ -119,14 +121,17 @@
       "places-near-you": "Places near you",
       "activate-location": "Activate your location",
       "desc": "To show places near you and coupons in real time",
-      "right-map": "Share your location to see places near you"
+      "right-map": "Share your location to see places near you",
+      "nearby-offers": "Nearby Offers",
+      "results": "results"
     },
     "cinemas": "Cinemas",
     "lunch-buffets": "Lunch buffets",
     "inflatable-parks": "Inflatable parks",
     "mechanical-games": "Mechanical games",
     "maki-open-bar": "Maki open bar",
-    "beauty": "Beauty"
+    "beauty": "Beauty",
+    "offers": "offers"
   },
   "welcomeBanner": {
     "welcome": "Welcome",
@@ -140,33 +145,60 @@
   "subscriptions": {
     "title": "Plans",
     "subtitle": "Choose the plan that suits you. You can change whenever you want.",
-    "currency": "S/",
+    "currency": "s/",
     "interval": "month",
     "recommended": "Recommended",
     "close": "Close",
-    "plans": {
-      "basic": {
-        "name": "Basic",
-        "description": "Free plan with basic functionalities",
-        "features": [
-          "Access to public coupons",
-          "Filter by category and radius",
-          "3 active coupons at the same time",
-          "Email support"
-        ],
-        "buttonText": "Get Started"
-      },
-      "premium": {
-        "name": "Premium",
-        "description": "Premium plan with access to exclusive functionalities",
-        "features": [
-          "Everything from Basic",
-          "Exclusive coupons by location",
-          "Live map with offers/schedules",
-          "Smart history and alerts",
-          "Priority support"
-        ],
-        "buttonText": "Try Premium"
+    "consumer": {
+      "plans": {
+        "basic": {
+          "name": "Basic",
+          "description": "Free plan with basic functionalities",
+          "features": [
+            "Access to public coupons",
+            "Filter by category and radius",
+            "3 active coupons at the same time",
+            "Email support"
+          ],
+          "buttonText": "Get Started"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Premium plan with access to exclusive functionalities",
+          "features": [
+            "Everything from Basic",
+            "Exclusive coupons by location",
+            "Live map with offers/schedules",
+            "Smart history and alerts",
+            "Priority support"
+          ],
+          "buttonText": "Try Premium"
+        }
+      }
+    },
+    "provider": {
+      "plans": {
+        "basic": {
+          "name": "Basic",
+          "description": "Free plan to start",
+          "features": [
+            "Create basic campaigns",
+            "Segmentation by radius/city",
+            "CSV Report"
+          ],
+          "buttonText": "Start"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Premium plan with advanced features",
+          "features": [
+            "Advanced metrics (CTR, conversions)",
+            "Export PDF/Excel",
+            "Detailed segmentation",
+            "Priority support"
+          ],
+          "buttonText": "Try Premium"
+        }
       }
     }
   },
@@ -287,17 +319,22 @@
     "button": "Save"
   },
   "settings": {
-    "plan.label": "Plan",
-    "plan.BASIC": "Basic",
-    "plan.PREMIUM": "Premium",
+    "basicInfo": "Basic Information",
+    "plan": {
+      "label": "Plan",
+      "BASIC": "Basic",
+      "PREMIUM": "Premium"
+    },
     "save": "Save",
     "cancel": "Cancel",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
-    "locationPermission.label": "Location Permission",
-    "locationPermission.ASK": "Ask",
-    "locationPermission.ALWAYS": "Always",
+    "locationPermission": {
+      "label": "Location Permission",
+      "ASK": "Ask",
+      "ALWAYS": "Always"
+    },
     "home": "Home",
     "work": "Work",
     "favorites": "Favorite Category",
@@ -308,28 +345,89 @@
     "clear": "Clear",
     "changePassword": "Change password",
     "updating": "Updating...",
-    "rights": "© 2025 All rights reserved"
+    "rights": "© 2025 All rights reserved",
+    "consumer": {
+      "title": "Consumer Details",
+      "notifications": "Receive notifications",
+      "locationPermission": "Allow location access",
+      "homeAddress": "Home address",
+      "workAddress": "Work address",
+      "universityAddress": "University address",
+      "favorites": "Favorite categories"
+    },
+    "owner": {
+      "title": "Business Details",
+      "businessName": "Business name",
+      "businessType": "Business type",
+      "taxId": "Tax ID / RUC",
+      "website": "Website",
+      "description": "Business description",
+      "address": "Business address",
+      "hours": "Business hours"
+    }
   },
   "helpCenter": {
     "title": "Help Center",
+
     "registerQuestion": "How do I register as a customer?",
-    "registerSteps": "Go to <b>Register</b>, enter your email, password, confirm and verify your email.<br>Steps:",
-    "registerStep1": "Click on <b>Register</b> (header or landing).",
+    "registerWord": "Register",
+    "registerStepsBefore": "Go to",
+    "registerStepsAfter": ", enter your email, password, confirm and verify your email.",
+    "registerStepsLabel": "Steps:",
+    "registerStep1Before": "Click on",
+    "registerStep1After": "(header or landing).",
     "registerStep2": "Enter your email and a secure password (8+ characters, 1 uppercase, 1 number, 1 symbol).",
     "registerStep3": "Check your email and verify your account.",
     "registerStep4": "Return and log in.",
+
     "couponQuestion": "How do I redeem a coupon at the store?",
-    "couponSteps": "Show your coupon from <b>My coupons</b> and the business validates it with a code/QR.<br>Steps:",
-    "couponStep1": "Buy the offer and go to <b>Profile → My coupons</b>.",
-    "couponStep2": "Open the coupon and tap <b>Show to redeem</b>.",
-    "couponStep3": "The business scans/enters the <b>unique code</b> and that's it.",
-    "couponNote": "Note: You need an internet connection to validate. If your coupon is marked as 'redeemed' by mistake, contact us with the <b>coupon ID</b>.",
+    "couponStepsBefore": "Show your coupon from",
+    "couponStepsAfter": "and the business validates it with a code/QR.",
+    "couponStepsLabel": "Steps:",
+    "couponStep1Before": "Buy the offer and go to",
+    "couponStep1Middle": "→",
+    "couponStep1After": ".",
+    "couponStep2Before": "Open the coupon and tap",
+    "couponStep2After": ".",
+    "couponStep3Before": "The business scans/enters the",
+    "couponStep3After": "and that's it.",
+    "couponNoteBefore": "Note: You need an internet connection to validate. If your coupon is marked as 'redeemed' by mistake, contact us with the",
+    "couponNoteAfter": ".",
+    "myCoupons": "My coupons",
+    "profile": "Profile",
+    "showToRedeem": "Show to redeem",
+    "uniqueCode": "unique code",
+    "couponId": "coupon ID",
+
     "locationQuestion": "Why do we ask for your location and how to enable it?",
-    "locationSteps": "To show you <b>nearby offers</b> and sort them by <b>distance</b>.<br>Steps:",
-    "locationStep1": "In the \"Near you\" bar, tap <b>Allow location</b>.",
+    "locationStepsBefore": "To show you",
+    "locationStepsMiddle": "and sort them by",
+    "locationStepsAfter": ".",
+    "locationStepsLabel": "Steps:",
+    "locationStep1Before": "In the \"Near you\" bar, tap",
+    "locationStep1After": ".",
     "locationStep2": "If you denied permissions:",
-    "locationStep2a": "<b>Profile:</b> Location permissions → <b>Allow</b> → Reload",
-    "locationStep3": "Adjust the radius (e.g. 1–10 km) with the selector to see more/fewer results."
+    "locationStep2aBefore": "",
+    "locationStep2aMiddle1": ": Location permissions →",
+    "locationStep2aMiddle2": "→ Reload",
+    "locationStep3": "Adjust the radius (e.g. 1–10 km) with the selector to see more/fewer results.",
+    "nearbyOffers": "nearby offers",
+    "distance": "distance",
+    "allowLocation": "Allow location",
+    "allow": "Allow"
+  },
+  "helpCenterProvider": {
+    "title": "Help Center",
+    "createCampaignQuestion": "How do I create a campaign?",
+    "createCampaignBefore": "Go to",
+    "createCampaignWord": "Create campaign",
+    "createCampaignAfter": ", complete title, budget, dates and segmentation (location or radius), and publish.",
+    "pauseReactivateQuestion": "How do I pause or reactivate?",
+    "pauseReactivateBefore": "In Campaigns, use the buttons",
+    "pauseReactivateAfter": "according to the status.",
+    "pauseReactivate": "Pause / Reactivate",
+    "metricsQuestion": "Why don't I see metrics?",
+    "metricsAnswer": "If the campaign is new or paused, metrics may take time. Check back later or verify the budget."
   },
   "common": {
     "currency": "s/"
@@ -382,7 +480,22 @@
     "title": "My Coupons"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "tagline": "Offers and coupons near you",
+    "description": "Discover the best deals and discounts on restaurants, entertainment, beauty and more in your area.",
+    "navigation": "Navigation",
+    "offers": "Offers",
+    "subscriptions": "Subscriptions",
+    "coupons": "Coupons",
+    "help": "Help",
+    "support": "Support",
+    "faq": "Frequent Questions",
+    "contact": "Contact",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "contact-us": "Contact Us",
+    "rights": "All rights reserved.",
+    "made-with": "Made with",
+    "in-peru": "in Peru"
   },
   "categorias": {
     "Entretenimiento": "Entertainment",

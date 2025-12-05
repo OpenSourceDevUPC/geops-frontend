@@ -6,18 +6,28 @@
 
     <div class="map-top-bar">
       <div class="map-top-bar-left">
-        <label>{{'home.map.places' | translate}}</label>
-        <button *ngIf="!locationAllowed" class="map-top-bar-left-btn-main" (click)="getLocation(true)">
-          {{'home.map.use-my-location' | translate}}
+        <label class="map-label">{{'home.map.places' | translate}}</label>
+        <button *ngIf="!locationAllowed()" class="map-top-bar-left-btn-main" (click)="getLocation(true)">
+          📍 {{'home.map.use-my-location' | translate}}
         </button>
+        <span *ngIf="locationAllowed()" class="location-active">
+          ✅ {{'home.map.location-active' | translate}}
+        </span>
       </div>
 
       <div class="map-top-bar-right">
-        <label>{{'home.map.search' | translate}}:</label>
-        <input type="text" placeholder = "{{'home.map.example' |translate}}" />
+        <label class="map-label">{{'home.map.radius' | translate}}:</label>
+        <select class="map-select" [(ngModel)]="maxDistanceKm" (ngModelChange)="updateDistanceRange($event)">
+          <option [value]="1.5">1.5 km</option>
+          <option [value]="2.5">2.5 km</option>
+          <option [value]="3.5">3.5 km</option>
+          <option [value]="5">5 km</option>
+          <option [value]="7.5">7.5 km</option>
+        </select>
 
-        <label>{{'home.map.radius' | translate}}</label>
-        <select [(ngModel)]="zoomSignal">
+        <label class="map-label">{{'home.map.zoom' | translate}}:</label>
+        <select class="map-select" [(ngModel)]="zoomSignal">
+          <option [value]="12">12</option>
           <option [value]="13">13</option>
           <option [value]="14">14</option>
           <option [value]="15">15</option>
@@ -39,7 +49,7 @@
     <div class="map">
       <div class="map-card">
         <div class="map-image">
-          @if(locationAllowed){
+          @if(locationAllowed()){
             <google-map
               mapId="53c43d6499ceb7c05e795dff"
               height="500px"
@@ -47,7 +57,7 @@
               [center]="center()"
               [zoom]="+zoomSignal()"
             >
-              @for(location of locationOffers(); track location)
+              @for(location of filteredMapOffers(); track location.offer.id)
               {
                 <map-advanced-marker
                   #marker="mapAdvancedMarker"
@@ -60,17 +70,17 @@
           }
           @else{
             <div class="map-overlay">
-              <div>
+              <div class="map-overlay-header">
                 <p class="map-title">{{'home.map.real-time' | translate}}</p>
                 <h2 class="map-subtitle">{{'home.map.places-near-you' | translate}}</h2>
               </div>
               <div class="location-box">
-                <p>
+                <div class="location-box-text">
                   <strong>{{'home.map.activate-location' | translate}}</strong><br>
                   {{ 'home.map.desc' | translate }}
-                </p>
+                </div>
                 <button class="btn-use" (click)="getLocation(true)">
-                  {{ 'home.map.use-my-location' | translate }}
+                  📍 {{ 'home.map.use-my-location' | translate }}
                 </button>
               </div>
             </div>
@@ -79,32 +89,45 @@
       </div>
 
       <div class="info-card">
-        <div class="offer-map-list">
-          @for(locationOffer of locationOffers(); track locationOffer) {
-            <div class="offer-loc-item">
-              <h4>Title: {{locationOffer.title}}</h4>
-              <p>Partner: {{locationOffer.partner}}</p>
-            </div>
-          }
-        </div>
-        @if(!locationAllowed) {
-          <div>
+        @if(locationAllowed()) {
+          <div class="info-card-header">
+            <h3 class="info-card-title">{{'home.map.nearby-offers' | translate}}</h3>
+            <span class="info-card-count">{{filteredMapOffers().length}} {{'home.map.results' | translate}}</span>
+          </div>
+          <div class="offer-map-list">
+            @for(location of filteredMapOffers(); track location.offer.id) {
+              <div class="offer-loc-item" [routerLink]="['/ofertas', location.offer.id]">
+                <div class="offer-loc-info">
+                  <h4 class="offer-loc-title">{{location.offer.title}}</h4>
+                  <p class="offer-loc-partner">{{'offersData.titles.' + location.offer.id | translate}}</p>
+                  <p class="offer-loc-location">📍 {{location.offer.location}}</p>
+                </div>
+                <div class="offer-loc-price">
+                  <span class="offer-loc-currency">S/</span>
+                  <span class="offer-loc-amount">{{location.offer.price | number:'1.2-2'}}</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="info-card-empty">
             <div class="info-card-pin">📍</div>
-            <p>{{'home.map.right-map' | translate}}</p>
+            <p class="info-card-message">{{'home.map.right-map' | translate}}</p>
           </div>
         }
-        </div>
+      </div>
     </div>
 
   </section>
   <section class="home-offers">
+    @if(cinemaOffers().length > 0) {
     <div class="offers-container">
       <div class="offer-texts">
         <span>{{'home.cinemas' | translate}}</span>
-        <button>{{'home.see-more' | translate}}</button>
+        <span class="offer-count">{{cinemaOffers().length}} {{'home.offers' | translate}}</span>
       </div>
       <div class="offer-cards">
-        @for(offer of cinemaOffers; track offer.title) {
+        @for(offer of cinemaOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
               <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
@@ -162,14 +185,16 @@
         }
       </div>
     </div>
+    }
+    @if(buffetOffers().length > 0) {
     <div class="offers-container">
       <div class="offer-texts">
         <span>{{'home.lunch-buffets' | translate}}</span>
-        <button>{{'home.see-more' | translate}}</button>
+        <span class="offer-count">{{buffetOffers().length}} {{'home.offers' | translate}}</span>
       </div>
 
       <div class="offer-cards">
-        @for(offer of buffetOffers; track offer.title) {
+        @for(offer of buffetOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
               <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
@@ -228,13 +253,15 @@
         }
       </div>
     </div>
+    }
+    @if(parkOffers().length > 0) {
     <div class="offers-container">
       <div class="offer-texts">
         <span>{{'home.inflatable-parks' | translate}}</span>
-        <button>{{'home.see-more' | translate}}</button>
+        <span class="offer-count">{{parkOffers().length}} {{'home.offers' | translate}}</span>
       </div>
       <div class="offer-cards">
-        @for(offer of parkOffers; track offer.title) {
+        @for(offer of parkOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
               <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
@@ -288,13 +315,15 @@
         }
       </div>
     </div>
+    }
+    @if(mechGamesOffers().length > 0) {
     <div class="offers-container">
       <div class="offer-texts">
         <span>{{'home.mechanical-games' | translate}}</span>
-        <button>{{'home.see-more' | translate}}</button>
+        <span class="offer-count">{{mechGamesOffers().length}} {{'home.offers' | translate}}</span>
       </div>
       <div class="offer-cards">
-        @for(offer of mechGamesOffers; track offer.title) {
+        @for(offer of mechGamesOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
               <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
@@ -351,13 +380,15 @@
         }
       </div>
     </div>
+    }
+    @if(makisOffers().length > 0) {
     <div class="offers-container">
       <div class="offer-texts">
         <span>{{'home.maki-open-bar' | translate}}</span>
-        <button>{{'home.see-more' | translate}}</button>
+        <span class="offer-count">{{makisOffers().length}} {{'home.offers' | translate}}</span>
       </div>
       <div class="offer-cards">
-        @for(offer of makisOffers; track offer.title) {
+        @for(offer of makisOffers(); track offer.id) {
           <div class="offer-card">
             <div class="img-box" tabindex="0">
               <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
@@ -415,13 +446,15 @@
         }
       </div>
     </div>
+    }
+    @if(beautyOffers().length > 0) {
     <div class="offers-container">
       <div class="offer-texts">
         <span>{{'home.beauty' | translate}}</span>
-        <button>{{'home.see-more' | translate}}</button>
+        <span class="offer-count">{{beautyOffers().length}} {{'home.offers' | translate}}</span>
       </div>
       <div class="offer-cards">
-        @for(offer of beautyOffers; track offer.title) {
+        @for(offer of beautyOffers(); track offer.id) {
           <div class="offer-card">
           <div class="img-box" tabindex="0">
             <img [src]="imgFor(offer)" [alt]="('offersData.titles.' + offer.id) | translate" />
@@ -479,5 +512,6 @@
         }
       </div>
     </div>
+    }
   </section>
 </div>

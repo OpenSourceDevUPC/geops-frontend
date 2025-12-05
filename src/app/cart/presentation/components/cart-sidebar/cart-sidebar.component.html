@@ -129,9 +129,14 @@
                 mat-raised-button
                 color="primary"
                 class="pay-now-btn"
-                [disabled]="!selectedPaymentMethod()"
+                [disabled]="!selectedPaymentMethod() || isProcessingPayment()"
                 (click)="processPayment()">
-                {{ 'cart.actions.payNow' | translate }}
+                <span *ngIf="!isProcessingPayment()">
+                  {{ 'cart.actions.payNow' | translate }}
+                </span>
+                <span *ngIf="isProcessingPayment()">
+                  {{ 'payment.form.processing' | translate }}
+                </span>
               </button>
             </div>
           </div>

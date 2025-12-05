@@ -3,7 +3,7 @@ import { BaseEntity } from '../../../shared/infrastructure/base-entity';
 /**
  * Defines possible user roles within the system.
  */
-export type UserRole = 'OWNER' | 'CONSUMER';
+export type UserRole = 'OWNER' | 'CONSUMER' | 'ADMIN';
 
 /**
  * Defines available subscription plans for users.
@@ -11,31 +11,18 @@ export type UserRole = 'OWNER' | 'CONSUMER';
 export type PlanType = 'BASIC' | 'PREMIUM';
 
 /**
- * Represents the business profile information for users with OWNER role.
- */
-export interface BusinessProfile {
-  businessName: string;
-  businessType: string;
-  taxId: string;
-}
-
-/**
  * Main user entity interface.
- * Extends BaseEntity and includes personal, business, and preference data.
+ * Extends BaseEntity and includes personal information, role, and subscription plan.
+ * Additional details (consumer or owner specific) are stored in separate entities.
  */
 export interface User extends BaseEntity {
   id: number;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   role: UserRole;
   plan: PlanType;
-  phone?: string;
-  business?: BusinessProfile;
-  locationPermission?: string;
-  favorites?: string[];
-  home?: string;
-  work?: string;
-  university?: string;
-  savedOffers?: number;
+  phone: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

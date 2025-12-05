@@ -15,6 +15,7 @@ import { PaymentMethod } from '../../../../payment/domain/model/payment-method.e
 import { Payment } from '../../../../payment/domain/model/payment.entity';
 import { CartUiService } from '../../services/cart-ui.service';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
+import { NotificationsService } from '../../../../notifications/presentation/services/notifications.service';
 
 export type CartView = 'cart' | 'checkout' | 'confirmation';
 export type PaymentStep = 'methods' | 'card-form' | 'confirmation';
@@ -39,6 +40,7 @@ export class CartSidebarComponent implements OnInit {
   private readonly cartApi = inject(CartApi);
   private readonly paymentApi = inject(PaymentApi);
   private readonly fb = inject(FormBuilder);
+  private readonly notificationsService = inject(NotificationsService);
   private readonly translateService = inject(TranslateService);
   private readonly cartUiService = inject(CartUiService);
 
@@ -63,14 +65,14 @@ export class CartSidebarComponent implements OnInit {
     cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
   });
 
-  userId = 'a512'; // In real app would come from auth service
+  userId = 0; // In real app would come from auth service
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = String(user.id);
+      this.userId = (user.id);
     } else {
       console.warn('[Layout] No hay usuario autenticado');
     }
@@ -254,7 +256,7 @@ export class CartSidebarComponent implements OnInit {
     const formValue = this.cardForm.value;
     const request: CreatePaymentRequest = {
       userId: this.userId,
-      cartId: this.cart()?.id?.toString() || '',
+      cartId: this.cart()?.id || 0,
       amount: this.totalAmount,
       paymentMethod: PaymentMethod.CARD,
       customerEmail: formValue.email,
@@ -283,7 +285,7 @@ export class CartSidebarComponent implements OnInit {
 
     const request: CreatePaymentRequest = {
       userId: this.userId,
-      cartId: this.cart()?.id?.toString() || '',
+      cartId: this.cart()?.id || 0,
       amount: this.totalAmount,
       paymentMethod: method,
       customerEmail: `user-${this.userId}@temp.com`,
@@ -311,6 +313,11 @@ export class CartSidebarComponent implements OnInit {
     this.paymentStep = 'confirmation';
     // Clear the cart after successful payment
     this.clearCart();
+    // Refresh notifications to show the new payment notification
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.notificationsService.refresh(user.id);
+    }
   }
 
   /**

@@ -12,7 +12,7 @@ import { CartItem } from './cart-item.entity';
  * @property updatedAt - ISO timestamp when the cart was last updated
  */
 export interface Cart extends BaseEntity {
-  userId: string;
+  userId: number;
   items: CartItem[];
   totalItems: number;
   totalAmount: number;

@@ -24,15 +24,15 @@ import { PaymentMethod, PaymentStatus } from './payment-method.enum';
  * @property completedAt - ISO timestamp when payment completed (optional)
  */
 export interface Payment extends BaseEntity {
-  userId: string;
-  cartId: string;
+  userId: number;
+  cartId: number;
   amount: number;
   // productType indicates which domain/table the payment refers to (e.g., 'offer', 'subscription')
   productType?: string;
   // productId is the id of the purchased product in its respective table
-  productId?: string;
+  productId?: number;
   // paymentCodes holds generated codes per purchased item (one per coupon)
-  paymentCodes?: { offerId: string; code: string }[];
+  paymentCodes?: { offerId: number; code: string }[];
   paymentMethod: PaymentMethod;
   status: PaymentStatus;
   customerEmail: string;

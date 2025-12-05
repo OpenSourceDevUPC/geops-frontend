@@ -12,7 +12,13 @@
       <div>
         <div class="settings-name">{{ user.name }}</div>
         <div class="settings-plan">
-          {{ 'settings.plan.' + user.plan | translate }}
+          <span *ngIf="user.plan === 'BASIC' || user.plan === 'PREMIUM'">
+            {{ 'settings.plan.' + user.plan | translate }} - {{ user.role }}
+          </span>
+          <span *ngIf="user.plan !== 'BASIC' && user.plan !== 'PREMIUM'" style="color: #ff6b6b;">
+            Plan no válido ({{ user.plan }}) - {{ user.role }}
+            <br><small>Por favor, actualiza tu plan a BASIC o PREMIUM</small>
+          </span>
         </div>
       </div>
       <div class="settings-profile-actions">
@@ -27,6 +33,9 @@
 
     <!-- User Settings Form -->
     <form class="settings-form">
+      <!-- Basic User Information -->
+      <h3>{{ 'settings.basicInfo' | translate }}</h3>
+
       <div class="settings-row">
         <label>{{ 'settings.name' | translate }}</label>
         <div class="input-edit-group">
@@ -36,13 +45,7 @@
           </button>
         </div>
       </div>
-      <div class="settings-row">
-        <label>{{ 'settings.plan.label' | translate }}</label>
-        <select class="settings-input" [(ngModel)]="user.plan" name="plan">
-          <option value="PREMIUM">{{ 'settings.plan.PREMIUM' | translate }}</option>
-          <option value="BASIC">{{ 'settings.plan.BASIC' | translate }}</option>
-        </select>
-      </div>
+
       <div class="settings-row">
         <label>{{ 'settings.email' | translate }}</label>
         <div class="input-edit-group">
@@ -52,6 +55,7 @@
           </button>
         </div>
       </div>
+
       <div class="settings-row">
         <label>{{ 'settings.phone' | translate }}</label>
         <div class="input-edit-group">
@@ -61,48 +65,184 @@
           </button>
         </div>
       </div>
+
       <div class="settings-row">
-        <label>{{ 'settings.locationPermission.label' | translate }}</label>
-        <select class="settings-input" [(ngModel)]="user.locationPermission" name="locationPermission">
-          <option value="ASK">{{ 'settings.locationPermission.ASK' | translate }}</option>
-          <option value="ALWAYS">{{ 'settings.locationPermission.ALWAYS' | translate }}</option>
+        <label>{{ 'settings.plan.label' | translate }}</label>
+        <select class="settings-input" [(ngModel)]="user.plan" name="plan">
+          <option value="BASIC">{{ 'settings.plan.BASIC' | translate }}</option>
+          <option value="PREMIUM">{{ 'settings.plan.PREMIUM' | translate }}</option>
         </select>
       </div>
-      <div class="settings-row">
-        <label>{{ 'settings.home' | translate }}</label>
-        <div class="input-edit-group">
-          <input class="settings-input" type="text"
-                 [(ngModel)]="user.home" name="home"
-                 [disabled]="!editState['home']"/>
-          <button type="button" class="edit-icon-btn" (click)="toggleEdit('home')">
-            <mat-icon>edit</mat-icon>
-          </button>
+
+      <!-- Consumer-specific fields -->
+      <div *ngIf="isConsumer && consumerDetails">
+        <h3>{{ 'settings.consumer.title' | translate }}</h3>
+
+        <div class="settings-row">
+          <label>{{ 'settings.consumer.notifications' | translate }}</label>
+          <input type="checkbox" [(ngModel)]="consumerDetails.recibirNotificaciones" name="notifications">
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.consumer.locationPermission' | translate }}</label>
+          <input type="checkbox" [(ngModel)]="consumerDetails.permisoUbicacion" name="locationPermission">
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.consumer.homeAddress' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="consumerDetails.direccionCasa"
+                   name="direccionCasa"
+                   [disabled]="!editState['direccionCasa']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('direccionCasa')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.consumer.workAddress' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="consumerDetails.direccionTrabajo"
+                   name="direccionTrabajo"
+                   [disabled]="!editState['direccionTrabajo']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('direccionTrabajo')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.consumer.universityAddress' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="consumerDetails.direccionUniversidad"
+                   name="direccionUniversidad"
+                   [disabled]="!editState['direccionUniversidad']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('direccionUniversidad')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.consumer.favorites' | translate }}</label>
+          <div class="settings-checkbox-group">
+            <label *ngFor="let cat of ALL_CATEGORIES" class="category-checkbox">
+              <input type="checkbox"
+                     [value]="cat"
+                     [checked]="isCategoryFavorite(cat)"
+                     (change)="onCategoryChange($event, cat)">
+              {{ cat }}
+            </label>
+          </div>
         </div>
       </div>
-      <div class="settings-row">
-        <label>{{ 'settings.work' | translate }}</label>
-        <div class="input-edit-group">
-          <input class="settings-input" type="text"
-                 [(ngModel)]="user.work" name="work"
-                 [disabled]="!editState['work']"/>
-          <button type="button" class="edit-icon-btn" (click)="toggleEdit('work')">
-            <mat-icon>edit</mat-icon>
-          </button>
+
+      <!-- Owner-specific fields -->
+      <div *ngIf="isOwner && ownerDetails">
+        <h3>{{ 'settings.owner.title' | translate }}</h3>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.businessName' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="ownerDetails.businessName"
+                   name="businessName"
+                   [disabled]="!editState['businessName']"
+                   required/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('businessName')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.businessType' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="ownerDetails.businessType"
+                   name="businessType"
+                   [disabled]="!editState['businessType']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('businessType')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.taxId' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="ownerDetails.taxId"
+                   name="taxId"
+                   [disabled]="!editState['taxId']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('taxId')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.website' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="url"
+                   [(ngModel)]="ownerDetails.website"
+                   name="website"
+                   [disabled]="!editState['website']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('website')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.description' | translate }}</label>
+          <div class="input-edit-group">
+            <textarea class="settings-input"
+                      [(ngModel)]="ownerDetails.description"
+                      name="description"
+                      rows="4"
+                      [disabled]="!editState['description']"></textarea>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('description')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.address' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="ownerDetails.address"
+                   name="address"
+                   [disabled]="!editState['address']"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('address')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <label>{{ 'settings.owner.hours' | translate }}</label>
+          <div class="input-edit-group">
+            <input class="settings-input" type="text"
+                   [(ngModel)]="ownerDetails.horarioAtencion"
+                   name="horarioAtencion"
+                   [disabled]="!editState['horarioAtencion']"
+                   placeholder="Lun-Vie: 9:00-18:00"/>
+            <button type="button" class="edit-icon-btn" (click)="toggleEdit('horarioAtencion')">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
-      <div class="settings-row">
-        <label>{{ 'settings.favorites' | translate }}</label>
-        <div class="settings-checkbox-group">
-          <label *ngFor="let cat of ALL_CATEGORIES" class="category-checkbox">
-            <input type="checkbox"
-                   [value]="cat"
-                   [checked]="user?.favorites?.includes(cat)"
-                   (change)="onCategoryChange($event, cat)">
-            {{ cat }}
-          </label>
-        </div>
-      </div>
-      <label>{{ 'settings.security' | translate }}</label>
+
+      <!-- Security Section -->
+      <h3>{{ 'settings.security' | translate }}</h3>
+
       <div class="settings-row">
         <label>{{ 'settings.passwordCurrent' | translate }}</label>
         <div class="input-edit-group">
@@ -116,6 +256,7 @@
           </button>
         </div>
       </div>
+
       <div class="settings-row">
         <label>{{ 'settings.passwordNew' | translate }}</label>
         <div class="input-edit-group">
@@ -129,6 +270,7 @@
           </button>
         </div>
       </div>
+
       <div class="settings-row">
         <label>{{ 'settings.passwordConfirm' | translate }}</label>
         <div class="input-edit-group">
@@ -142,6 +284,7 @@
           </button>
         </div>
       </div>
+
       <div class="settings-actions">
         <button class="settings-btn secondary" type="reset">
           {{ 'settings.clear' | translate }}

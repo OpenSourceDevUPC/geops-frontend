@@ -15,8 +15,8 @@ import { Offer } from '../../../loyalty/domain/model/offer.entity';
  * @property createdAt - Creation timestamp of the coupon
  */
 export interface Coupon extends BaseEntity {
-  userId: string;
-  paymentId: string; // reference to payment that generated the coupon
+  userId: number;
+  paymentId: number; // reference to payment that generated the coupon
   paymentCode: string; // code generated at payment time
   productType?: string; // copied from payment
   offerId?: number; // reference to the offer id

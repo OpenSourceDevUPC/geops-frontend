@@ -1,5 +1,5 @@
-<div class="coupon-list">
-  <h2>{{ 'coupons.title' | translate }}</h2>
+<div class="layout">
+  <h2 class="page-title">{{ 'coupons.title' | translate }}</h2>
   <ng-container *ngFor="let c of coupons">
     <app-coupon-item [coupon]="c"></app-coupon-item>
   </ng-container>
