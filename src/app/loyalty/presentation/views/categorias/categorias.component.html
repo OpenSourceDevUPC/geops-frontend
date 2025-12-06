@@ -26,6 +26,7 @@
           <button
             type="button"
             class="view-offer"
+            (click)="onViewOffer(o)"
             [attr.aria-label]="('offersPage.card.view' | translate) + ' ' + (o.title || (('offersData.titles.' + o.id) | translate))">
             {{ 'offersPage.card.view' | translate }}
           </button>

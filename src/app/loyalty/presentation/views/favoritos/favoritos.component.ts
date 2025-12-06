@@ -6,19 +6,7 @@ import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-end
 import { TranslateModule } from '@ngx-translate/core';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {CartStore} from '../../../../cart/application/cart.store';
-
-type Offer = {
-  id: number;
-  title: string;
-  partner: string;
-  price: number;
-  codePrefix: string;
-  validUntil: string;
-  rating: number;
-  location: string;
-  category: string;
-  imageUrl?: string;
-};
+import { Offer } from '../../../domain/model/offer.entity';
 
 @Component({
   selector: 'app-favoritos',
@@ -38,6 +26,7 @@ export class FavoritosComponent implements OnInit {
   offers: Offer[] = [];
 
   private currentUserId: number | null = null;
+  private impressionsTracked = false;
 
   /**
    * creates an instance of the 'favoritesComponent' component
@@ -107,6 +96,7 @@ export class FavoritosComponent implements OnInit {
           next: (list) => {
             const map = new Map(list.map((o) => [o.id, o]));
             this.offers = ids.map((id) => map.get(id)!).filter(Boolean) as Offer[];
+            this.trackInitialImpressions(this.offers);
             this.loading = false;
           },
           error: () => (this.loading = false),
@@ -153,6 +143,7 @@ export class FavoritosComponent implements OnInit {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
+    this.offersApi.recordCampaignClick(o.campaignId);
     this.cartStore.addItem(this.currentUserId, o.id, offerTitle, o.price, offerImageUrl, 1);
   }
 
@@ -169,9 +160,32 @@ export class FavoritosComponent implements OnInit {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
+    this.offersApi.recordCampaignClick(o.campaignId);
     // Add to cart and open sidebar
     this.cartStore.addItem(this.currentUserId, o.id, offerTitle, o.price, offerImageUrl, 1);
     this.cartStore.openSidebar();
+  }
+
+  onViewOffer(o: Offer) {
+    this.offersApi.recordCampaignClick(o.campaignId);
+  }
+
+  private trackInitialImpressions(offers: Offer[]): void {
+    if (this.impressionsTracked || !offers.length) {
+      return;
+    }
+
+    const ids = new Set<number>();
+    offers.forEach(offer => {
+      if (typeof offer.campaignId === 'number' && offer.campaignId > 0) {
+        ids.add(offer.campaignId);
+      }
+    });
+
+    if (ids.size) {
+      this.offersApi.recordCampaignImpressions(Array.from(ids));
+      this.impressionsTracked = true;
+    }
   }
 
 }

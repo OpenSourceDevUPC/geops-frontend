@@ -159,6 +159,68 @@
     "reports": "Reports",
     "comments": "Comments"
   },
+  "campaign": {
+    "addOfferForm": {
+      "title": {
+        "new": "New Offer",
+        "edit": "Edit Offer"
+      },
+      "fields": {
+        "title": {
+          "label": "Offer Title",
+          "placeholder": "Ex: 20% off products"
+        },
+        "partner": {
+          "label": "Partner",
+          "placeholder": "Ex: Restaurant El Sabor"
+        },
+        "price": {
+          "label": "Price (S/.)",
+          "placeholder": "0.00"
+        },
+        "category": {
+          "label": "Category",
+          "placeholder": "Select a category"
+        },
+        "codePrefix": {
+          "label": "Code Prefix",
+          "placeholder": "Ex: PROMO"
+        },
+        "location": {
+          "label": "Location",
+          "placeholder": "Ex: Main Ave 123, Miraflores"
+        },
+        "imageUrl": {
+          "label": "Image URL",
+          "placeholder": "https://example.com/image.jpg"
+        },
+        "validUntil": {
+          "label": "Valid Until"
+        }
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "add": "Add Offer"
+      },
+      "errors": {
+        "required": "This field is required",
+        "minLength": "Must be at least {{value}} characters",
+        "maxLength": "Must not exceed {{value}} characters",
+        "minValue": "Value must be greater than or equal to 0"
+      }
+    },
+    "offersList": {
+      "empty": {
+        "description": "No offers linked"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "validUntil": "Valid until"
+    }
+  },
   "subscriptions": {
     "title": "Plans",
     "subtitle": "Choose the plan that suits you. You can change whenever you want.",
@@ -461,7 +523,10 @@
     "metricsAnswer": "If the campaign is new or paused, metrics may take time. Check back later or verify the budget."
   },
   "common": {
-    "currency": "s/"
+    "currency": "s/",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "offerDetail": {
     "back": "Back",
@@ -526,6 +591,7 @@
       "resume": "Resume",
       "activate": "Activate",
       "finalize": "Finalize",
+      "remove": "Remove",
       "view": "View",
       "cancel": "Cancel",
       "save": "Save Changes",
@@ -539,6 +605,39 @@
       "active": "Active",
       "paused": "Paused",
       "finalized": "Finalized"
+    },
+    "statusLabels": {
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "FINALIZED": "Finalized"
+    },
+    "dialogs": {
+      "pause": {
+        "title": "Pause campaign?",
+        "message": "Are you sure you want to pause the campaign \"{{name}}\"?",
+        "confirm": "Pause"
+      },
+      "activate": {
+        "title": "Activate campaign?",
+        "message": "Are you sure you want to activate the campaign \"{{name}}\"?",
+        "confirm": "Activate"
+      },
+      "finalize": {
+        "title": "Finalize campaign?",
+        "message": "Are you sure you want to finalize the campaign \"{{name}}\"? This action cannot be undone.",
+        "confirm": "Finalize"
+      },
+      "delete": {
+        "title": "Delete campaign?",
+        "message": "Are you sure you want to delete the campaign \"{{name}}\"? This action cannot be undone.",
+        "confirm": "Delete"
+      }
+    },
+    "notifications": {
+      "pauseSuccess": "Campaign paused successfully",
+      "activateSuccess": "Campaign activated successfully",
+      "finalizeSuccess": "Campaign finalized successfully",
+      "deleteSuccess": "Campaign deleted successfully"
     },
     "form": {
       "createTitle": "Create New Campaign",

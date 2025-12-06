@@ -120,6 +120,7 @@
 
           <button
             class="view-offer"
+            (click)="onViewOffer(o)"
             [routerLink]="['/ofertas', o.id]"
             [queryParams]="{ from: 'offers' }"
             [queryParamsHandling]="'preserve'">

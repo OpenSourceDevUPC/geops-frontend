@@ -159,6 +159,68 @@
     "reports": "Reportes",
     "comments": "Comentarios"
   },
+  "campaign": {
+    "addOfferForm": {
+      "title": {
+        "new": "Nueva Oferta",
+        "edit": "Editar Oferta"
+      },
+      "fields": {
+        "title": {
+          "label": "Título de la Oferta",
+          "placeholder": "Ej: 20% de descuento en productos"
+        },
+        "partner": {
+          "label": "Socio/Partner",
+          "placeholder": "Ej: Restaurante El Sabor"
+        },
+        "price": {
+          "label": "Precio (S/.)",
+          "placeholder": "0.00"
+        },
+        "category": {
+          "label": "Categoría",
+          "placeholder": "Selecciona una categoría"
+        },
+        "codePrefix": {
+          "label": "Prefijo de Código",
+          "placeholder": "Ej: PROMO"
+        },
+        "location": {
+          "label": "Ubicación",
+          "placeholder": "Ej: Av. Principal 123, Miraflores"
+        },
+        "imageUrl": {
+          "label": "URL de la Imagen",
+          "placeholder": "https://ejemplo.com/imagen.jpg"
+        },
+        "validUntil": {
+          "label": "Válido Hasta"
+        }
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar Cambios",
+        "add": "Agregar Oferta"
+      },
+      "errors": {
+        "required": "Este campo es requerido",
+        "minLength": "Debe tener al menos {{value}} caracteres",
+        "maxLength": "No debe exceder {{value}} caracteres",
+        "minValue": "El valor debe ser mayor o igual a 0"
+      }
+    },
+    "offersList": {
+      "empty": {
+        "description": "No hay ofertas asociadas"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "validUntil": "Válido hasta"
+    }
+  },
   "subscriptions": {
     "title": "Planes",
     "subtitle": "Elige el plan que se ajusta a ti. Puedes cambiar cuando quieras.",
@@ -461,7 +523,10 @@
     "metricsAnswer": "Si la campaña es nueva o está pausada, las métricas pueden tardar. Revisa más tarde o verifica el presupuesto."
   },
   "common": {
-    "currency": "s/"
+    "currency": "s/",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Cerrar"
   },
   "offerDetail": {
     "back": "Volver",
@@ -521,6 +586,7 @@
       "view": "Visualizar",
       "cancel": "Cancelar",
       "save": "Guardar Cambios",
+      "remove": "Eliminar",
       "addOffers": "Agregar Ofertas",
       "removeOffer": "Quitar Oferta",
       "back": "Volver",
@@ -531,6 +597,39 @@
       "active": "Activa",
       "paused": "Pausada",
       "finalized": "Finalizada"
+    },
+    "statusLabels": {
+      "ACTIVE": "Activa",
+      "PAUSED": "Pausada",
+      "FINALIZED": "Finalizada"
+    },
+    "dialogs": {
+      "pause": {
+        "title": "¿Pausar campaña?",
+        "message": "¿Estás seguro de que deseas pausar la campaña \"{{name}}\"?",
+        "confirm": "Pausar"
+      },
+      "activate": {
+        "title": "¿Activar campaña?",
+        "message": "¿Estás seguro de que deseas activar la campaña \"{{name}}\"?",
+        "confirm": "Activar"
+      },
+      "finalize": {
+        "title": "¿Finalizar campaña?",
+        "message": "¿Estás seguro de que deseas finalizar la campaña \"{{name}}\"? Esta acción no se podrá revertir.",
+        "confirm": "Finalizar"
+      },
+      "delete": {
+        "title": "¿Eliminar campaña?",
+        "message": "¿Estás seguro de que deseas eliminar la campaña \"{{name}}\"? Esta acción no se puede deshacer.",
+        "confirm": "Eliminar"
+      }
+    },
+    "notifications": {
+      "pauseSuccess": "Campaña pausada exitosamente",
+      "activateSuccess": "Campaña activada exitosamente",
+      "finalizeSuccess": "Campaña finalizada exitosamente",
+      "deleteSuccess": "Campaña eliminada exitosamente"
     },
     "form": {
       "createTitle": "Crear Nueva Campaña",

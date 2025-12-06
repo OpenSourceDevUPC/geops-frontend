@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CampaignOffer } from '../../../domain/model/offer.entity';
 
 /**
@@ -25,14 +27,34 @@ import { CampaignOffer } from '../../../domain/model/offer.entity';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    TranslateModule
   ],
   templateUrl: './add-offer-form.component.html',
   styleUrls: ['./add-offer-form.component.css']
 })
 export class AddOfferFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
+
+  readonly categoryOptions: string[] = [
+    'Entretenimiento',
+    'Belleza',
+    'Gastronomía',
+    'Gift Card',
+    'Educación',
+    'Salud',
+    'Tecnología',
+    'Moda',
+    'Hogar',
+    'Deportes',
+    'Viajes',
+    'Automotriz',
+    'Servicios',
+    'Otros'
+  ];
 
   @Input() campaignId!: number;
   @Input() offer?: CampaignOffer; // If editing existing offer
@@ -145,18 +167,18 @@ export class AddOfferFormComponent implements OnInit {
     if (!control) return '';
 
     if (control.hasError('required')) {
-      return 'Este campo es requerido';
+      return this.translate.instant('campaign.addOfferForm.errors.required');
     }
     if (control.hasError('minlength')) {
       const minLength = control.errors?.['minlength'].requiredLength;
-      return `Debe tener al menos ${minLength} caracteres`;
+      return this.translate.instant('campaign.addOfferForm.errors.minLength', { value: minLength });
     }
     if (control.hasError('maxlength')) {
       const maxLength = control.errors?.['maxlength'].requiredLength;
-      return `No debe exceder ${maxLength} caracteres`;
+      return this.translate.instant('campaign.addOfferForm.errors.maxLength', { value: maxLength });
     }
     if (control.hasError('min')) {
-      return 'El valor debe ser mayor o igual a 0';
+      return this.translate.instant('campaign.addOfferForm.errors.minValue');
     }
 
     return '';

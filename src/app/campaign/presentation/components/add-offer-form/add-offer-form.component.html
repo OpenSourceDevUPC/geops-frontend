@@ -1,11 +1,17 @@
 <div class="offer-form-container">
-  <h3>{{ isEditMode ? 'Editar Oferta' : 'Nueva Oferta' }}</h3>
+  <h3>
+    {{ (isEditMode ? 'campaign.addOfferForm.title.edit' : 'campaign.addOfferForm.title.new') | translate }}
+  </h3>
 
   <form [formGroup]="offerForm" (ngSubmit)="onSubmit()" class="offer-form">
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Título de la Oferta</mat-label>
-        <input matInput formControlName="title" placeholder="Ej: 20% de descuento en productos">
+        <mat-label>{{ 'campaign.addOfferForm.fields.title.label' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="title"
+          [placeholder]="'campaign.addOfferForm.fields.title.placeholder' | translate"
+        >
         <mat-icon matPrefix>local_offer</mat-icon>
         <mat-error *ngIf="offerForm.get('title')?.invalid">
           {{ getErrorMessage('title') }}
@@ -15,8 +21,12 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Socio/Partner</mat-label>
-        <input matInput formControlName="partner" placeholder="Ej: Restaurante El Sabor">
+        <mat-label>{{ 'campaign.addOfferForm.fields.partner.label' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="partner"
+          [placeholder]="'campaign.addOfferForm.fields.partner.placeholder' | translate"
+        >
         <mat-icon matPrefix>store</mat-icon>
         <mat-error *ngIf="offerForm.get('partner')?.invalid">
           {{ getErrorMessage('partner') }}
@@ -26,25 +36,30 @@
 
     <div class="form-row two-columns">
       <mat-form-field appearance="outline">
-        <mat-label>Precio (S/.)</mat-label>
-        <input matInput type="number" formControlName="price" placeholder="0.00">
+        <mat-label>{{ 'campaign.addOfferForm.fields.price.label' | translate }}</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="price"
+          [placeholder]="'campaign.addOfferForm.fields.price.placeholder' | translate"
+        >
         <mat-icon matPrefix>attach_money</mat-icon>
         <mat-error *ngIf="offerForm.get('price')?.invalid">
           {{ getErrorMessage('price') }}
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+<!--       <mat-form-field appearance="outline">
         <mat-label>Precio Original (S/.)</mat-label>
         <input matInput type="number" formControlName="originalPrice" placeholder="0.00">
         <mat-icon matPrefix>money_off</mat-icon>
         <mat-error *ngIf="offerForm.get('originalPrice')?.invalid">
           {{ getErrorMessage('originalPrice') }}
         </mat-error>
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
 
-    <div class="form-row">
+<!--     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descripción</mat-label>
         <textarea matInput formControlName="description" rows="3" placeholder="Describe los detalles de la oferta..."></textarea>
@@ -53,11 +68,18 @@
         </mat-error>
       </mat-form-field>
     </div>
-
+ -->
     <div class="form-row two-columns">
       <mat-form-field appearance="outline">
-        <mat-label>Categoría</mat-label>
-        <input matInput formControlName="category" placeholder="Ej: Restaurantes, Entretenimiento">
+        <mat-label>{{ 'campaign.addOfferForm.fields.category.label' | translate }}</mat-label>
+        <mat-select formControlName="category">
+          <mat-option value="" disabled>
+            {{ 'campaign.addOfferForm.fields.category.placeholder' | translate }}
+          </mat-option>
+          <mat-option *ngFor="let category of categoryOptions" [value]="category">
+            {{ ('offersData.categories.' + category) | translate }}
+          </mat-option>
+        </mat-select>
         <mat-icon matPrefix>label</mat-icon>
         <mat-error *ngIf="offerForm.get('category')?.invalid">
           {{ getErrorMessage('category') }}
@@ -65,8 +87,12 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Prefijo de Código</mat-label>
-        <input matInput formControlName="codePrefix" placeholder="Ej: PROMO">
+        <mat-label>{{ 'campaign.addOfferForm.fields.codePrefix.label' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="codePrefix"
+          [placeholder]="'campaign.addOfferForm.fields.codePrefix.placeholder' | translate"
+        >
         <mat-icon matPrefix>confirmation_number</mat-icon>
         <mat-error *ngIf="offerForm.get('codePrefix')?.invalid">
           {{ getErrorMessage('codePrefix') }}
@@ -76,8 +102,12 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Ubicación</mat-label>
-        <input matInput formControlName="location" placeholder="Ej: Av. Principal 123, Miraflores">
+        <mat-label>{{ 'campaign.addOfferForm.fields.location.label' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="location"
+          [placeholder]="'campaign.addOfferForm.fields.location.placeholder' | translate"
+        >
         <mat-icon matPrefix>location_on</mat-icon>
         <mat-error *ngIf="offerForm.get('location')?.invalid">
           {{ getErrorMessage('location') }}
@@ -85,7 +115,7 @@
       </mat-form-field>
     </div>
 
-    <div class="form-row two-columns">
+<!--     <div class="form-row two-columns">
       <mat-form-field appearance="outline">
         <mat-label>Latitud</mat-label>
         <input matInput type="number" formControlName="latitude" placeholder="-12.0464">
@@ -95,19 +125,23 @@
         <mat-label>Longitud</mat-label>
         <input matInput type="number" formControlName="longitude" placeholder="-77.0428">
       </mat-form-field>
-    </div>
+    </div> -->
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>URL de la Imagen</mat-label>
-        <input matInput formControlName="imageUrl" placeholder="https://ejemplo.com/imagen.jpg">
+        <mat-label>{{ 'campaign.addOfferForm.fields.imageUrl.label' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="imageUrl"
+          [placeholder]="'campaign.addOfferForm.fields.imageUrl.placeholder' | translate"
+        >
         <mat-icon matPrefix>image</mat-icon>
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Válido Hasta</mat-label>
+        <mat-label>{{ 'campaign.addOfferForm.fields.validUntil.label' | translate }}</mat-label>
         <input matInput [matDatepicker]="validityPicker" formControlName="validUntil">
         <mat-datepicker-toggle matIconSuffix [for]="validityPicker"></mat-datepicker-toggle>
         <mat-datepicker #validityPicker></mat-datepicker>
@@ -119,11 +153,11 @@
 
     <div *ngIf="showActions" class="form-actions">
       <button mat-button type="button" (click)="onCancel()">
-        Cancelar
+        {{ 'campaign.addOfferForm.actions.cancel' | translate }}
       </button>
       <button mat-raised-button color="primary" type="submit" [disabled]="!offerForm.valid">
         <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
-        {{ isEditMode ? 'Guardar Cambios' : 'Agregar Oferta' }}
+        {{ (isEditMode ? 'campaign.addOfferForm.actions.save' : 'campaign.addOfferForm.actions.add') | translate }}
       </button>
     </div>
   </form>

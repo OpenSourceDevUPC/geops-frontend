@@ -96,7 +96,7 @@
           </div>
           <div class="offer-map-list">
             @for(location of filteredMapOffers(); track location.offer.id) {
-              <div class="offer-loc-item" [routerLink]="['/ofertas', location.offer.id]">
+              <div class="offer-loc-item" [routerLink]="['/ofertas', location.offer.id]" (click)="onViewOffer(location.offer)">
                 <div class="offer-loc-info">
                   <h4 class="offer-loc-title">{{location.offer.title}}</h4>
                   <p class="offer-loc-partner">{{ location.offer.title }} | {{ ('offersData.titles.' + location.offer.id) | translate }}</p>
@@ -142,6 +142,7 @@
               <button
                 type="button"
                 class="view-offer"
+                (click)="onViewOffer(offer)"
                 [routerLink]="['/ofertas', offer.id]"
                 [queryParams]="{ from: 'home' }"
                 [queryParamsHandling]="'preserve'">
@@ -209,6 +210,7 @@
               <button
                 type="button"
                 class="view-offer"
+                (click)="onViewOffer(offer)"
                 [routerLink]="['/ofertas', offer.id]"
                 [queryParams]="{ from: 'home' }"
                 [queryParamsHandling]="'preserve'">
@@ -276,6 +278,7 @@
               <button
                 type="button"
                 class="view-offer"
+                (click)="onViewOffer(offer)"
                 [routerLink]="['/ofertas', offer.id]"
                 [queryParams]="{ from: 'home' }"
                 [queryParamsHandling]="'preserve'">
@@ -338,6 +341,7 @@
               <button
                 type="button"
                 class="view-offer"
+                (click)="onViewOffer(offer)"
                 [routerLink]="['/ofertas', offer.id]"
                 [queryParams]="{ from: 'home' }"
                 [queryParamsHandling]="'preserve'">
@@ -403,6 +407,7 @@
               <button
                 type="button"
                 class="view-offer"
+                (click)="onViewOffer(offer)"
                 [routerLink]="['/ofertas', offer.id]"
                 [queryParams]="{ from: 'home' }"
                 [queryParamsHandling]="'preserve'">

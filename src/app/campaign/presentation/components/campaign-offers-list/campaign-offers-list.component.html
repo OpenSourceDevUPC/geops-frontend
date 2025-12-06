@@ -1,7 +1,7 @@
 <div class="offers-list-container">
   <div *ngIf="offers.length === 0" class="empty-state">
     <mat-icon>local_offer</mat-icon>
-    <p>No hay ofertas asociadas</p>
+    <p>{{ 'campaign.offersList.empty.description' | translate }}</p>
   </div>
 
   <div *ngIf="offers.length > 0" class="offers-grid">
@@ -41,18 +41,18 @@
 
         <div *ngIf="offer.validUntil" class="offer-validity">
           <mat-icon>schedule</mat-icon>
-          Válido hasta: {{ offer.validUntil | date:'dd/MM/yyyy' }}
+          {{ 'campaign.offersList.validUntil' | translate }}: {{ offer.validUntil | date:'dd/MM/yyyy' }}
         </div>
       </mat-card-content>
 
       <mat-card-actions *ngIf="!readonly">
         <button mat-button (click)="onEdit(offer)">
           <mat-icon>edit</mat-icon>
-          Editar
+          {{ 'campaign.offersList.actions.edit' | translate }}
         </button>
         <button mat-button color="warn" (click)="onDelete(offer.id)">
           <mat-icon>delete</mat-icon>
-          Eliminar
+          {{ 'campaign.offersList.actions.delete' | translate }}
         </button>
       </mat-card-actions>
     </mat-card>

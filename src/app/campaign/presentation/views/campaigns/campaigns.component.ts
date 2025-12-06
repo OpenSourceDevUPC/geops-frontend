@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -11,7 +11,9 @@ import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
-import { CampaignApiEndpoint } from '../../../infrastructure/campaign-api-endpoint';
+
+type DialogAction = 'pause' | 'activate' | 'finalize' | 'delete';
+type NotificationKey = 'pauseSuccess' | 'activateSuccess' | 'finalizeSuccess' | 'deleteSuccess';
 
 /**
  * CampaignsComponent
@@ -42,7 +44,7 @@ export class CampaignsComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
-  private readonly campaignApiEndpoint = inject(CampaignApiEndpoint);
+  private readonly translate = inject(TranslateService);
 
   selectedTabIndex = 0;
   campaigns = this.store.campaigns;
@@ -117,33 +119,13 @@ export class CampaignsComponent implements OnInit {
    * Pause campaign (change status to PAUSED)
    */
   onPause(campaignId: number): void {
-    const campaign = this.campaigns().find(c => c.id === campaignId);
+    const campaign = this.findCampaign(campaignId);
     if (!campaign) return;
 
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: '¿Pausar campaña?',
-        message: `¿Estás seguro de que deseas pausar la campaña "${campaign.name}"?`,
-        confirmText: 'Pausar',
-        cancelText: 'Cancelar'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(confirmed => {
+    this.openCampaignDialog('pause', campaign.name).afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        const updates = {
-          name: campaign.name,
-          description: campaign.description,
-          startDate: campaign.startDate,
-          endDate: campaign.endDate,
-          estimatedBudget: campaign.estimatedBudget,
-          status: 'PAUSED' as const,
-          totalImpressions: campaign.totalImpressions,
-          totalClicks: campaign.totalClicks,
-          CTR: campaign.CTR
-        };
-        this.store.updateCampaign(campaignId, updates);
-        this.snackBar.open('Campaña pausada exitosamente', 'Cerrar', { duration: 3000 });
+        this.store.updateCampaign(campaignId, this.buildStatusUpdates(campaign, 'PAUSED'));
+        this.showNotification('pauseSuccess');
       }
     });
   }
@@ -152,33 +134,13 @@ export class CampaignsComponent implements OnInit {
    * Activate campaign (change status to ACTIVE)
    */
   onActivate(campaignId: number): void {
-    const campaign = this.campaigns().find(c => c.id === campaignId);
+    const campaign = this.findCampaign(campaignId);
     if (!campaign) return;
 
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: '¿Activar campaña?',
-        message: `¿Estás seguro de que deseas activar la campaña "${campaign.name}"?`,
-        confirmText: 'Activar',
-        cancelText: 'Cancelar'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(confirmed => {
+    this.openCampaignDialog('activate', campaign.name).afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        const updates = {
-          name: campaign.name,
-          description: campaign.description,
-          startDate: campaign.startDate,
-          endDate: campaign.endDate,
-          estimatedBudget: campaign.estimatedBudget,
-          status: 'ACTIVE' as const,
-          totalImpressions: campaign.totalImpressions,
-          totalClicks: campaign.totalClicks,
-          CTR: campaign.CTR
-        };
-        this.store.updateCampaign(campaignId, updates);
-        this.snackBar.open('Campaña activada exitosamente', 'Cerrar', { duration: 3000 });
+        this.store.updateCampaign(campaignId, this.buildStatusUpdates(campaign, 'ACTIVE'));
+        this.showNotification('activateSuccess');
       }
     });
   }
@@ -187,34 +149,13 @@ export class CampaignsComponent implements OnInit {
    * Finalize campaign (change status to FINALIZED)
    */
   onFinalize(campaignId: number): void {
-    const campaign = this.campaigns().find(c => c.id === campaignId);
+    const campaign = this.findCampaign(campaignId);
     if (!campaign) return;
 
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: '¿Finalizar campaña?',
-        message: `¿Estás seguro de que deseas finalizar la campaña "${campaign.name}"? Esta acción no se podrá revertir.`,
-        confirmText: 'Finalizar',
-        cancelText: 'Cancelar',
-        isDanger: true
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(confirmed => {
+    this.openCampaignDialog('finalize', campaign.name).afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        const updates = {
-          name: campaign.name,
-          description: campaign.description,
-          startDate: campaign.startDate,
-          endDate: campaign.endDate,
-          estimatedBudget: campaign.estimatedBudget,
-          status: 'FINALIZED' as const,
-          totalImpressions: campaign.totalImpressions,
-          totalClicks: campaign.totalClicks,
-          CTR: campaign.CTR
-        };
-        this.store.updateCampaign(campaignId, updates);
-        this.snackBar.open('Campaña finalizada exitosamente', 'Cerrar', { duration: 3000 });
+        this.store.updateCampaign(campaignId, this.buildStatusUpdates(campaign, 'FINALIZED'));
+        this.showNotification('finalizeSuccess');
       }
     });
   }
@@ -230,23 +171,13 @@ export class CampaignsComponent implements OnInit {
    * Delete campaign with confirmation
    */
   onDelete(campaignId: number): void {
-    const campaign = this.campaigns().find(c => c.id === campaignId);
+    const campaign = this.findCampaign(campaignId);
     if (!campaign) return;
 
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: '¿Eliminar campaña?',
-        message: `¿Estás seguro de que deseas eliminar la campaña "${campaign.name}"? Esta acción no se puede deshacer.`,
-        confirmText: 'Eliminar',
-        cancelText: 'Cancelar',
-        isDanger: true
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(confirmed => {
+    this.openCampaignDialog('delete', campaign.name).afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.store.deleteCampaign(campaignId);
-        this.snackBar.open('Campaña eliminada exitosamente', 'Cerrar', { duration: 3000 });
+        this.showNotification('deleteSuccess');
       }
     });
   }
@@ -260,5 +191,43 @@ export class CampaignsComponent implements OnInit {
       throw new Error('No authenticated user found');
     }
     return userId;
+  }
+
+  private findCampaign(campaignId: number): Campaign | undefined {
+    return this.campaigns().find(c => c.id === campaignId);
+  }
+
+  private openCampaignDialog(action: DialogAction, name: string) {
+    return this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: this.translate.instant(`campaigns.dialogs.${action}.title`),
+        message: this.translate.instant(`campaigns.dialogs.${action}.message`, { name }),
+        confirmText: this.translate.instant(`campaigns.dialogs.${action}.confirm`),
+        cancelText: this.translate.instant('common.cancel'),
+        isDanger: action === 'delete' || action === 'finalize'
+      }
+    });
+  }
+
+  private buildStatusUpdates(campaign: Campaign, status: Campaign['status']): Partial<Campaign> {
+    return {
+      name: campaign.name,
+      description: campaign.description,
+      startDate: campaign.startDate,
+      endDate: campaign.endDate,
+      estimatedBudget: campaign.estimatedBudget,
+      status,
+      totalImpressions: campaign.totalImpressions,
+      totalClicks: campaign.totalClicks,
+      CTR: campaign.CTR
+    };
+  }
+
+  private showNotification(notification: NotificationKey): void {
+    this.snackBar.open(
+      this.translate.instant(`campaigns.notifications.${notification}`),
+      this.translate.instant('common.close'),
+      { duration: 3000 }
+    );
   }
 }

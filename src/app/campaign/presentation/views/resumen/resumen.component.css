@@ -219,6 +219,11 @@
   color: white !important;
 }
 
+.finalize-btn {
+  background: #9E9E9E !important;
+  color: white !important;
+}
+
 .delete-btn {
   background: #f44336 !important;
   color: white !important;

@@ -1,6 +1,7 @@
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { Campaign } from '../domain/model/campaign.entity';
 import { CampaignOffer } from '../domain/model/offer.entity';
+import { calculateCtr } from '../domain/utils/campaign-metrics.util';
 import {
   CampaignResource,
   CampaignResponse,
@@ -24,6 +25,9 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
    * Converts API resource to domain entity
    */
   toEntityFromResource(resource: CampaignResource): Campaign {
+    const totalImpressions = resource.totalImpressions ?? 0;
+    const totalClicks = resource.totalClicks ?? 0;
+
     return {
       id: resource.id,
       userId: resource.userId,
@@ -33,9 +37,9 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       endDate: resource.endDate,
       status: resource.status as 'ACTIVE' | 'PAUSED' | 'FINALIZED',
       estimatedBudget: resource.estimatedBudget,
-      totalImpressions: resource.totalImpressions,
-      totalClicks: resource.totalClicks,
-      CTR: resource.CTR,
+      totalImpressions,
+      totalClicks,
+      CTR: calculateCtr(totalClicks, totalImpressions),
       createdAt: resource.createdAt,
       updatedAt: resource.updatedAt,
     };
@@ -45,6 +49,9 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
    * Converts domain entity to API resource
    */
   toResourceFromEntity(entity: Campaign): CampaignResource {
+    const totalImpressions = entity.totalImpressions ?? 0;
+    const totalClicks = entity.totalClicks ?? 0;
+
     return {
       id: entity.id,
       userId: entity.userId,
@@ -54,9 +61,9 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       endDate: entity.endDate,
       status: entity.status,
       estimatedBudget: entity.estimatedBudget,
-      totalImpressions: entity.totalImpressions,
-      totalClicks: entity.totalClicks,
-      CTR: entity.CTR,
+      totalImpressions,
+      totalClicks,
+      CTR: calculateCtr(totalClicks, totalImpressions),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

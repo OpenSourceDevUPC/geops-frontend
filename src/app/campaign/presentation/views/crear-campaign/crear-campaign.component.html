@@ -13,6 +13,9 @@
       <mat-error *ngIf="campaignForm.get('name')?.hasError('required')">
         {{ 'campaigns.form.nameRequired' | translate }}
       </mat-error>
+      <mat-error *ngIf="campaignForm.get('name')?.hasError('minlength')">
+        {{ 'campaigns.form.nameMinLength' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -20,6 +23,9 @@
       <textarea matInput formControlName="description" rows="4" [placeholder]="'campaigns.form.descriptionPlaceholder' | translate"></textarea>
       <mat-error *ngIf="campaignForm.get('description')?.hasError('required')">
         {{ 'campaigns.form.descriptionRequired' | translate }}
+      </mat-error>
+      <mat-error *ngIf="campaignForm.get('description')?.hasError('minlength')">
+        {{ 'campaigns.form.descriptionMinLength' | translate }}
       </mat-error>
     </mat-form-field>
 
@@ -29,6 +35,9 @@
         <input matInput [matDatepicker]="startPicker" formControlName="startDate">
         <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
         <mat-datepicker #startPicker></mat-datepicker>
+        <mat-error *ngIf="campaignForm.get('startDate')?.hasError('required')">
+          {{ 'campaigns.form.startDateRequired' | translate }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -36,6 +45,9 @@
         <input matInput [matDatepicker]="endPicker" formControlName="endDate">
         <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
         <mat-datepicker #endPicker></mat-datepicker>
+        <mat-error *ngIf="campaignForm.get('endDate')?.hasError('required')">
+          {{ 'campaigns.form.endDateRequired' | translate }}
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -43,6 +55,12 @@
       <mat-label>{{ 'campaigns.form.budget' | translate }}</mat-label>
       <input matInput type="number" formControlName="estimatedBudget" [placeholder]="'campaigns.form.budgetPlaceholder' | translate">
       <mat-icon matPrefix>attach_money</mat-icon>
+      <mat-error *ngIf="campaignForm.get('estimatedBudget')?.hasError('required')">
+        {{ 'campaigns.form.budgetRequired' | translate }}
+      </mat-error>
+      <mat-error *ngIf="campaignForm.get('estimatedBudget')?.hasError('min')">
+        {{ 'campaigns.form.budgetMin' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <div class="form-actions">

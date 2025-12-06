@@ -9,7 +9,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
 import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
@@ -34,8 +33,7 @@ import { AuthService } from '../../../../identity/infrastructure/auth/auth.servi
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule
+    MatNativeDateModule
   ],
   templateUrl: './crear-campaign.component.html',
   styleUrls: ['./crear-campaign.component.css']
@@ -62,20 +60,27 @@ export class CrearCampaignComponent {
   }
 
   onSubmit(): void {
-    if (this.campaignForm.valid && !this.loading()) {
-      const campaign: Partial<Campaign> = {
-        ...this.campaignForm.value,
-        status: this.defaultStatus,
-        userId: this.getUserId(),
-        totalImpressions: 0,
-        totalClicks: 0,
-        ctr: 0
-      };
-
-      this.store.createCampaign(campaign);
-      // Navigate after a short delay to allow store to update
-      setTimeout(() => this.router.navigate(['/campañas']), 500);
+    if (this.loading()) {
+      return;
     }
+
+    if (this.campaignForm.invalid) {
+      this.campaignForm.markAllAsTouched();
+      return;
+    }
+
+    const campaign: Partial<Campaign> = {
+      ...this.campaignForm.value,
+      status: this.defaultStatus,
+      userId: this.getUserId(),
+      totalImpressions: 0,
+      totalClicks: 0,
+      ctr: 0
+    };
+
+    this.store.createCampaign(campaign);
+    // Navigate after a short delay to allow store to update
+    setTimeout(() => this.router.navigate(['/campañas']), 500);
   }
 
   onCancel(): void {
