@@ -461,7 +461,10 @@
     "metricsAnswer": "Si la campaña es nueva o está pausada, las métricas pueden tardar. Revisa más tarde o verifica el presupuesto."
   },
   "common": {
-    "currency": "s/"
+    "currency": "s/",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Cerrar"
   },
   "offerDetail": {
     "back": "Volver",
@@ -521,6 +524,7 @@
       "view": "Visualizar",
       "cancel": "Cancelar",
       "save": "Guardar Cambios",
+      "remove": "Eliminar",
       "addOffers": "Agregar Ofertas",
       "removeOffer": "Quitar Oferta",
       "back": "Volver",
@@ -531,6 +535,39 @@
       "active": "Activa",
       "paused": "Pausada",
       "finalized": "Finalizada"
+    },
+    "statusLabels": {
+      "ACTIVE": "Activa",
+      "PAUSED": "Pausada",
+      "FINALIZED": "Finalizada"
+    },
+    "dialogs": {
+      "pause": {
+        "title": "¿Pausar campaña?",
+        "message": "¿Estás seguro de que deseas pausar la campaña \"{{name}}\"?",
+        "confirm": "Pausar"
+      },
+      "activate": {
+        "title": "¿Activar campaña?",
+        "message": "¿Estás seguro de que deseas activar la campaña \"{{name}}\"?",
+        "confirm": "Activar"
+      },
+      "finalize": {
+        "title": "¿Finalizar campaña?",
+        "message": "¿Estás seguro de que deseas finalizar la campaña \"{{name}}\"? Esta acción no se podrá revertir.",
+        "confirm": "Finalizar"
+      },
+      "delete": {
+        "title": "¿Eliminar campaña?",
+        "message": "¿Estás seguro de que deseas eliminar la campaña \"{{name}}\"? Esta acción no se puede deshacer.",
+        "confirm": "Eliminar"
+      }
+    },
+    "notifications": {
+      "pauseSuccess": "Campaña pausada exitosamente",
+      "activateSuccess": "Campaña activada exitosamente",
+      "finalizeSuccess": "Campaña finalizada exitosamente",
+      "deleteSuccess": "Campaña eliminada exitosamente"
     },
     "form": {
       "createTitle": "Crear Nueva Campaña",
