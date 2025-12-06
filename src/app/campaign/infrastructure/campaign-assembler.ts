@@ -110,7 +110,7 @@ export class CampaignAssembler implements BaseAssembler<Campaign, CampaignResour
       // Optional fields
       ...(entity.totalImpressions !== undefined && { totalImpressions: entity.totalImpressions }),
       ...(entity.totalClicks !== undefined && { totalClicks: entity.totalClicks }),
-      ...(entity.CTR !== undefined && { ctr: entity.CTR })
+      ...(entity.CTR !== undefined && { ctr: 0 })
     };
   }
 }
