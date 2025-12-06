@@ -366,10 +366,6 @@ export class SettingsComponent implements OnInit {
             (position) => {
               // Permission granted
               this.consumerDetails!.permisoUbicacion = true;
-              console.log('[SettingsComponent] ✅ Location permission granted', {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-              });
               this.mensaje = 'Ubicación activada correctamente';
               setTimeout(() => (this.mensaje = ''), 3000);
             },
@@ -466,7 +462,6 @@ export class SettingsComponent implements OnInit {
     // Execute all save operations in parallel
     forkJoin(saveOperations).subscribe({
       next: (results: any[]) => {
-        console.log('[SettingsComponent] All updates successful:', results);
         this.cargando = false;
         this.mensaje = 'Perfil actualizado correctamente';
 

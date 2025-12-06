@@ -170,13 +170,10 @@ export class RegisterBussinesComponent implements OnInit {
       ownerDetailsPayload
     ).subscribe({
       next: () => {
-        console.log('[RegisterBussines] ✅ Detalles de propietario creados exitosamente');
-
         // Limpiar datos temporales del localStorage
         localStorage.removeItem('register-owner-data');
 
         this.submitting = false;
-        console.log('[RegisterBussines] ✅ Registro completo. Navegando a /resumen');
 
         // Redirigir al resumen
         this.router.navigate(['/resumen']);
