@@ -12,8 +12,8 @@ import { BaseResponse, BaseResource } from '../../shared/infrastructure/base-res
  * @property total - Total price for the quantity of the offer
  */
 export interface CartItemResource extends BaseResource {
-  userId: string;
-  offerId: string;
+  userId: number;
+  offerId: number;
   offerTitle: string;
   offerPrice: number;
   offerImageUrl: string;
@@ -32,7 +32,7 @@ export interface CartItemResource extends BaseResource {
  * @property updatedAt - ISO timestamp when the cart was last updated
  */
 export interface CartResource extends BaseResource {
-  userId: string;
+  userId: number;
   items: CartItemResource[];
   totalItems: number;
   totalAmount: number;

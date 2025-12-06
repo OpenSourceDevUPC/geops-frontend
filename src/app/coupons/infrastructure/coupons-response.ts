@@ -15,8 +15,8 @@ import { BaseResponse, BaseResource } from '../../shared/infrastructure/base-res
  * @property createdAt - Creation timestamp of the coupon
  */
 export interface CouponResource extends BaseResource {
-  userId: string;
-  paymentId: string;
+  userId: number;
+  paymentId: number;
   paymentCode: string;
   productType?: string;
   offerId?: number | string;

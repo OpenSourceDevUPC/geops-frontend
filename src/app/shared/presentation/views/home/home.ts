@@ -1,16 +1,29 @@
-import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
+import {Component, inject, OnInit, signal, viewChild, computed} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
 import {Offer} from '../../../../loyalty/domain/model/offer.entity';
 import {OffersApiEndpoint} from '../../../../loyalty/infrastructure/offers/offers-api-endpoint';
 import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
 import {FavoritesApiEndpoint} from '../../../../loyalty/infrastructure/favorites/favorites-api-endpoint';
-import {CartApi} from '../../../../cart/infrastructure/cart-api';
-import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
+import {CartStore} from '../../../../cart/application/cart.store';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import {RouterLink} from '@angular/router';
 import {GoogleMap, MapAdvancedMarker, MapInfoWindow} from '@angular/google-maps';
 import {FormsModule} from '@angular/forms';
+
+interface OfferLocation {
+  offer: Offer;
+  lat: number;
+  lng: number;
+}
+
+interface CategoryMapping {
+  key: string;
+  label: string;
+  categories: string[];
+  titleKeywords: string[]; // Palabras clave para buscar en el título
+  excludeKeywords?: string[]; // Palabras clave para excluir
+}
 
 @Component({
   selector: 'app-home',
@@ -31,36 +44,169 @@ import {FormsModule} from '@angular/forms';
 })
 export class Home implements OnInit {
 
-  private favSet = new Set<string>();
+  private favSet = new Set<number>();
   private currentUserId: number | null = null;
-  private userId:string = 'a512';
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  private userId: number = 1;
+  private readonly cartStore = inject(CartStore);
+  private impressionsTracked = false;
 
-  categories = [
-    { key: 'all', label: 'home.map.all' },
-    { key: 'cinemas', label: 'home.map.cinemas' },
-    { key: 'buffets', label: 'home.map.buffets' },
-    { key: 'parks', label: 'home.map.parks' },
-    { key: 'children', label: 'home.map.for-children' },
-    { key: 'makis', label: 'home.map.makis' },
-    { key: 'beauty', label: 'home.map.beauty' }
+  categories: CategoryMapping[] = [
+    {
+      key: 'all',
+      label: 'home.map.all',
+      categories: [],
+      titleKeywords: []
+    },
+    {
+      key: 'cinemas',
+      label: 'home.map.cinemas',
+      categories: ['Entretenimiento'],
+      titleKeywords: ['cine', 'cinemark', 'cineplanet', 'película', 'pelicula', 'entradas'],
+      excludeKeywords: ['buffet', 'park', 'jungle', 'inflable', 'kids', 'niños', 'juego']
+    },
+    {
+      key: 'buffets',
+      label: 'home.map.buffets',
+      categories: ['Gastronomía'],
+      titleKeywords: ['buffet', 'almuerzo', 'cena', 'bailable'],
+      excludeKeywords: ['maki', 'makis', 'sushi', 'nikkei', 'ramen']
+    },
+    {
+      key: 'parks',
+      label: 'home.map.parks',
+      categories: ['Entretenimiento'],
+      titleKeywords: ['park', 'parque', 'inflable', 'jungle', 'aquatica', 'infinity'],
+      excludeKeywords: ['cine', 'buffet', 'maki']
+    },
+    {
+      key: 'children',
+      label: 'home.map.for-children',
+      categories: ['Entretenimiento'],
+      titleKeywords: ['kids', 'niños', 'niñ', 'playland', 'mundo kids', 'infantil', 'coney'],
+      excludeKeywords: ['buffet', 'maki']
+    },
+    {
+      key: 'makis',
+      label: 'home.map.makis',
+      categories: ['Gastronomía'],
+      titleKeywords: ['maki', 'makis', 'sushi', 'nikkei', 'ramen', 'shimaya', 'sakura', 'barra libre'],
+      excludeKeywords: ['buffet', 'cine']
+    },
+    {
+      key: 'beauty',
+      label: 'home.map.beauty',
+      categories: ['Belleza', 'Gift Card'],
+      titleKeywords: ['belleza', 'facial', 'beauty', 'kabuki', 'minna', 'dbs', 'aruma', 'skin', 'cuidado'],
+      excludeKeywords: []
+    }
   ];
-  selectedCategories:string[] = ['all'];
-  cinemaOffers:Offer[] = [];
-  buffetOffers:Offer[] = [];
-  parkOffers:Offer[] = [];
-  mechGamesOffers:Offer[] = [];
-  makisOffers:Offer[] = [];
-  beautyOffers:Offer[] = [];
+  selectedCategories = signal<string[]>(['all']);
+  allOffers = signal<Offer[]>([]);
 
-  latitude = signal<number>(0);
-  longitude = signal<number>(0);
-  locationAllowed: boolean = false;
+  latitude = signal<number>(-12.0464);
+  longitude = signal<number>(-77.0428);
+  locationAllowed = signal<boolean>(false);
   center = signal<google.maps.LatLngLiteral>({lat: this.latitude(), lng: this.longitude()});
-  zoomSignal = signal(11);
-  locationOffers = signal<{title: string, partner: string, lat: number, lng: number}[]>([]);
+  zoomSignal = signal(13);
+  maxDistanceKm = signal<number>(3.5);
+
+  offerLocations = signal<OfferLocation[]>([]);
   infoWindowRef = viewChild.required(MapInfoWindow);
+
+  // Computed signals para filtrar ofertas según categorías
+  filteredMapOffers = computed(() => {
+    const selected = this.selectedCategories();
+    const locations = this.offerLocations();
+
+    if (selected.includes('all')) {
+      return locations;
+    }
+
+    return locations.filter(loc =>
+      selected.some(catKey => this.offerMatchesCategory(loc.offer, catKey))
+    );
+  });
+
+  filteredDisplayOffers = computed(() => {
+    const selected = this.selectedCategories();
+    const offers = this.allOffers();
+
+    if (selected.includes('all')) {
+      return offers;
+    }
+
+    return offers.filter(offer =>
+      selected.some(catKey => this.offerMatchesCategory(offer, catKey))
+    );
+  });
+
+  // Ofertas agrupadas por tipo para la vista
+  cinemaOffers = computed(() => {
+    const filtered = this.filteredDisplayOffers();
+    const selected = this.selectedCategories();
+
+    // Si 'cinemas' no está seleccionado y no es 'all', no mostrar
+    if (!selected.includes('all') && !selected.includes('cinemas')) {
+      return [];
+    }
+
+    return filtered.filter(o => this.offerMatchesCategory(o, 'cinemas'));
+  });
+
+  buffetOffers = computed(() => {
+    const filtered = this.filteredDisplayOffers();
+    const selected = this.selectedCategories();
+
+    if (!selected.includes('all') && !selected.includes('buffets')) {
+      return [];
+    }
+
+    return filtered.filter(o => this.offerMatchesCategory(o, 'buffets'));
+  });
+
+  parkOffers = computed(() => {
+    const filtered = this.filteredDisplayOffers();
+    const selected = this.selectedCategories();
+
+    if (!selected.includes('all') && !selected.includes('parks')) {
+      return [];
+    }
+
+    return filtered.filter(o => this.offerMatchesCategory(o, 'parks'));
+  });
+
+  mechGamesOffers = computed(() => {
+    const filtered = this.filteredDisplayOffers();
+    const selected = this.selectedCategories();
+
+    if (!selected.includes('all') && !selected.includes('children')) {
+      return [];
+    }
+
+    return filtered.filter(o => this.offerMatchesCategory(o, 'children'));
+  });
+
+  makisOffers = computed(() => {
+    const filtered = this.filteredDisplayOffers();
+    const selected = this.selectedCategories();
+
+    if (!selected.includes('all') && !selected.includes('makis')) {
+      return [];
+    }
+
+    return filtered.filter(o => this.offerMatchesCategory(o, 'makis'));
+  });
+
+  beautyOffers = computed(() => {
+    const filtered = this.filteredDisplayOffers();
+    const selected = this.selectedCategories();
+
+    if (!selected.includes('all') && !selected.includes('beauty')) {
+      return [];
+    }
+
+    return filtered.filter(o => this.offerMatchesCategory(o, 'beauty'));
+  });
 
   constructor(
     private offersApi: OffersApiEndpoint,
@@ -70,81 +216,23 @@ export class Home implements OnInit {
   {}
 
   ngOnInit(): void {
-
     this.checkPermissionsOnLoad().then();
-
-    const cinemaNumbers = [18, 8, 16];
-    const buffetNumbers = [7, 5, 9];
-    const parkNumbers = [13, 11, 17];
-    const mechGamesNumbers = [20, 10, 1];
-    const makisNumbers = [22, 21, 12];
-    const beautyNumbers = [15, 2, 3];
 
     const user = this.authService.getCurrentUser();
     if (user) {
-      this.userId = String(user.id);
+      this.userId = user.id;
     } else {
-      console.warn('[Layout] No hay usuario autenticado');
+      console.warn('[Home] No hay usuario autenticado');
     }
 
     this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Ofertas] Usuario actual ID:', this.currentUserId);
 
     if (!this.currentUserId) {
-      console.warn('[Ofertas] No hay usuario autenticado');
-      // Opcional: redirigir al login
-      // this.router.navigate(['/login']);
+      console.warn('[Home] No hay usuario autenticado');
     }
 
-    this.offersApi.getByIds(cinemaNumbers).subscribe({
-      next: (offers) => {
-          this.cinemaOffers = offers;
-          console.log('Cinema offers: ', this.cinemaOffers);
-        },
-      error: (err) => {console.error('Error to fetching offers', err)}
-    });
-
-    this.offersApi.getByIds(buffetNumbers).subscribe({
-      next: (offers) => {
-        this.buffetOffers = offers;
-        console.log('Buffet offers: ', this.buffetOffers);
-      },
-      error: (err) => {console.error('Error to fetching offers', err)}
-    });
-
-    this.offersApi.getByIds(parkNumbers).subscribe({
-      next: (offers) => {
-        this.parkOffers = offers;
-        console.log('Park offers: ', this.parkOffers);
-      },
-      error: (err) => {console.error('Error to fetching offers', err)}
-    });
-
-
-    this.offersApi.getByIds(mechGamesNumbers).subscribe({
-      next: (offers) => {
-        this.mechGamesOffers = offers;
-        console.log('Mechanical Games offers: ', this.mechGamesOffers);
-      },
-      error: (err) => {console.error('Error to fetching offers', err)}
-    });
-
-    this.offersApi.getByIds(makisNumbers).subscribe({
-      next: (offers) => {
-        this.makisOffers = offers;
-        console.log('Makis Open Bar offers: ', this.makisOffers);
-      },
-      error: (err) => {console.error('Error to fetching offers', err)}
-    });
-
-    this.offersApi.getByIds(beautyNumbers).subscribe({
-      next: (offers) => {
-        this.beautyOffers = offers;
-        console.log('Beauty offers: ', this.beautyOffers);
-      },
-      error: (err) => {console.error('Error to fetching offers', err)}
-    });
-
+    // Cargar todas las ofertas de una vez
+    this.loadAllOffers();
     this.fetchFavs();
   }
 
@@ -171,16 +259,23 @@ export class Home implements OnInit {
    */
   selectCategory(catKey: string) {
     if (catKey === 'all') {
-      this.selectedCategories = ['all'];
-    }
-    else {
-      this.selectedCategories = this.selectedCategories.filter(c => c !== 'all');
-      if (this.selectedCategories.includes(catKey)) {
-        this.selectedCategories = this.selectedCategories.filter(c => c !== catKey);
+      this.selectedCategories.set(['all']);
+    } else {
+      const current = this.selectedCategories();
+      let updated = current.filter(c => c !== 'all');
+
+      if (updated.includes(catKey)) {
+        updated = updated.filter(c => c !== catKey);
+      } else {
+        updated.push(catKey);
       }
-      else {
-        this.selectedCategories.push(catKey);
+
+      // Si no hay categorías seleccionadas, volver a 'all'
+      if (updated.length === 0) {
+        updated = ['all'];
       }
+
+      this.selectedCategories.set(updated);
     }
   }
 
@@ -190,7 +285,52 @@ export class Home implements OnInit {
    * @returns If the category is in the selectedCategory array.
    */
   isCategoryActive(catKey: string): boolean {
-    return this.selectedCategories.includes(catKey);
+    return this.selectedCategories().includes(catKey);
+  }
+
+  /**
+   * Verifica si una oferta coincide con una categoría específica
+   */
+  private offerMatchesCategory(offer: Offer, categoryKey: string): boolean {
+    const category = this.categories.find(cat => cat.key === categoryKey);
+    if (!category) return false;
+
+    const titleLower = offer.title.toLowerCase();
+    const categoryLower = offer.category.toLowerCase();
+
+    // Verificar si la categoría de BD coincide
+    const categoryMatch = category.categories.some(cat =>
+      categoryLower.includes(cat.toLowerCase())
+    );
+
+    // Verificar palabras clave en el título
+    const titleMatch = category.titleKeywords.some(keyword =>
+      titleLower.includes(keyword.toLowerCase())
+    );
+
+    // Verificar palabras clave de exclusión
+    const hasExcludedKeyword = category.excludeKeywords?.some(keyword =>
+      titleLower.includes(keyword.toLowerCase())
+    ) || false;
+
+    // Debe coincidir con categoría O título, pero NO tener keywords excluidas
+    return (categoryMatch || titleMatch) && !hasExcludedKeyword;
+  }
+
+  /**
+   * Obtiene las categorías de base de datos correspondientes a las categorías seleccionadas
+   */
+  private getDbCategoriesForSelected(selected: string[]): string[] {
+    const dbCategories = new Set<string>();
+
+    selected.forEach(key => {
+      const category = this.categories.find(cat => cat.key === key);
+      if (category && category.categories.length > 0) {
+        category.categories.forEach(dbCat => dbCategories.add(dbCat));
+      }
+    });
+
+    return Array.from(dbCategories);
   }
 
   /**
@@ -202,7 +342,7 @@ export class Home implements OnInit {
     return !o ? '' : (o.imageUrl ?? `assets/offers/${o.id}.jpg`);
   }
 
-  isFav(id: number) { return this.favSet.has(String(id)); }
+  isFav(id: number) { return this.favSet.has(id); }
 
   toggleFav(o: Offer) {
     if (!this.currentUserId) {
@@ -211,12 +351,11 @@ export class Home implements OnInit {
       return;
     }
 
-    if (this.favSet.has(String(o.id))) {
+    if (this.favSet.has(o.id)) {
       // Eliminar favorito usando el endpoint directo
       this.favoritesApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
         next: () => {
-          this.favSet.delete(String(o.id));
-          console.log('[Ofertas] Favorito eliminado:', o.id);
+          this.favSet.delete(o.id);
         },
         error: (err) => {
           console.error('[Ofertas] Error al eliminar favorito:', err);
@@ -224,8 +363,7 @@ export class Home implements OnInit {
       });
     } else {
       this.favoritesApi.add(this.currentUserId, o.id).subscribe(() => {
-        this.favSet.add(String(o.id));
-        console.log('[Ofertas] Favorito agregado:', o.id);
+        this.favSet.add(o.id);
       });
     }
   }
@@ -237,8 +375,7 @@ export class Home implements OnInit {
     }
     this.favoritesApi.getByUser(this.currentUserId).subscribe({
       next: (rows) => {
-        this.favSet = new Set(rows.map((r) => r.offerId));
-        console.log('[Ofertas] Favoritos cargados:', this.favSet.size);
+        this.favSet = new Set<number>(rows.map((r) => r.offerId));
       },
       error: () => this.favSet.clear(),
     });
@@ -249,47 +386,22 @@ export class Home implements OnInit {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    // Add to cart first, then open cart sidebar
-    this.cartApi
-      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
-      .subscribe({
-        next: () => {
-          console.log('Item added to cart successfully');
-          // Reset payment flow when items are added
-          this.cartUiService.resetPaymentFlow();
-          // Open the cart sidebar after adding the item
-          this.cartUiService.openCart();
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-          // Could show an error message here
-        },
-      });
+    this.offersApi.recordCampaignClick(o.campaignId);
+    // Add to cart and open sidebar
+    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+    this.cartStore.openSidebar();
   }
 
   addToCart(o: Offer) {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    this.cartApi.addItemToCart(
-      this.userId,
-      o.id.toString(),
-      offerTitle,
-      o.price,
-      offerImageUrl,
-      1
-    ).subscribe({
-      next: () => {
-        // Reset payment flow when items are added
-        this.cartUiService.resetPaymentFlow();
-        // Could show a success message here
-        console.log('Item added to cart successfully');
-      },
-      error: (error) => {
-        console.error('Error adding item to cart:', error);
-        // Could show an error message here
-      }
-    });
+    this.offersApi.recordCampaignClick(o.campaignId);
+    this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+  }
+
+  onViewOffer(offer: Offer) {
+    this.offersApi.recordCampaignClick(offer.campaignId);
   }
 
   /**
@@ -303,44 +415,21 @@ export class Home implements OnInit {
         this.latitude.set(position.coords.latitude);
         this.longitude.set(position.coords.longitude);
         this.center.set({lat: this.latitude(), lng: this.longitude()});
-        console.log('Latitude:', this.latitude());
-        console.log('Longitude:', this.longitude());
-        console.log('center:', this.center().lat, " ",this.center().lng);
-        this.locationAllowed = true;
+        this.locationAllowed.set(true);
 
         if(isLocationAllowed) {
           localStorage.setItem('locationAllowed','true');
         }
 
-        this.offersApi.getAll().subscribe({
-          next: (offers) => {
-            const baseLat = this.latitude();
-            const baseLng = this.longitude();
-
-            this.locationOffers.update(() => {
-
-              return offers.map(o => {
-                const coords = this.generateNearbyLocation(baseLat, baseLng, 3.5);
-                return {
-                  title: o.title ?? "No title",
-                  partner: o.partner ?? "No Partner",
-                  lat: coords.lat,
-                  lng: coords.lng
-                };
-              });
-            });
-
-            console.log("Offers with random locations:", this.locationOffers());
-          },
-
-          error: (err) => {
-            console.error(err);
-          }
-        });
-
+        // Generar ubicaciones aleatorias para las ofertas existentes
+        this.generateOfferLocations();
       },
       (error) => {
-        console.log('Error getting location:', error.message);
+        console.error('[Home] Error getting location:', error.message);
+        // Usar ubicación por defecto (Lima centro)
+        this.latitude.set(-12.0464);
+        this.longitude.set(-77.0428);
+        this.center.set({lat: this.latitude(), lng: this.longitude()});
       }
     )
   }
@@ -351,11 +440,14 @@ export class Home implements OnInit {
   async checkPermissionsOnLoad() {
     const wasAllowed = localStorage.getItem('locationAllowed') === 'true';
 
-    const permission = await navigator.permissions.query({name: 'geolocation'});
+    try {
+      const permission = await navigator.permissions.query({name: 'geolocation'});
 
-    if(permission.state === 'granted' && wasAllowed) {
-      console.log('Geolocation permission previously allowed');
-      this.getLocation();
+      if(permission.state === 'granted' && wasAllowed) {
+        this.getLocation();
+      }
+    } catch (error) {
+      console.warn('[Home] Could not query geolocation permission', error);
     }
   }
 
@@ -395,12 +487,97 @@ export class Home implements OnInit {
     return { lat: newLat, lng: newLng };
   }
 
-  openInfoWindow(location:{title: string, partner: string, lat: number, lng: number}, marker: MapAdvancedMarker) {
-    console.log("Offer title:", location.title, "Offer partner:",location.partner);
+  openInfoWindow(location: OfferLocation, marker: MapAdvancedMarker) {
     const content = `
-      <h2>${location.title}</h2>
-      <p>${location.partner}</p>
-    `
-    this.infoWindowRef().open(marker,true, content);
+      <div style="padding: 8px; max-width: 250px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #000;">${location.offer.title}</h3>
+        <p style="margin: 0 0 4px 0; color: #A751D4; font-weight: 600;">${location.offer.partner}</p>
+        <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">📍 ${location.offer.location}</p>
+        <p style="margin: 0; font-size: 18px; font-weight: bold; color: #000;">S/ ${location.offer.price.toFixed(2)}</p>
+      </div>
+    `;
+    this.infoWindowRef().open(marker, true, content);
+  }
+
+  /**
+   * Carga todas las ofertas desde el backend
+   */
+  private loadAllOffers() {
+    this.offersApi.getAll().subscribe({
+      next: (offers) => {
+        this.allOffers.set(offers);
+        this.trackFirstImpressions(offers);
+
+        // Si la ubicación ya está permitida, generar ubicaciones
+        if (this.locationAllowed()) {
+          this.generateOfferLocations();
+        }
+      },
+      error: (err) => {
+        console.error('[Home] Error loading offers:', err);
+      }
+    });
+  }
+
+  /**
+   * Genera ubicaciones aleatorias para todas las ofertas cerca del usuario
+   */
+  private generateOfferLocations() {
+    const offers = this.allOffers();
+    const baseLat = this.latitude();
+    const baseLng = this.longitude();
+    const maxDist = this.maxDistanceKm();
+
+    const locations: OfferLocation[] = offers.map(offer => {
+      const coords = this.generateNearbyLocation(baseLat, baseLng, maxDist);
+      return {
+        offer,
+        lat: coords.lat,
+        lng: coords.lng
+      };
+    });
+
+    this.offerLocations.set(locations);
+  }
+
+  private trackFirstImpressions(offers: Offer[]): void {
+    if (this.impressionsTracked || !offers.length) {
+      return;
+    }
+    const campaignIds = this.extractCampaignIds(offers);
+    if (campaignIds.length) {
+      this.offersApi.recordCampaignImpressions(campaignIds);
+      this.impressionsTracked = true;
+    }
+  }
+
+  private extractCampaignIds(offers: Offer[]): number[] {
+    const unique = new Set<number>();
+    offers.forEach(offer => {
+      if (typeof offer.campaignId === 'number' && offer.campaignId > 0) {
+        unique.add(offer.campaignId);
+      }
+    });
+    return Array.from(unique);
+  }
+
+  /**
+   * Actualiza el rango de distancia y regenera las ubicaciones
+   */
+  updateDistanceRange(newDistance: number) {
+    this.maxDistanceKm.set(newDistance);
+
+    // Ajustar zoom según distancia
+    if (newDistance <= 2) {
+      this.zoomSignal.set(14);
+    } else if (newDistance <= 4) {
+      this.zoomSignal.set(13);
+    } else {
+      this.zoomSignal.set(12);
+    }
+
+    if (this.locationAllowed()) {
+      this.generateOfferLocations();
+    }
   }
 }

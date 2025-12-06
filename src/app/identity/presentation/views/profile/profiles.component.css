@@ -135,6 +135,15 @@
 }
 .dot.yellow {
   background: #ffd500;
+  box-shadow: 0 0 8px rgba(255, 213, 0, 0.4);
+}
+.dot.green {
+  background: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+.dot.red {
+  background: #f44336;
+  box-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
 }
 
 /* Styling for places (home, work, university) */
@@ -151,5 +160,183 @@
   font-size: 13px;
   margin-bottom: 18px;
   margin-top: 20px;
+}
+
+/* Responsive Design - 1024px */
+@media (max-width: 1024px) {
+  .profile-card {
+    max-width: 640px;
+    margin: 40px auto 16px;
+  }
+
+  .profile-header {
+    padding: 28px 28px 20px;
+  }
+
+  .profile-item {
+    padding: 15px 28px;
+  }
+}
+
+/* Responsive Design - 768px */
+@media (max-width: 768px) {
+  .profile-wrapper {
+    min-height: auto;
+    padding: 0 16px;
+  }
+
+  .profile-card {
+    max-width: 100%;
+    margin: 32px auto 16px;
+    border-radius: 12px;
+  }
+
+  .profile-header {
+    padding: 24px 20px 18px;
+    gap: 14px;
+  }
+
+  .profile-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .profile-name {
+    font-size: 18px;
+  }
+
+  .profile-plan {
+    font-size: 14px;
+  }
+
+  .profile-edit-btn {
+    padding: 6px 18px;
+    font-size: 14px;
+  }
+
+  .profile-item {
+    padding: 14px 20px;
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .profile-value {
+    justify-content: flex-start;
+    min-width: auto;
+  }
+
+  .places {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .profile-footer {
+    font-size: 12px;
+  }
+}
+
+/* Responsive Design - 640px */
+@media (max-width: 640px) {
+  .profile-card {
+    margin: 24px auto 12px;
+  }
+
+  .profile-header {
+    flex-wrap: wrap;
+    padding: 20px 16px 16px;
+    gap: 12px;
+  }
+
+  .profile-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+
+  .profile-header-details {
+    flex: 1;
+  }
+
+  .profile-name {
+    font-size: 17px;
+  }
+
+  .profile-plan {
+    font-size: 13px;
+  }
+
+  .profile-edit-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .profile-item {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .tag {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
+}
+
+/* Responsive Design - 375px */
+@media (max-width: 375px) {
+  .profile-card {
+    margin: 20px auto 12px;
+    border-radius: 10px;
+  }
+
+  .profile-header {
+    padding: 16px 12px 14px;
+  }
+
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .profile-name {
+    font-size: 16px;
+  }
+
+  .profile-plan {
+    font-size: 12px;
+  }
+
+  .profile-edit-btn {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .profile-item {
+    padding: 11px 12px;
+    font-size: 12px;
+  }
+
+  .profile-label {
+    font-size: 12px;
+  }
+
+  .profile-value {
+    font-size: 12px;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .profile-footer {
+    font-size: 11px;
+  }
 }
 

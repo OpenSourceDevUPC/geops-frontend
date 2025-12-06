@@ -44,6 +44,20 @@ export class WelcomeBannerComponent implements OnInit {
   }
 
   /**
+   * Get current user role
+   */
+  getUserRole(): 'CONSUMER' | 'OWNER' {
+    return (this.currentUser()?.role as 'CONSUMER' | 'OWNER') || 'CONSUMER';
+  }
+
+  /**
+   * Check if user is a provider/owner
+   */
+  isProviderUser(): boolean {
+    return this.getUserRole() === 'OWNER';
+  }
+
+  /**
    * Check if user has premium plan
    */
   isPremiumUser(): boolean {
@@ -77,7 +91,6 @@ export class WelcomeBannerComponent implements OnInit {
    * @param plan - The selected plan
    */
   onPlanSelect(plan: SubscriptionWithTranslations): void {
-    console.log('Plan selected:', plan);
     // Here you would implement the logic to process the plan selection
     this.closePlans();
   }

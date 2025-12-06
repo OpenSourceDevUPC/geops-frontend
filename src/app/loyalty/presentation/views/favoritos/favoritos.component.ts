@@ -5,21 +5,8 @@ import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorite
 import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
-import {CartApi} from '../../../../cart/infrastructure/cart-api';
-import {CartUiService} from '../../../../cart/presentation/services/cart-ui.service';
-
-type Offer = {
-  id: number;
-  title: string;
-  partner: string;
-  price: number;
-  codePrefix: string;
-  validTo: string;
-  rating: number;
-  location: string;
-  category: string;
-  imageUrl?: string;
-};
+import {CartStore} from '../../../../cart/application/cart.store';
+import { Offer } from '../../../domain/model/offer.entity';
 
 @Component({
   selector: 'app-favoritos',
@@ -33,16 +20,13 @@ type Offer = {
  * favorites screen
  */
 export class FavoritosComponent implements OnInit {
-  private readonly cartApi = inject(CartApi);
-  private readonly cartUiService = inject(CartUiService);
+  private readonly cartStore = inject(CartStore);
 
   loading = false;
   offers: Offer[] = [];
 
-
   private currentUserId: number | null = null;
-
-  userId = 'a512';
+  private impressionsTracked = false;
 
   /**
    * creates an instance of the 'favoritesComponent' component
@@ -62,7 +46,6 @@ export class FavoritosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.currentUserId = this.authService.getCurrentUserId();
-    console.log('[Favoritos] Usuario actual ID:', this.currentUserId);
     if (!this.currentUserId) {
       console.warn('[Favoritos] No hay usuario autenticado');
       return;
@@ -113,6 +96,7 @@ export class FavoritosComponent implements OnInit {
           next: (list) => {
             const map = new Map(list.map((o) => [o.id, o]));
             this.offers = ids.map((id) => map.get(id)!).filter(Boolean) as Offer[];
+            this.trackInitialImpressions(this.offers);
             this.loading = false;
           },
           error: () => (this.loading = false),
@@ -139,7 +123,6 @@ export class FavoritosComponent implements OnInit {
     this.favsApi.removeByUserAndOffer(this.currentUserId, o.id).subscribe({
       next: () => {
         this.offers = this.offers.filter((x) => x.id !== o.id);
-        console.log('[Favoritos] Favorito eliminado:', o.id);
       },
       error: (err) => {
         console.error('[Favoritos] Error al eliminar favorito:', err);
@@ -152,28 +135,16 @@ export class FavoritosComponent implements OnInit {
    * @param o - Oferta a añadir
    */
   addToCart(o: Offer) {
+    if (!this.currentUserId) {
+      console.warn('[Favoritos] No hay usuario autenticado para añadir al carrito');
+      return;
+    }
+
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    this.cartApi.addItemToCart(
-      this.userId,
-      o.id.toString(),
-      offerTitle,
-      o.price,
-      offerImageUrl,
-      1
-    ).subscribe({
-      next: () => {
-        // Reset payment flow when items are added
-        this.cartUiService.resetPaymentFlow();
-        // Could show a success message here
-        console.log('Item added to cart successfully');
-      },
-      error: (error) => {
-        console.error('Error adding item to cart:', error);
-        // Could show an error message here
-      }
-    });
+    this.offersApi.recordCampaignClick(o.campaignId);
+    this.cartStore.addItem(this.currentUserId, o.id, offerTitle, o.price, offerImageUrl, 1);
   }
 
   /**
@@ -181,26 +152,40 @@ export class FavoritosComponent implements OnInit {
    * @param o - Oferta a comprar
    */
   buyNow(o: Offer) {
-    // Using hardcoded user ID for now - in real app would come from auth service
+    if (!this.currentUserId) {
+      console.warn('[Favoritos] No hay usuario autenticado para comprar');
+      return;
+    }
+
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
-    // Add to cart first, then open cart sidebar
-    this.cartApi
-      .addItemToCart(this.userId, o.id.toString(), offerTitle, o.price, offerImageUrl, 1)
-      .subscribe({
-        next: () => {
-          console.log('Item added to cart successfully');
-          // Reset payment flow when items are added
-          this.cartUiService.resetPaymentFlow();
-          // Open the cart sidebar after adding the item
-          this.cartUiService.openCart();
-        },
-        error: (error) => {
-          console.error('Error adding item to cart:', error);
-          // Could show an error message here
-        },
-      });
+    this.offersApi.recordCampaignClick(o.campaignId);
+    // Add to cart and open sidebar
+    this.cartStore.addItem(this.currentUserId, o.id, offerTitle, o.price, offerImageUrl, 1);
+    this.cartStore.openSidebar();
+  }
+
+  onViewOffer(o: Offer) {
+    this.offersApi.recordCampaignClick(o.campaignId);
+  }
+
+  private trackInitialImpressions(offers: Offer[]): void {
+    if (this.impressionsTracked || !offers.length) {
+      return;
+    }
+
+    const ids = new Set<number>();
+    offers.forEach(offer => {
+      if (typeof offer.campaignId === 'number' && offer.campaignId > 0) {
+        ids.add(offer.campaignId);
+      }
+    });
+
+    if (ids.size) {
+      this.offersApi.recordCampaignImpressions(Array.from(ids));
+      this.impressionsTracked = true;
+    }
   }
 
 }

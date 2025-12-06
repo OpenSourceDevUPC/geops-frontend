@@ -8,7 +8,7 @@
     <img class="offer-hero" [src]="imgFor()" [alt]="o.title">
 
     <section class="summary">
-      <h1 class="title">{{ ('offersData.titles.' + o.id) | translate }}</h1>
+      <h1 class="title">{{ o.title || (('offersData.titles.' + o.id) | translate) }}</h1>
       <div class="partner">{{ o.partner }}</div>
 
       <div class="meta">
@@ -92,7 +92,7 @@
     </div>
 
     <article class="review-item" *ngFor="let r of reviews">
-      <div class="avatar">{{ initialOf(r.userName, String(r.userId)[0] ?? '?') }}</div>
+      <div class="avatar">{{ initialOf(r.userName, r.userId.toString()) }}</div>
       <div class="body">
         <div class="row">
           <div class="inline-stars">

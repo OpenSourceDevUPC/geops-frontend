@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { User } from '../domain/model/user.entity';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersApi extends BaseApi {
   private readonly usersEndpoint: UsersApiEndpoint;
@@ -20,7 +20,7 @@ export class UsersApi extends BaseApi {
     return this.usersEndpoint.getAll();
   }
 
-  getUser(id: string): Observable<User> {
+  getUser(id: number): Observable<User> {
     return this.usersEndpoint.getById(id);
   }
 
@@ -32,7 +32,7 @@ export class UsersApi extends BaseApi {
     return this.usersEndpoint.update(user, user.id);
   }
 
-  deleteUser(id: string): Observable<void> {
+  deleteUser(id: number): Observable<void> {
     return this.usersEndpoint.delete(id);
   }
 
@@ -42,17 +42,17 @@ export class UsersApi extends BaseApi {
    * @param planType - The new plan type
    * @returns Observable of updated user
    */
-  updateUserPlan(userId: string = "1", planType: 'BASIC' | 'PREMIUM'): Observable<User> {
-    return new Observable(observer => {
+  updateUserPlan(userId: number = 1, planType: 'BASIC' | 'PREMIUM'): Observable<User> {
+    return new Observable((observer) => {
       this.getUser(userId).subscribe({
         next: (user) => {
           const updatedUser = { ...user, plan: planType };
           this.updateUser(updatedUser).subscribe({
             next: (result) => observer.next(result),
-            error: (error) => observer.error(error)
+            error: (error) => observer.error(error),
           });
         },
-        error: (error) => observer.error(error)
+        error: (error) => observer.error(error),
       });
     });
   }

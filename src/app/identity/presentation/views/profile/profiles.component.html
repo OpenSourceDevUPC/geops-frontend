@@ -42,12 +42,12 @@
       <div class="profile-item">
         <span class="profile-label">{{ 'profile.location' | translate }}</span>
         <span class="profile-value">
-          <span class="dot yellow"></span>
-          {{
-            user.locationPermission === 'ALWAYS'
-              ? ('profile.locationAlways' | translate)
-              : ('profile.locationAsk' | translate)
-          }}
+          <span class="dot" [class.yellow]="locationPermission === 'ASK'"
+                            [class.green]="locationPermission === 'ALWAYS'"
+                            [class.red]="locationPermission === 'DENIED'"></span>
+          <span *ngIf="locationPermission === 'ALWAYS'">{{ 'profile.locationAlways' | translate }}</span>
+          <span *ngIf="locationPermission === 'ASK'">{{ 'profile.locationAsk' | translate }}</span>
+          <span *ngIf="locationPermission === 'DENIED'">{{ 'profile.locationDenied' | translate }}</span>
         </span>
       </div>
       <!-- Saved places (home, work, university) -->
