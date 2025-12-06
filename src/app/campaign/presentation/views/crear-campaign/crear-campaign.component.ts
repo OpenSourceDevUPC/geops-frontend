@@ -45,6 +45,7 @@ export class CrearCampaignComponent {
   private readonly store = inject(CampaignStore);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly defaultStatus: Campaign['status'] = 'ACTIVE';
 
   campaignForm: FormGroup;
   loading = this.store.loading;
@@ -57,7 +58,7 @@ export class CrearCampaignComponent {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       estimatedBudget: [0, [Validators.required, Validators.min(0)]],
-      status: ['PAUSED', Validators.required]
+      status: [this.defaultStatus, Validators.required]
     });
   }
 
@@ -65,6 +66,7 @@ export class CrearCampaignComponent {
     if (this.campaignForm.valid && !this.loading()) {
       const campaign: Partial<Campaign> = {
         ...this.campaignForm.value,
+        status: this.defaultStatus,
         userId: this.getUserId(),
         totalImpressions: 0,
         totalClicks: 0,
