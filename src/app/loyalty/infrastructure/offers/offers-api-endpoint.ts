@@ -4,9 +4,9 @@ import { BaseApiEndpoint } from '../../../shared/infrastructure/base-api-endpoin
 import { Offer } from '../../domain/model/offer.entity';
 import { OfferResource, OffersResponse } from './offers-response';
 import { OffersAssembler } from './offers-assembler';
-import { map, Observable, switchMap, forkJoin, of, catchError } from 'rxjs';
+import { map, Observable, switchMap, forkJoin, of, catchError, take } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CampaignStore } from '../../../campaign/application/campaign.store';
+import { CampaignApiEndpoint } from '../../../campaign/infrastructure/campaign-api-endpoint';
 
 @Injectable({ providedIn: 'root' })
 export class OffersApiEndpoint extends BaseApiEndpoint<
@@ -15,16 +15,11 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
   OffersResponse,
   OffersAssembler
 > {
-  private readonly clickQueue = new Map<number, number>();
-  private readonly impressionQueue = new Map<number, number>();
-  private flushTimer: ReturnType<typeof setTimeout> | null = null;
-  private static readonly FLUSH_DELAY_MS = 800;
-
   /**
    * creates an instance of the offersApiEndpoint service
    * @param http - angular http client
    */
-  constructor(http: HttpClient, private readonly campaignStore: CampaignStore) {
+  constructor(http: HttpClient, private readonly campaignApi: CampaignApiEndpoint) {
     super(http, `${environment.platformProviderApiBaseUrl}/offers`, new OffersAssembler());
   }
 
@@ -132,70 +127,38 @@ export class OffersApiEndpoint extends BaseApiEndpoint<
     if (!this.isValidCampaignId(campaignId)) {
       return;
     }
-    this.incrementQueue(this.clickQueue, campaignId!, 1);
-    this.scheduleFlush();
+    this.persistEngagementDelta(campaignId!, { clicks: 1 });
   }
 
   recordCampaignImpressions(campaignIds: number[]): void {
-    let hasValidIds = false;
     campaignIds.forEach(id => {
       if (this.isValidCampaignId(id)) {
-        this.incrementQueue(this.impressionQueue, id, 1);
-        hasValidIds = true;
+        this.persistEngagementDelta(id, { impressions: 1 });
       }
     });
-
-    if (hasValidIds) {
-      this.scheduleFlush();
-    }
   }
 
-  private scheduleFlush(): void {
-    if (this.flushTimer) {
-      return;
-    }
-    this.flushTimer = setTimeout(() => this.flushQueues(), OffersApiEndpoint.FLUSH_DELAY_MS);
-  }
+  private persistEngagementDelta(
+    campaignId: number,
+    delta: { clicks?: number; impressions?: number }
+  ): void {
+    this.campaignApi
+      .getById(campaignId)
+      .pipe(
+        take(1),
+        switchMap(campaign => {
+          const updated = {
+            ...campaign,
+            totalClicks: (campaign.totalClicks ?? 0) + (delta.clicks ?? 0),
+            totalImpressions: (campaign.totalImpressions ?? 0) + (delta.impressions ?? 0)
+          };
 
-  private flushQueues(): void {
-    if (!this.clickQueue.size && !this.impressionQueue.size) {
-      this.clearFlushTimer();
-      return;
-    }
-
-    const deltas = new Map<number, { clicks?: number; impressions?: number }>();
-
-    const appendDelta = (campaignId: number, partial: { clicks?: number; impressions?: number }) => {
-      const current = deltas.get(campaignId) ?? {};
-      deltas.set(campaignId, {
-        clicks: (current.clicks ?? 0) + (partial.clicks ?? 0),
-        impressions: (current.impressions ?? 0) + (partial.impressions ?? 0)
+          return this.campaignApi.updateCampaign(campaignId, updated).pipe(take(1));
+        })
+      )
+      .subscribe({
+        error: err => console.error('[OffersApiEndpoint] Failed to persist campaign engagement:', err)
       });
-    };
-
-    this.clickQueue.forEach((value, campaignId) => appendDelta(campaignId, { clicks: value }));
-    this.impressionQueue.forEach((value, campaignId) => appendDelta(campaignId, { impressions: value }));
-
-    this.clickQueue.clear();
-    this.impressionQueue.clear();
-
-    deltas.forEach((delta, campaignId) => {
-      this.campaignStore.applyEngagementDelta(campaignId, delta);
-    });
-
-    this.clearFlushTimer();
-  }
-
-  private clearFlushTimer(): void {
-    if (!this.flushTimer) {
-      return;
-    }
-    clearTimeout(this.flushTimer);
-    this.flushTimer = null;
-  }
-
-  private incrementQueue(queue: Map<number, number>, campaignId: number, amount: number): void {
-    queue.set(campaignId, (queue.get(campaignId) ?? 0) + amount);
   }
 
   private isValidCampaignId(id?: number): id is number {
