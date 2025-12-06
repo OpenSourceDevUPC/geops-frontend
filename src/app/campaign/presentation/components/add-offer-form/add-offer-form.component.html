@@ -57,7 +57,12 @@
     <div class="form-row two-columns">
       <mat-form-field appearance="outline">
         <mat-label>Categoría</mat-label>
-        <input matInput formControlName="category" placeholder="Ej: Restaurantes, Entretenimiento">
+        <mat-select formControlName="category">
+          <mat-option value="" disabled>Selecciona una categoría</mat-option>
+          <mat-option *ngFor="let category of categoryOptions" [value]="category">
+            {{ ('offersData.categories.' + category) | translate }}
+          </mat-option>
+        </mat-select>
         <mat-icon matPrefix>label</mat-icon>
         <mat-error *ngIf="offerForm.get('category')?.invalid">
           {{ getErrorMessage('category') }}

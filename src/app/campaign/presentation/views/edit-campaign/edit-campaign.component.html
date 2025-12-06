@@ -126,14 +126,14 @@
       <div class="tab-content">
         <div class="offers-header">
           <h3>{{ 'campaigns.offers.title' | translate }}</h3>
-          <button mat-raised-button color="primary" (click)="onShowOfferForm()" *ngIf="!showOfferForm">
+          <button mat-raised-button color="primary" (click)="onShowOfferForm()" *ngIf="!showOfferForm && isCampaignActive">
             <mat-icon>add</mat-icon>
             {{ 'campaigns.offers.add' | translate }}
           </button>
         </div>
 
         <!-- Add/Edit Offer Form -->
-        <div *ngIf="showOfferForm" class="offer-form-section">
+        <div *ngIf="canDisplayOfferForm" class="offer-form-section">
           <app-add-offer-form
             [campaignId]="campaignId"
             [offer]="editingOffer"

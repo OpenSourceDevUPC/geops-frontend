@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
 import { CampaignOffer } from '../../../domain/model/offer.entity';
 
 /**
@@ -25,14 +27,33 @@ import { CampaignOffer } from '../../../domain/model/offer.entity';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    TranslateModule
   ],
   templateUrl: './add-offer-form.component.html',
   styleUrls: ['./add-offer-form.component.css']
 })
 export class AddOfferFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+
+  readonly categoryOptions: string[] = [
+    'Entretenimiento',
+    'Belleza',
+    'Gastronomía',
+    'Gift Card',
+    'Educación',
+    'Salud',
+    'Tecnología',
+    'Moda',
+    'Hogar',
+    'Deportes',
+    'Viajes',
+    'Automotriz',
+    'Servicios',
+    'Otros'
+  ];
 
   @Input() campaignId!: number;
   @Input() offer?: CampaignOffer; // If editing existing offer

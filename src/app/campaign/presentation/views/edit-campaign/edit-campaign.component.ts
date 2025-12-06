@@ -71,6 +71,14 @@ export class EditCampaignComponent implements OnInit {
   showOfferForm: boolean = false;
   editingOffer: CampaignOffer | undefined = undefined;
 
+  get isCampaignActive(): boolean {
+    return this.campaignForm.get('status')?.value === 'ACTIVE';
+  }
+
+  get canDisplayOfferForm(): boolean {
+    return this.showOfferForm && (this.isCampaignActive || !!this.editingOffer);
+  }
+
   constructor() {
     this.campaignForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -152,6 +160,9 @@ export class EditCampaignComponent implements OnInit {
   // ==================== OFFER MANAGEMENT ====================
 
   onShowOfferForm(): void {
+    if (!this.isCampaignActive) {
+      return;
+    }
     this.showOfferForm = true;
     this.editingOffer = undefined;
   }
