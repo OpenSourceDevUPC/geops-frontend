@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign } from '../../../domain/model/campaign.entity';
+import { calculateCtr } from '../../../domain/utils/campaign-metrics.util';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 
 /**
@@ -56,19 +57,14 @@ export class ReportesComponent implements OnInit {
     const totalImpressions = campaigns.reduce((sum, c) => sum + c.totalImpressions, 0);
     const totalClicks = campaigns.reduce((sum, c) => sum + c.totalClicks, 0);
     const totalBudget = campaigns.reduce((sum, c) => sum + c.estimatedBudget, 0);
-        // Calculate average CTR safely
-    let averageCTR = 0;
-    if (campaigns.length > 0) {
-      const validCTRs = campaigns
-        .map(c => c.CTR || 0)
-        .filter(ctr => !isNaN(ctr) && isFinite(ctr));
 
-      averageCTR = validCTRs.length > 0
-        ? validCTRs.reduce((sum, ctr) => sum + ctr, 0) / validCTRs.length
-        : 0;
-    } else {
-      averageCTR = 0;
-    }
+    const ctrValues = campaigns
+      .map(c => calculateCtr(c.totalClicks, c.totalImpressions))
+      .filter(ctr => !isNaN(ctr) && isFinite(ctr));
+
+    const averageCTR = ctrValues.length > 0
+      ? Number((ctrValues.reduce((sum, ctr) => sum + ctr, 0) / ctrValues.length).toFixed(1))
+      : 0;
 
     return {
       generatedAt: new Date().toISOString(),
@@ -77,7 +73,7 @@ export class ReportesComponent implements OnInit {
         totalImpressions,
         totalClicks,
         totalBudget,
-        averageCTR: Number(averageCTR.toFixed(2)),
+        averageCTR,
         byStatus: {
           active: campaigns.filter(c => c.status === 'ACTIVE').length,
           paused: campaigns.filter(c => c.status === 'PAUSED').length,
@@ -94,7 +90,7 @@ export class ReportesComponent implements OnInit {
         estimatedBudget: c.estimatedBudget,
         totalImpressions: c.totalImpressions,
         totalClicks: c.totalClicks,
-        ctr: c.CTR,
+        ctr: calculateCtr(c.totalClicks, c.totalImpressions),
         createdAt: c.createdAt,
         updatedAt: c.updatedAt
       }))
@@ -108,17 +104,20 @@ export class ReportesComponent implements OnInit {
   get csvData(): string {
     const campaigns = this.filteredCampaigns;
     const headers = ['ID', 'Nombre', 'Estado', 'Fecha Inicio', 'Fecha Fin', 'Presupuesto', 'Impresiones', 'Clicks', 'CTR (%)'];
-    const rows = campaigns.map((c) => [
-      c.id,
-      c.name,
-      c.status,
-      c.startDate,
-      c.endDate,
-      c.estimatedBudget,
-      c.totalImpressions,
-      c.totalClicks,
-      c.CTR,
-    ]);
+    const rows = campaigns.map((c) => {
+      const ctr = calculateCtr(c.totalClicks, c.totalImpressions);
+      return [
+        c.id,
+        c.name,
+        c.status,
+        c.startDate,
+        c.endDate,
+        c.estimatedBudget,
+        c.totalImpressions,
+        c.totalClicks,
+        ctr,
+      ];
+    });
 
     return [
       headers.join(','),

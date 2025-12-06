@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CampaignStore } from '../../../application/campaign.store';
 import { Campaign, CampaignStatus } from '../../../domain/model/campaign.entity';
+import { calculateCtr } from '../../../domain/utils/campaign-metrics.util';
 import { AuthService } from '../../../../identity/infrastructure/auth/auth.service';
 import { ConfirmDialogComponent } from '../../../../shared/presentation/components/confirm-dialog/confirm-dialog.component';
 import { WelcomeBannerComponent } from '../../../../subscriptions/presentation/components/welcome-banner/welcome-banner.component';
@@ -63,13 +64,16 @@ export class ResumenComponent implements OnInit {
     const campaigns = this.campaigns();
     if (campaigns.length === 0) return 0;
 
-    const validCTRs = campaigns
-      .map((c) => c.CTR || 0)
+    const ctrValues = campaigns
+      .map((c) => calculateCtr(c.totalClicks, c.totalImpressions))
       .filter((ctr) => !isNaN(ctr) && isFinite(ctr));
 
-    return validCTRs.length > 0
-      ? validCTRs.reduce((sum, ctr) => sum + ctr, 0) / validCTRs.length
-      : 0;
+    if (ctrValues.length === 0) {
+      return 0;
+    }
+
+    const average = ctrValues.reduce((sum, ctr) => sum + ctr, 0) / ctrValues.length;
+    return Number(average.toFixed(1));
   });
 
   ngOnInit(): void {

@@ -2,6 +2,7 @@ import { computed, Injectable, Signal, signal, inject } from '@angular/core';
 import { retry } from 'rxjs';
 import { Campaign } from '../domain/model/campaign.entity';
 import { CampaignOffer } from '../domain/model/offer.entity';
+import { calculateCtr } from '../domain/utils/campaign-metrics.util';
 import { CampaignApi } from '../infrastructure/campaign-api';
 import { CampaignCartOperations } from '../infrastructure/campaign-cart-operations';
 
@@ -115,6 +116,18 @@ export class CampaignStore {
     // No automatic loading - data is loaded on-demand by components
   }
 
+  private normalizeCampaign(campaign: Campaign): Campaign {
+    const totalImpressions = campaign.totalImpressions ?? 0;
+    const totalClicks = campaign.totalClicks ?? 0;
+
+    return {
+      ...campaign,
+      totalImpressions,
+      totalClicks,
+      CTR: calculateCtr(totalClicks, totalImpressions)
+    };
+  }
+
   // ==================== CAMPAIGN METHODS ====================
 
   /**
@@ -136,7 +149,7 @@ export class CampaignStore {
 
     this.api.getCampaignsByUserId(userId).pipe(retry(2)).subscribe({
       next: campaigns => {
-        this.campaignsSignal.set(campaigns);
+        this.campaignsSignal.set(campaigns.map(c => this.normalizeCampaign(c)));
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -156,7 +169,7 @@ export class CampaignStore {
 
     this.api.getCampaignById(id).pipe(retry(2)).subscribe({
       next: campaign => {
-        this.selectedCampaignSignal.set(campaign);
+        this.selectedCampaignSignal.set(this.normalizeCampaign(campaign));
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -176,7 +189,8 @@ export class CampaignStore {
 
     this.api.createCampaign(campaign).pipe(retry(2)).subscribe({
       next: created => {
-        this.campaignsSignal.update(campaigns => [...campaigns, created]);
+        const normalized = this.normalizeCampaign(created);
+        this.campaignsSignal.update(campaigns => [...campaigns, normalized]);
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -226,11 +240,12 @@ export class CampaignStore {
   private performCampaignUpdate(id: number, updates: Partial<Campaign>): void {
     this.api.updateCampaign(id, updates).pipe(retry(2)).subscribe({
       next: updated => {
+        const normalized = this.normalizeCampaign(updated);
         this.campaignsSignal.update(campaigns =>
-          campaigns.map(c => c.id === id ? updated : c)
+          campaigns.map(c => c.id === id ? normalized : c)
         );
         if (this.selectedCampaignSignal()?.id === id) {
-          this.selectedCampaignSignal.set(updated);
+          this.selectedCampaignSignal.set(normalized);
         }
         this.loadingSignal.set(false);
       },
@@ -282,7 +297,7 @@ export class CampaignStore {
    * @param campaign - The campaign to select (or null to clear)
    */
   selectCampaign(campaign: Campaign | null): void {
-    this.selectedCampaignSignal.set(campaign);
+    this.selectedCampaignSignal.set(campaign ? this.normalizeCampaign(campaign) : null);
     if (campaign) {
       this.loadOffersByCampaignId(campaign.id!);
     } else {
@@ -408,7 +423,7 @@ export class CampaignStore {
     return {
       impressions: campaign.totalImpressions,
       clicks: campaign.totalClicks,
-      ctr: campaign.CTR,
+      ctr: calculateCtr(campaign.totalClicks, campaign.totalImpressions),
     };
   }
 
