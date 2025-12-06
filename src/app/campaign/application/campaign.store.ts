@@ -428,6 +428,46 @@ export class CampaignStore {
   }
 
   /**
+   * Applies engagement deltas locally so UI feedback stays in sync before backend updates exist.
+   * @param campaignId campaign identifier to update
+   * @param delta amount to add to clicks/impressions
+   */
+  applyEngagementDelta(
+    campaignId: number,
+    delta: { clicks?: number; impressions?: number }
+  ): void {
+    const clicksDelta = delta.clicks ?? 0;
+    const impressionsDelta = delta.impressions ?? 0;
+
+    if (!campaignId || (!clicksDelta && !impressionsDelta)) {
+      return;
+    }
+
+    const applyDelta = (campaign: Campaign): Campaign => {
+      if (campaign.id !== campaignId) {
+        return campaign;
+      }
+
+      const totalClicks = (campaign.totalClicks ?? 0) + clicksDelta;
+      const totalImpressions = (campaign.totalImpressions ?? 0) + impressionsDelta;
+
+      return {
+        ...campaign,
+        totalClicks,
+        totalImpressions,
+        CTR: calculateCtr(totalClicks, totalImpressions)
+      };
+    };
+
+    this.campaignsSignal.update(campaigns => campaigns.map(applyDelta));
+
+    const selected = this.selectedCampaignSignal();
+    if (selected?.id === campaignId) {
+      this.selectedCampaignSignal.set(applyDelta(selected));
+    }
+  }
+
+  /**
    * Check if a campaign is active
    * @param campaign - The campaign to check
    */

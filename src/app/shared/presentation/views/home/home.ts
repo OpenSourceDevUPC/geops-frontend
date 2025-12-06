@@ -48,6 +48,7 @@ export class Home implements OnInit {
   private currentUserId: number | null = null;
   private userId: number = 1;
   private readonly cartStore = inject(CartStore);
+  private impressionsTracked = false;
 
   categories: CategoryMapping[] = [
     {
@@ -385,6 +386,7 @@ export class Home implements OnInit {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
+    this.offersApi.recordCampaignClick(o.campaignId);
     // Add to cart and open sidebar
     this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
     this.cartStore.openSidebar();
@@ -394,7 +396,12 @@ export class Home implements OnInit {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
+    this.offersApi.recordCampaignClick(o.campaignId);
     this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
+  }
+
+  onViewOffer(offer: Offer) {
+    this.offersApi.recordCampaignClick(offer.campaignId);
   }
 
   /**
@@ -499,6 +506,7 @@ export class Home implements OnInit {
     this.offersApi.getAll().subscribe({
       next: (offers) => {
         this.allOffers.set(offers);
+        this.trackFirstImpressions(offers);
 
         // Si la ubicación ya está permitida, generar ubicaciones
         if (this.locationAllowed()) {
@@ -530,6 +538,27 @@ export class Home implements OnInit {
     });
 
     this.offerLocations.set(locations);
+  }
+
+  private trackFirstImpressions(offers: Offer[]): void {
+    if (this.impressionsTracked || !offers.length) {
+      return;
+    }
+    const campaignIds = this.extractCampaignIds(offers);
+    if (campaignIds.length) {
+      this.offersApi.recordCampaignImpressions(campaignIds);
+      this.impressionsTracked = true;
+    }
+  }
+
+  private extractCampaignIds(offers: Offer[]): number[] {
+    const unique = new Set<number>();
+    offers.forEach(offer => {
+      if (typeof offer.campaignId === 'number' && offer.campaignId > 0) {
+        unique.add(offer.campaignId);
+      }
+    });
+    return Array.from(unique);
   }
 
   /**

@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 import { FavoritesApiEndpoint } from '../../../infrastructure/favorites/favorites-api-endpoint';
 import { TranslateModule } from '@ngx-translate/core';
 import { CartStore } from '../../../../cart/application/cart.store';
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
+import { OffersApiEndpoint } from '../../../infrastructure/offers/offers-api-endpoint';
 
 type Offer = {
+  campaignId: number;
   id: number;
   title: string;
   partner: string;
@@ -58,6 +59,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
   private favSet = new Set<number>();
   private dataLoaded = false;
   private currentUserId: number | null = null;
+  private impressionsTracked = false;
 
   /**
    * creates an instance of the offerscomponent component
@@ -104,6 +106,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
         this.categories = Array.from(new Set(this.all.map((o) => o.category))).sort();
         this.locations = Array.from(new Set(this.all.map((o) => o.location))).sort();
 
+        this.trackInitialImpressions(this.all);
         this.dataLoaded = true;
         this.applyFilters();
         this.loading = false;
@@ -282,6 +285,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
+    this.offersApi.recordCampaignClick(o.campaignId);
     this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
   }
 
@@ -293,8 +297,39 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     const offerTitle = o.title;
     const offerImageUrl = this.imgFor(o);
 
+    this.offersApi.recordCampaignClick(o.campaignId);
     // Add to cart and open sidebar
     this.cartStore.addItem(this.userId, o.id, offerTitle, o.price, offerImageUrl, 1);
     this.cartStore.openSidebar();
+  }
+
+  onViewOffer(o: Offer) {
+    this.offersApi.recordCampaignClick(o.campaignId);
+    this.router.navigate(['/ofertas', o.id], {
+      queryParams: { from: 'categorias' },
+      queryParamsHandling: 'preserve'
+    });
+  }
+
+  private trackInitialImpressions(offers: Offer[]): void {
+    if (this.impressionsTracked || !offers.length) {
+      return;
+    }
+
+    const campaignIds = this.extractCampaignIds(offers);
+    if (campaignIds.length) {
+      this.offersApi.recordCampaignImpressions(campaignIds);
+      this.impressionsTracked = true;
+    }
+  }
+
+  private extractCampaignIds(offers: Offer[]): number[] {
+    const ids = new Set<number>();
+    offers.forEach(offer => {
+      if (typeof offer.campaignId === 'number' && offer.campaignId > 0) {
+        ids.add(offer.campaignId);
+      }
+    });
+    return Array.from(ids);
   }
 }

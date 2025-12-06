@@ -11,13 +11,7 @@ import { ReviewsApiEndpoint } from '../../../infrastructure/reviews-api-endpoint
 import {AuthService} from '../../../../identity/infrastructure/auth/auth.service';
 import { Review } from '../../../domain/model/review.entity';
 import { CartStore } from '../../../../cart/application/cart.store';
-
-
-type Offer = {
-  id: number; title: string; partner: string; price: number;
-  codePrefix: string; validUntil: string; rating: number;
-  location: string; category: string; imageUrl?: string;
-};
+import { Offer } from '../../../domain/model/offer.entity';
 
 @Component({
   selector: 'app-ver-oferta',
@@ -252,6 +246,7 @@ export class VerOfertaComponent implements OnInit {
     const offerImageUrl = this.imgFor();
 
     this.cartStore.addItem(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1);
+    this.offersApi.recordCampaignClick(this.offer.campaignId);
   }
 
   /**
@@ -271,6 +266,7 @@ export class VerOfertaComponent implements OnInit {
     // Add to cart and open sidebar
     this.cartStore.addItem(this.userId, this.offer.id, offerTitle, this.offer.price, offerImageUrl, 1);
     this.cartStore.openSidebar();
+    this.offersApi.recordCampaignClick(this.offer.campaignId);
   }
 
   protected readonly String = String;
