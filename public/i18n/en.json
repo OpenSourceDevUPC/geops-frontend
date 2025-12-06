@@ -80,7 +80,17 @@
       "Entretenimiento": "Entertainment",
       "Belleza": "Beauty",
       "Gastronomía": "Dining",
-      "Gift Card": "Gift Card"
+      "Gift Card": "Gift Card",
+      "Educación": "Education",
+      "Salud": "Health",
+      "Tecnología": "Technology",
+      "Moda": "Fashion",
+      "Hogar": "Home",
+      "Deportes": "Sports",
+      "Viajes": "Travel",
+      "Automotriz": "Automotive",
+      "Servicios": "Services",
+      "Otros": "Others"
     },
     "locations": {
       "Varias Sedes": "Multiple locations",
@@ -705,6 +715,16 @@
     "Gastronomía": "Buffets",
     "Belleza": "Beauty",
     "Gift Card": "Gift Card",
-    "title": "Categories"
+    "title": "Categories",
+    "Educación": "Education",
+    "Salud": "Health",
+    "Tecnología": "Technology",
+    "Moda": "Fashion",
+    "Hogar": "Home",
+    "Deportes": "Sports",
+    "Viajes": "Travel",
+    "Automotriz": "Automotive",
+    "Servicios": "Services",
+    "Otros": "Others"
   }
 }
