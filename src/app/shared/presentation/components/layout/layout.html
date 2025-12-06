@@ -163,7 +163,7 @@
 <app-footer-content></app-footer-content>
 
 <!-- Cart Sidebar -->
-<app-cart-sidebar></app-cart-sidebar>
+<app-cart-sidebar *ngIf="!isOwner()"></app-cart-sidebar>
 
 <!-- Navigation Loading Backdrop -->
 <app-navigation-backdrop></app-navigation-backdrop>
