@@ -57,8 +57,7 @@ export class CrearCampaignComponent {
       description: ['', [Validators.required, Validators.minLength(10)]],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      estimatedBudget: [0, [Validators.required, Validators.min(0)]],
-      status: [this.defaultStatus, Validators.required]
+      estimatedBudget: [0, [Validators.required, Validators.min(0)]]
     });
   }
 
