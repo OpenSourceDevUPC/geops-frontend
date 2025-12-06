@@ -159,6 +159,68 @@
     "reports": "Reports",
     "comments": "Comments"
   },
+  "campaign": {
+    "addOfferForm": {
+      "title": {
+        "new": "New Offer",
+        "edit": "Edit Offer"
+      },
+      "fields": {
+        "title": {
+          "label": "Offer Title",
+          "placeholder": "Ex: 20% off products"
+        },
+        "partner": {
+          "label": "Partner",
+          "placeholder": "Ex: Restaurant El Sabor"
+        },
+        "price": {
+          "label": "Price (S/.)",
+          "placeholder": "0.00"
+        },
+        "category": {
+          "label": "Category",
+          "placeholder": "Select a category"
+        },
+        "codePrefix": {
+          "label": "Code Prefix",
+          "placeholder": "Ex: PROMO"
+        },
+        "location": {
+          "label": "Location",
+          "placeholder": "Ex: Main Ave 123, Miraflores"
+        },
+        "imageUrl": {
+          "label": "Image URL",
+          "placeholder": "https://example.com/image.jpg"
+        },
+        "validUntil": {
+          "label": "Valid Until"
+        }
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "add": "Add Offer"
+      },
+      "errors": {
+        "required": "This field is required",
+        "minLength": "Must be at least {{value}} characters",
+        "maxLength": "Must not exceed {{value}} characters",
+        "minValue": "Value must be greater than or equal to 0"
+      }
+    },
+    "offersList": {
+      "empty": {
+        "description": "No offers linked"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "validUntil": "Valid until"
+    }
+  },
   "subscriptions": {
     "title": "Plans",
     "subtitle": "Choose the plan that suits you. You can change whenever you want.",

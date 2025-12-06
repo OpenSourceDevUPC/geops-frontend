@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
 import { CampaignOffer } from '../../../domain/model/offer.entity';
 
 /**
@@ -14,7 +15,7 @@ import { CampaignOffer } from '../../../domain/model/offer.entity';
 @Component({
   selector: 'app-campaign-offers-list',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, TranslateModule],
   templateUrl: './campaign-offers-list.component.html',
   styleUrls: ['./campaign-offers-list.component.css']
 })

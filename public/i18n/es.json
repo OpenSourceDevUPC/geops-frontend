@@ -159,6 +159,68 @@
     "reports": "Reportes",
     "comments": "Comentarios"
   },
+  "campaign": {
+    "addOfferForm": {
+      "title": {
+        "new": "Nueva Oferta",
+        "edit": "Editar Oferta"
+      },
+      "fields": {
+        "title": {
+          "label": "Título de la Oferta",
+          "placeholder": "Ej: 20% de descuento en productos"
+        },
+        "partner": {
+          "label": "Socio/Partner",
+          "placeholder": "Ej: Restaurante El Sabor"
+        },
+        "price": {
+          "label": "Precio (S/.)",
+          "placeholder": "0.00"
+        },
+        "category": {
+          "label": "Categoría",
+          "placeholder": "Selecciona una categoría"
+        },
+        "codePrefix": {
+          "label": "Prefijo de Código",
+          "placeholder": "Ej: PROMO"
+        },
+        "location": {
+          "label": "Ubicación",
+          "placeholder": "Ej: Av. Principal 123, Miraflores"
+        },
+        "imageUrl": {
+          "label": "URL de la Imagen",
+          "placeholder": "https://ejemplo.com/imagen.jpg"
+        },
+        "validUntil": {
+          "label": "Válido Hasta"
+        }
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar Cambios",
+        "add": "Agregar Oferta"
+      },
+      "errors": {
+        "required": "Este campo es requerido",
+        "minLength": "Debe tener al menos {{value}} caracteres",
+        "maxLength": "No debe exceder {{value}} caracteres",
+        "minValue": "El valor debe ser mayor o igual a 0"
+      }
+    },
+    "offersList": {
+      "empty": {
+        "description": "No hay ofertas asociadas"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "validUntil": "Válido hasta"
+    }
+  },
   "subscriptions": {
     "title": "Planes",
     "subtitle": "Elige el plan que se ajusta a ti. Puedes cambiar cuando quieras.",
