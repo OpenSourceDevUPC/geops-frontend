@@ -29,24 +29,19 @@ export class CampaignCartOperations {
    * 4. Remove matching items from each cart
    */
   removeOffersFromAllCarts(campaignId: number): Observable<void> {
-    console.log('[CampaignCartOperations] Starting cart cleanup for campaign:', campaignId);
-
     // 1. Get all offers from this campaign
     return this.http.get<any[]>(`${environment.platformProviderApiBaseUrl}/offers/campaign/${campaignId}`).pipe(
       switchMap(offers => {
         if (!offers || offers.length === 0) {
-          console.log('[CampaignCartOperations] No offers found for campaign:', campaignId);
           return of(undefined);
         }
 
         const offerIds = offers.map(o => o.id);
-        console.log('[CampaignCartOperations] Found offers to remove from carts:', offerIds);
 
         // 2. Get all carts
         return this.http.get<any[]>(`${environment.platformProviderApiBaseUrl}/carts`).pipe(
           switchMap(carts => {
             if (!carts || carts.length === 0) {
-              console.log('[CampaignCartOperations] No carts found');
               return of(undefined);
             }
 
@@ -59,8 +54,6 @@ export class CampaignCartOperations {
                 if (itemsToRemove.length === 0) {
                   return of(null);
                 }
-
-                console.log(`[CampaignCartOperations] Removing ${itemsToRemove.length} items from cart ${cart.userId}`);
 
                 // Remove each item from the cart using CartApi
                 const removeRequests = itemsToRemove.map((item: any) =>
@@ -76,7 +69,6 @@ export class CampaignCartOperations {
               });
 
             if (removeOperations.length === 0) {
-              console.log('[CampaignCartOperations] No items to remove from any cart');
               return of(undefined);
             }
 
